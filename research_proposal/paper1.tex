@@ -1,0 +1,70 @@
+% define document
+\documentclass[12pt,a4paper]{article} % For LaTeX2e
+%
+% packages
+%\usepackage{11785_project}
+\usepackage[square,numbers]{natbib}
+\usepackage{times}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{comment,csquotes,color}
+%
+% define margin for the pages
+\topmargin -10mm
+\textwidth 160truemm
+\textheight 240truemm
+\oddsidemargin 0mm
+\evensidemargin 0mm
+% 
+% for cross-reference footnotes
+\newcommand{\footnoteref}[1]{\textsuperscript{\ref{#1}}}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{ \textbf{Research Proposal:} \\
+	Absolute versus comparative judgment}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{
+	Jose Rivera \\
+	\small{\texttt{josemanuel.riveraespejo@uantwerpen.be}} \\
+	\AND
+	Steven Gillis \\
+	\small{\texttt{steven.gillis@uantwerpen.be}} \\
+	\AND
+	Sven De Maeyer \\
+	\small{\texttt{sven.demaeyer@uantwerpen.be}}
+}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+	%
+	\maketitle
+	%
+	\begin{abstract}
+		High level description of the research.
+	\end{abstract}
+	%
+	%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	%
+	\input 1_introduction
+	\input 2_question
+	\input 3_design
+	\input 4_analysis
+	%\input n_rest
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% You should cite all sources mentioned in this proposal in the file 11785_project.bib
+	% If you don't wish to cite some of your sources inline (e.g. in the Related Work section) using \cite{}, just you nocite to add
+	% them to the references section at the end of your proposal like so.
+	
+	\newpage
+	\bibliography{11785_project}
+	\bibliographystyle{dcu}
+	
+\end{document}
