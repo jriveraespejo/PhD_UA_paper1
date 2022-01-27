@@ -1,5 +1,5 @@
-# PhD Thesis
-This project contains the preliminary version of the first paper produced in fulfillment of the requirements for the degree of **_Doctor of Philosopjy in Education Sciences_** at the [University of Antwerp](https://www.uantwerpen.be/en/research/phd/).
+# PhD Thesis: Paper 1
+This project contains the preliminary version of the first paper produced in fulfillment of the requirements for the degree of **_Doctor of Philosophy in Education Sciences_** at the [University of Antwerp](https://www.uantwerpen.be/en/research/phd/).
 
 ## Status
 **In progress**
