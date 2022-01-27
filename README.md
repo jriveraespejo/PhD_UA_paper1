@@ -6,7 +6,7 @@ This project contains the preliminary version of the first paper produced in ful
 
 
 ## Documents
-The preliminary version of the research proposal can be downloaded from [**HERE**](https://github.com/jriveraespejo/PhD_UA_paper1/blob/master/research_proposal/paper1.pdf).
+The preliminary version of the research proposal can be downloaded from [**HERE**](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/research_proposal/paper1.pdf).
 
 The preliminary version of the submitted paper can be downloaded from [**HERE**]()
 
