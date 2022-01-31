@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Outcomes} \label{ss_sect:outcome}
 %
-On the one hand, the outcome from the \textbf{transcription task} was obtained following a two step procedure \citep{Boonen_et_al_2021}. First, we aligned the participant's orthographic  transcriptions at the utterance level. This step was repeated for every one of the \textcolor{blue}{$6400$ transcription ($64 \times 100$, see Section \ref{s_sect:JandT})}. Lastly, we computed the entropy measure of the aligned transcriptions using equation (\ref{eq:entropy}) \citep{Shannon_1948}. The last step resulted in $320$ entropy measures\footnote{\label{foot:doe}under DoE literature, the design corresponds to entropy measures for $32$ experimental units with $10$ replicate runs and $20$ duplicates, making a total of $320$ experimental runs.}.
+On the one hand, the outcome from the \textbf{transcription task} was obtained following a two step procedure \citep{Boonen_et_al_2021}. First, we aligned the participant's orthographic  transcriptions at the utterance level. This step was repeated for every one of the $6400$ transcription ($64 \times 100$, see Section \ref{s_sect:JandT}). Lastly, we computed the entropy measure of the aligned transcriptions using equation (\ref{eq:entropy}) \citep{Shannon_1948}. The last step resulted in $320$ entropy measures\footnote{\label{foot:doe}under DoE literature, the design corresponds to entropy measures for $32$ experimental units with $10$ replicate runs and $20$ duplicates, making a total of $320$ experimental runs.}.
 
 Entropy was used as an objective measure of SI, i.e. a quantification of (dis)agreement between listeners' transcriptions. Utterances yielding a high degree of agreement between transcribers were considered highly intelligible and therefore registered a lower entropy $\left( H \rightarrow 0 \right)$, while utterances yielding a low degree of agreement were considered as exhibiting low intelligibility and therefore registered a higher entropy $\left( H \rightarrow 1 \right)$ \citep{Boonen_et_al_2021, Faes_et_al_2021}. In that sense, entropy was defined as: 
 %
@@ -18,24 +18,22 @@ where $N$ denotes the number of transcribers, $p_{i}$ the utterance's probabilit
 
 On the other hand, the outcome for \textbf{judgment task} was obtained following the procedure outlined in Section \ref{ss_sect:proc}, with the total number of judgments per procedure detailed in Table \ref{tab:allocation}. 
 
-\textcolor{blue}{It is important to mention that besides the exclusion of corrupted observations. e.g. no available rating, no other experimental run was eliminated before the modeling process. This decision departs from what it is observed in previous research}, e.g. \citet{Boonen_et_al_2020} decided to eliminate observations based on misfit analysis \citep{Lesterhuis_2018}, while \citet{vanDaal_2020} and \citet{Boonen_et_al_2021} did the same based on outlier analysis. For the case of misfit analysis, we argue that such procedures cannot be used without caution. The literature points out that in the context of CJ, these statistics are always relative, i.e. they depend on other stimulus and judges included in the assessment \citep{Pollitt_2012a, Pollitt_2012b}, while they have been proven to be less sensitive, as they are calculated with a low number of judgments per representation \citep{Pollitt_2012a}. On the other hand, for the case of outlier analysis, we argue that outlying observations cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. Moreover, as stated by \citet{McElreath_2020}, outliers are interesting cases to analyze. \textcolor{blue}{Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather adjust the model, so it can be robust against the influence of such outliers.}
+It is important to mention that besides the exclusion of corrupted observations. e.g. no available rating, no other experimental run was eliminated before the modeling process. This decision departs from what it is observed in previous research, e.g. \citet{Boonen_et_al_2020} decided to eliminate observations based on misfit analysis \citep{Lesterhuis_2018}, while \citet{vanDaal_2020} and \citet{Boonen_et_al_2021} did the same based on outlier analysis. For the case of misfit analysis, we argue that such procedures cannot be used without caution. The literature points out that in the context of CJ, these statistics are always relative, i.e. they depend on other stimulus and judges included in the assessment \citep{Pollitt_2012a, Pollitt_2012b}, while they have been proven to be less sensitive, as they are calculated with a low number of judgments per representation \citep{Pollitt_2012a}. On the other hand, for the case of outlier analysis, we argue that outlying observations cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. Moreover, as stated by \citet{McElreath_2020}, outliers are interesting cases to analyze. Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather adjust the model, so it can be robust against the influence of such outliers.
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Covariates} \label{ss_sect:covariates}
 %
-\textcolor{blue}{The sampled children registered the following characteristics regarding their hearing status:
+The sampled children registered the following characteristics regarding their hearing status:
 	%
 	\begin{enumerate}
 		\item Normal Hearing (NHC)
 		\item Hearing Impaired (HIC):
 		\begin{itemize}
 			\item Cochlear Implant (CIC) 
-			\item Hearing Aid (HAC) 
-			\item Auditory Brain stem Implant (ABI)
+			\item Hearing Aid (HAC)
 		\end{itemize}
 	\end{enumerate}
-}
 
 \begin{comment}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,6 +122,9 @@ beta = (1 - mu)*M  ->  M = alpha + beta (prior sample size)
 \textcolor{red}{(in process)}
 
 \begin{comment}
+
+Considering the intelligibility of any stimulus is determined by three interrelated parties: the message, speaker, and listener, and that the inherent variability within each integrating part could be high, the current research assumes the utterances are equivalent among each other.
+
 It will consider the correlation with the entropy measure.
 %
 \begin{enumerate}

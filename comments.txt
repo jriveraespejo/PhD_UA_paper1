@@ -1,0 +1,45 @@
+[check] SI measures comes from speech therapy, see literature there about OR process and if it is demanding
+
+
+[check] you need an assessment that is much quicker, against OR.
+
+
+[check] instead "psycho-physics" go for "psycho-linguistic"
+Pim Leeveld - Speaking (1989) to learn abut psycho-linguistic
+
+
+[check] How absolute holistic methods are done in other papers
+Boonen et al (2021) and Faes et al (2021), integer between 0 and 100
+
+
+[check] experimental setting
+describe the slider for HJ
+
+
+[check] slider on the left:
+HJ actually is not independent (the next assessment is affected by the previous) 
+solution so far was more in the sense of randomize the stimuli
+
+
+[check] three parties in SI (for simuli section):
+- speaker, add in introduction they have random effects
+- listener, characteristics of them are also important, add in introduction they have random effects
+- message (missing), e.g. quality of recording, makes intelligibility goes down. also speaking rate 
+"the level of abstraction assumes the messages are equivalent."
+they play a role together.
+Should it be in the introduction, NO, just in the final paper or an extra discussion 
+
+
+[] decision of 5 might be in Boonen (2021), or maybe we can decide to use 20 (proposal is not the bible)
+see if we need to redesign the allocation of judges (Table 1 in my proposal)
+
+
+[check] outliers vs reviewers:
+dictatorial argument (does it work?)
+
+
+[check] ABI out, only 3 child
+
+
+[] HJ model, start simple (independent rating)
+neural process of the subject cannot be controlled fully with statistics e.g. degree of aphasia
