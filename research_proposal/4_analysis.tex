@@ -6,52 +6,145 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Outcomes} \label{ss_sect:outcome}
 %
-On the one hand, the outcome from the \textbf{transcription task} was obtained following a two step procedure \citep{Boonen_et_al_2021}. First, we aligned the participant's orthographic  transcriptions at the utterance level. This step was repeated for every one of the $6400$ transcription ($64 \times 100$, see Section \ref{s_sect:JandT}). Lastly, we computed the entropy measure of the aligned transcriptions using equation (\ref{eq:entropy}) \citep{Shannon_1948}. The last step resulted in $320$ entropy measures\footnote{\label{foot:doe}under DoE literature, the design corresponds to entropy measures for $32$ experimental units with $10$ replicate runs and $20$ duplicates, making a total of $320$ experimental runs.}.
+On the one hand, the outcome for the \textbf{judgment task} was obtained following the procedure outlined in sections \ref{ss_sect:proc} and \ref{ss_sect:expset}, with the total number of judgments per procedure detailed in Table \ref{tab:allocation}.
 
-Entropy was used as an objective measure of SI, i.e. a quantification of (dis)agreement between listeners' transcriptions. Utterances yielding a high degree of agreement between transcribers were considered highly intelligible and therefore registered a lower entropy $\left( H \rightarrow 0 \right)$, while utterances yielding a low degree of agreement were considered as exhibiting low intelligibility and therefore registered a higher entropy $\left( H \rightarrow 1 \right)$ \citep{Boonen_et_al_2021, Faes_et_al_2021}. In that sense, entropy was defined as: 
+On the other hand, the outcome from the \textbf{transcription task} was obtained following a two step procedure \citep{Boonen_et_al_2021}. First, we aligned the participant's orthographic transcriptions, at the utterance level, in a column-like grid structure similar to the one presented in Table \ref{tab:align_example}. This step was repeated for every one of the $6400$ transcriptions\footnote{\label{foot:doe}under DoE literature, the design corresponds to $32$ experimental units with $10$ replicates each, making a total of $320$ experimental runs. Moreover, we register $20$ duplicates (transcriptions) for each run, making a total of $6400$ transcriptions.} (see Section \ref{s_sect:JandT}). Lastly, we computed the entropy measure of the aligned transcriptions as in \citet{Shannon_1948}: 
 %
 \begin{equation} \label{eq:entropy}
-	H(\pmb{p}) = H = \frac{-\sum_{i=1}^{n} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(N)}
+	H = H(\pmb{p}) = \frac{-\sum_{i=1}^{n} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(N)}
 \end{equation}
 %
-where $N$ denotes the number of transcribers, $p_{i}$ the utterance's probability of occurrence, and $n$ the total number of events, i.e. two for the CJ-D case, and more than two for the CJ-O and HJ procedures.
+where $n$ denotes the number of word occurrences, $p_{i}$ the probability of the word occurrence, and $N$ the total number of aligned transcriptions per utterance.
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|| c | ccccc || } 
+		\hline
+		Transcription & \multicolumn{5}{c ||}{Utterance} \\ [0.5ex]
+		\cline{2-6}
+		number & 1 & 2 & 3 & 4 & 5 \\ [0.5ex] 
+		\hline\hline
+		1 & de & jongen & ziet & een & kikker \\ 
+		  & the & boy & see & a & frog \\ 
+		\hline
+		2 & de & jongen & ziet & de & [X] \\
+		  & the & boy & sees & the & [X] \\ 
+		\hline
+		3 & de & jongen & zag & [B] & kokkin \\
+		  & the & boy & saw & [B] & cook \\ 
+		\hline
+		4 & de & jongen & zag & geen & kikkers \\
+		  & the & boy & saw & no & frogs \\ 
+		\hline
+		5 & de & hond & zoekt & een & [X] \\
+		  & the & dog & searches & a & [X] \\ 
+		\hline
+		Entropy & $0$ & $0.3109$ & $0.6555$ & $0.8277$ & $1$ \\
+		\hline
+		\multicolumn{4}{l}{\footnotesize{[B] = blank space, [X] = unidentifiable word}}
+	\end{tabular}
+	\caption{Example of five aligned transcriptions and its corresponding entropy calculations. Extracted from \citet{Boonen_et_al_2021}, and slightly modified with illustrative purposes.}
+	\label{tab:align_example}
+\end{table}
+%
 
-On the other hand, the outcome for \textbf{judgment task} was obtained following the procedure outlined in Section \ref{ss_sect:proc}, with the total number of judgments per procedure detailed in Table \ref{tab:allocation}. 
+Entropy was used as an objective measure of SI, i.e. a quantification of (dis)agreement between listeners' transcriptions. Utterances yielding a high degree of agreement between transcribers were considered highly intelligible, and therefore registered a lower entropy $\left( H \rightarrow 0 \right)$. Moreover, utterances yielding a low degree of agreement were considered as exhibiting low intelligibility, and therefore registered a higher entropy $\left( H \rightarrow 1 \right)$ \citep{Boonen_et_al_2021, Faes_et_al_2021}. 
 
-It is important to mention that besides the exclusion of corrupted observations. e.g. no available rating, no other experimental run was eliminated before the modeling process. This decision departs from what it is observed in previous research, e.g. \citet{Boonen_et_al_2020} decided to eliminate observations based on misfit analysis \citep{Lesterhuis_2018}, while \citet{vanDaal_2020} and \citet{Boonen_et_al_2021} did the same based on outlier analysis. For the case of misfit analysis, we argue that such procedures cannot be used without caution. The literature points out that in the context of CJ, these statistics are always relative, i.e. they depend on other stimulus and judges included in the assessment \citep{Pollitt_2012a, Pollitt_2012b}, while they have been proven to be less sensitive, as they are calculated with a low number of judgments per representation \citep{Pollitt_2012a}. On the other hand, for the case of outlier analysis, we argue that outlying observations cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. Moreover, as stated by \citet{McElreath_2020}, outliers are interesting cases to analyze. Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather adjust the model, so it can be robust against the influence of such outliers.
+Using Table \ref{tab:align_example}, we exemplify the entropy calculation for utterances $2$, $4$ and $5$, which represent relevant scenarios for the procedure. Notice that every calculation considers five transcriptions in total ($N=5$). 
+
+For the second utterance, we observe that four transcriptions identify it with the word \textit{jongen}, while the last with the word \textit{hond}. Therefore, we registered two word occurrences ($n=2$), with probabilities $\pmb{p} = (p_{1}, p_{2}) = (4/5, 1/5)$, and the entropy measure equal to:
+%
+\begin{align*}
+	H &= \frac{-\sum_{i=1}^{2} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
+	%
+	&= \frac{- \left[ 0.8 \log_{2}(0.8) + 0.2 \log_{2}(0.2) \right] }{\log_{2}(5)} \\
+	%
+	&\approx 0.3109
+\end{align*} 
+%
+For the fourth utterance, we observe that two transcriptions identify it with the word \textit{een}, one with \textit{de}, one with \textit{geen}, and one with a blank space [B]. Notice the blank space was not expected in such position, therefore, it was considered as a different word occurrence, i.e. the scenario had four word occurrences ($n=4$), with probabilities $\pmb{p} = (p_{1}, p_{2}, p_{3}, p_{4}) = (2/5, 1/5, 1/5, 1/5)$, and entropy measure equal to:
+%
+\begin{align*}
+	H &= \frac{-\sum_{i=1}^{4} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
+	%
+	&= \frac{- \left[ 0.4 \log_{2}(0.4) + 3 \cdot 0.2 \log_{2}(0.2) \right] }{\log_{2}(5)} \\
+	%
+	&\approx 0.8277
+\end{align*} 
+%
+Finally, for the fifth utterance, we observe that all of the  transcriptions identify it with different words. Notice we consider the unidentifiable word [X] in the second transcription, as being different from the one in the last. This is done to avoid the artificial reduction of the entropy measure, as [X] values already indicate the lack of intelligibility of the word. Therefore, we registered five word occurrences ($n=5$), with probabilities $\pmb{p} = (p_{1}, \dots, p_{5}) = (1/5, \dots, 1/5)$, and entropy measure equal to:
+%
+\begin{align*}
+	H &= \frac{-\sum_{i=1}^{5} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
+	%
+	&= \frac{- 5 \cdot 0.2 \log_{2}(0.2) }{\log_{2}(5)} \\
+	%
+	&= 1
+\end{align*} 
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Covariates} \label{ss_sect:covariates}
 %
-The sampled children registered the following characteristics regarding their hearing status:
-	%
-	\begin{enumerate}
-		\item Normal Hearing (NHC)
-		\item Hearing Impaired (HIC):
-		\begin{itemize}
-			\item Cochlear Implant (CIC) 
-			\item Hearing Aid (HAC)
-		\end{itemize}
-	\end{enumerate}
+Table \ref{tab:children_char} reports the characteristics of the selected children, in terms of their hearing status, gender, age at recording, length of device use at recording, and post-implant pure tone average (PTA) aided and unaided by a hearing apparatus.
 
-\begin{comment}
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\textbf{for the experimenter:} Based on \citet{Faes_et_al_2021} we depict the procedure for the experimenter:
-	%
-	\begin{enumerate}
-		\item 1. matching procedure 
-		\item selection of suitable stimuli
-		\item determine the number of stimuli per judge 
-		\item 
-	\end{enumerate}
-	
-	about matching procedure \citep{Faes_et_al_2021}:
-	NH children were matched on gender, age and regional background, to the other two groups.Based on the previous NH kids were not representative of the NH population. 
-	Question: How they were matched?, Propensity Score Matching or manual work?. 
-	Age in NH at least has to be matched with "hearing age" in other groups, i.e. the length of use of the hearing device. However is still not completely appropriate. "lexical age", i.e. vocabulary size, is another matching measure (see p. 14 in \citep{Faes_et_al_2021} for more) 
-	
-\end{comment}
+From the table, \textcolor{red}{describe in summaries the table. Notice ideally Table \ref{tab:children_char} would go to the appendix}
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|| c | cccccc || } 
+		\hline
+		& Hearing & Gender & Age & Device use & \multicolumn{2}{c ||}{PTA} \\[0.5ex]
+		\cline{6-7}
+		Child & Status & & (y;m) & (y;m) & unaided & aided \\[0.5ex] 
+		\hline\hline
+		1 & NH & male &  &  &  & \\ 
+		2 & HI/CI & female &  &  &  & \\ 
+		3 & HI/HA &  &  &  &  & \\
+		4 &  &  &  &  &  & \\
+		5 &  &  &  &  &  & \\
+		6 &  &  &  &  &  & \\
+		7 &  &  &  &  &  & \\
+		8 &  &  &  &  &  & \\
+		9 &  &  &  &  &  & \\
+		10 &  &  &  &  &  & \\ 
+		11 &  &  &  &  &  & \\ 
+		12 &  &  &  &  &  & \\ 
+		13 &  &  &  &  &  & \\
+		14 &  &  &  &  &  & \\
+		15 &  &  &  &  &  & \\
+		16 &  &  &  &  &  & \\
+		17 &  &  &  &  &  & \\
+		18 &  &  &  &  &  & \\
+		19 &  &  &  &  &  & \\
+		20 &  &  &  &  &  & \\
+		21 &  &  &  &  &  & \\ 
+		22 &  &  &  &  &  & \\ 
+		23 &  &  &  &  &  & \\
+		24 &  &  &  &  &  & \\
+		25 &  &  &  &  &  & \\
+		26 &  &  &  &  &  & \\
+		27 &  &  &  &  &  & \\
+		28 &  &  &  &  &  & \\
+		29 &  &  &  &  &  & \\
+		30 &  &  &  &  &  & \\
+		31 &  &  &  &  &  & \\ 
+		32 &  &  &  &  &  & \\ 
+		\hline
+		\multicolumn{7}{l}{\footnotesize{(y;m) = (years;months)}} \\
+		\multicolumn{7}{l}{\footnotesize{NH = normal hearing,}} \\
+		\multicolumn{7}{l}{\footnotesize{HI/CI = hearing impaired / cochlear implant,}} \\
+		\multicolumn{7}{l}{\footnotesize{HI/HA = hearing impaired / hearing aid}}
+	\end{tabular}
+	\caption{Characteristics of selected children.}
+	\label{tab:children_char}
+\end{table}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Pre-processing} \label{ss_sect:preproc}
+%
+It is important to mention that besides the exclusion of corrupted observations. e.g. no available rating, no other experimental run was eliminated before the modeling process. This decision departs from what it is observed in previous research, e.g. \citet{Boonen_et_al_2020} decided to eliminate observations based on misfit analysis \citep{Lesterhuis_2018}, while \citet{vanDaal_2020} and \citet{Boonen_et_al_2021} did the same based on outlier analysis. For the case of misfit analysis, we argue that such procedures cannot be used without caution. The literature points out that in the context of CJ, these statistics are always relative, i.e. they depend on other stimulus and judges included in the assessment \citep{Pollitt_2012a, Pollitt_2012b}, while they have been proven to be less sensitive, as they are calculated with a low number of judgments per representation \citep{Pollitt_2012a}. On the other hand, for the case of outlier analysis, we argue that outlying observations cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. Moreover, as stated by \citet{McElreath_2020}, outliers are interesting cases to analyze. Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather adjust the model, so it can be robust against the influence of such outliers.
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
