@@ -86,78 +86,9 @@ Finally, for the fifth utterance, we observe that all of the  transcriptions ide
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Covariates} \label{ss_sect:covariates}
 %
-The characteristics of the selected children is detailed in Table \ref{tab:children_char}. The table includes all the variables used for the matching procedure in Section \ref{s_sect:children}, and additionally, shows the child's etiology, i.e. the cause of their hearing impairment, and their post-implant pure tone average (PTA), i.e. the child's subjective hearing sensitivity, aided and unaided by their hearing apparatus. No other variables are included as no known additional comorbidities, beside their hearing impairment, is suspected.
+The characteristics of the selected children is detailed in Table \ref{tab:children_char} from Appendix \ref{appA:char}. The table includes all the variables used for the matching procedure in Section \ref{s_sect:children}, and additionally, shows the child's etiology, i.e. the cause of their hearing impairment, and their post-implant pure tone average (PTA), i.e. the child's subjective hearing sensitivity, aided and unaided by their hearing apparatus. No other variables are included as no known additional comorbidities, beside their hearing impairment, is suspected.
 
-From the table, \textcolor{red}{describe in summaries the table.} 
-	
-\textcolor{red}{Notice ideally Table \ref{tab:children_char} would go to the appendix}
-%
-\begin{table}[h!]
-	\centering
-	\begin{tabular}{|| c | cccccccc || } 
-		\hline
-		& Hearing &  & Regional & Age & Device use &  & \multicolumn{2}{c ||}{PTA (dB.)} \\[0.5ex]
-		\cline{8-9}
-		Child & Status & Gender & background & (y;m) & (y;m) & Etiology & unaided & aided \\[0.5ex] 
-		\hline\hline
-		1 & NH & male &  &  &  & genetic &  &\\
-		\rowcolor{gray}
-		2 & HI/CI & female &  &  &  & CMV infection &  &\\ 
-		3 & HI/HA &  &  &  &  & unknown &  &\\
-		\rowcolor{gray}
-		4 &  &  &  &  &  &  &  &\\
-		5 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		6 &  &  &  &  &  &  &  &\\
-		7 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		8 &  &  &  &  &  &  &  &\\
-		9 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		10 &  &  &  &  &  &  &  &\\ 
-		11 &  &  &  &  &  &  &  &\\ 
-		\rowcolor{gray}
-		12 &  &  &  &  &  &  &  &\\ 
-		13 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		14 &  &  &  &  &  &  &  &\\
-		15 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		16 &  &  &  &  &  &  &  &\\
-		17 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		18 &  &  &  &  &  &  &  &\\
-		19 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		20 &  &  &  &  &  &  &  &\\
-		21 &  &  &  &  &  &  &  &\\ 
-		\rowcolor{gray}
-		22 &  &  &  &  &  &  &  &\\ 
-		23 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		24 &  &  &  &  &  &  &  &\\
-		25 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		26 &  &  &  &  &  &  &  &\\
-		27 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		28 &  &  &  &  &  &  &  &\\
-		29 &  &  &  &  &  &  &  &\\
-		\rowcolor{gray}
-		30 &  &  &  &  &  &  &  &\\
-		31 &  &  &  &  &  &  &  &\\ 
-		\rowcolor{gray}
-		32 &  &  &  &  &  &  &  &\\ 
-		33 &  &  &  &  &  &  &  &\\
-		\hline
-		\multicolumn{7}{l}{\footnotesize{(y;m) = (years;months)}} \\
-		\multicolumn{7}{l}{\footnotesize{NH = normal hearing,}} \\
-		\multicolumn{7}{l}{\footnotesize{HI/CI = hearing impaired / cochlear implant,}} \\
-		\multicolumn{7}{l}{\footnotesize{HI/HA = hearing impaired / hearing aid}}
-	\end{tabular}
-	\caption{Characteristics of selected children.}
-	\label{tab:children_char}
-\end{table}
+From the table, \textcolor{red}{describe summaries from the table.}
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -173,24 +104,27 @@ Considering the previous, if we still manage to identify outlying observations w
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Statistical modeling} \label{s_sect:models}
+\subsection{Model estimation} \label{s_sect:estimation}
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Model selection}
+The models proposed in sections \ref{s_sec:evaluation} and \ref{s_sect:models} will be estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we will use the Hamiltonian Monte Carlo algorithm (HMC) \cite{Duane_et_al_1987, Betancourt_et_al_2013, Neal_2012}. The software package that will provide us with the HMC machinery is \texttt{Stan} \cite{Stan_2020}, while we will use \texttt{R} \cite{R_2015, RStan_2020}, and its integration packages, to analyze its outputs.
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Model selection} \label{s_sect:model_sel}
 %
 Following the successful and comprehensive analysis in \citet{vanDaal_2020} and \citet{Lesterhuis_2018}, the current research will also use the Information-Theoretic Approach (ITA) \citep{Anderson_2008, Chamberlain_1965} for the selection of competing models. The approach considers three steps: (1) state our hypothesis into statistical models, (2) select among competing models, and (3) make inferences based on one or multiple models.
 
-First, for the translation of our working hypotheses into statistical models, we will use Directed Acyclic Graphs (DAG) and probabilistic programming \citep{Jaynes_2003}. A DAG is the simplest representation of a Graphical Causal Model (GCM), a heuristic model that contains information not purely statistical, but unlike a detailed statistical model, it allow us to deduce which variable relationships can provide valid causal inferences \citep{Hernan_et_al_2020, McElreath_2020}. In summary, a DAG is a reasonable way to state our hypothesis, and make our assumption more transparent. However, abide by the "no-free lunch" rule, the causal inferences produced under a DAG are only valid if the assumed DAG is correct. In contrast, the probabilistic programming will serve as the algebraic formalist to specify our statistical model.
+First, for the translation of our working hypotheses into statistical models, we will use Directed Acyclic Graphs (DAG) and probabilistic programming \citep{Jaynes_2003}. A DAG is the simplest representation of a Graphical Causal Model (GCM), a heuristic model that contains information not purely statistical, but unlike a detailed statistical model, it allow us to deduce which variable relationships can provide valid causal inferences \citep{Hernan_et_al_2020, McElreath_2020}. In summary, a DAG is a reasonable way to state our hypothesis, and make our assumption more transparent. However, abide by the \textit{no-free lunch} rule, the causal inferences produced under the DAG will only be valid if the assumed DAG is correct. In contrast, the probabilistic programming will serve as the algebraic formalist to define our statistical models.
 
-Second, to select among competing models we will use the out-of-sample (cross-validated) deviance, as this can be considered the model's \textit{measure of relative distance from perfect (predictive) accuracy} \citep{McElreath_2020}. In that sense, this research will embrace the full flexibility of our bayesian implementation (see Section \ref{s_sect:estimation}), and it will use two information criteria that provide the best approximations of such measure: the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021} \footnote{\citet{vanDaal_2020} used the Akaike’s Information Criterion (AIC) \citep{Akaike_1974} with similar purposes.}. 
+Second, to select among competing models, we will use the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}\footnote{\citet{vanDaal_2020} used the Akaike’s Information Criterion (AIC) \citep{Akaike_1974} with similar purposes.}. Two reasons justify our decision. First, both criteria allow us to embrace the full flexibility and information of our bayesian implementation (outlined in Section \ref{s_sect:estimation}). Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}, where the deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data\footnote{also defined as a model's \textit{measure of the relative distance from perfect (predictive) accuracy} \citep{McElreath_2020}.}. \citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure, that we do not need the KL divergence absolute value, as the \textit{true} distribution of our data is not available (otherwise, we would not need a statistical model). But rather, using the deviance difference between competing models, we can measure which model is the farthest from perfect (predictive) accuracy of our data\footnote{for the intuition and the detailed derivation of the argument see \citet{McElreath_2020} (p. 202-211)}.
 
-Finally, considering the evidence in the previous step, we proceed to make inferences based on one or multiple models.
+Finally, considering the evidence provided by the previous step, we proceed to make inferences based on one or multiple models.
 %
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Models}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Model evaluation} \label{s_sec:evaluation}
 %
-Considering the objectives outlined in Section \ref{seq:rq}, this research will consider seven interrelated models: 
+Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate seven models that serve different, but interrelated purposes:
 \begin{enumerate} \itemsep1pt
 	\item[(1)] a measurement error model for entropy
 	\item[(2)] a measurement model for: 
@@ -206,11 +140,66 @@ Considering the objectives outlined in Section \ref{seq:rq}, this research will 
 		\item models (1) and (2c)
 	\end{enumerate}
 \end{enumerate} 
-
-The reason to propose three models lies in the fact that they serve different, but interrelated purposes. The first, will allow us to construct the "most objective" measure of a child's SI. In it, we will be able to assess some research hypothesis of our interest, e.g. if there is a significant SI difference between children with different hearing status, controlling for some other confounding factors. The second set of models, will allow us to test, \textcolor{red}{to do} \\
-
-\noindent \textbf{Measurement error model for entropy:} \\
 %
+
+\textcolor{blue}{Model (1) will allow us to construct the \textit{most objective} measure of a child's SI ranking, and to test some research hypothesis of our interest. 
+%
+The second set of models (2a, 2b, 2c) will allow us to provide preliminary evidence on the reliability and validity of the rating procedures. For the reliability, We will compare 
+%
+the direction, magnitude, and quality of inference of the same research hypothesis outlined for Model (1), in the newly estimated models.
+}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{validity}
+%
+\textcolor{red}{(in process)}
+
+\begin{comment}
+	correlate latent scores (from different methods) with entropy measures (see research proposal)
+	
+	\textbf{critique:} What about decision statements or think at loud rating process? (is it possible), \citet{Lesterhuis_2018} has shown their usefulness, while \citet{Boonen_et_al_2020} signals the need to know about the inner working of judgment processes.
+\end{comment}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{reliability}
+%
+\textcolor{red}{(in process)}
+
+\begin{comment}
+	compare the Scale Separation Reliability (SSR, an inter-rater reliability measure), coming from CJ methods, with others for other methods
+	
+	- No intra-rater reliability, also known as test-retest reliability (Verhavert_2018, Reliability_wiki_2022) 
+	- No Inter-method reliability,  assesses the degree to which test scores are consistent when there is a variation in the methods or instruments used (Verhavert_2018, Reliability_wiki_2022) 
+	- No comparison of SSR vs the true correlation of the latent scale and entropy measures 
+	* Justification: (Verhavert_2018, p. 156) " simulation studies could resolve the inconclusiveness regarding the SSR as a correlation with the truth."
+\end{comment}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{efficiency (time)}
+%
+\textcolor{red}{(in process)}
+
+\begin{comment}
+	time needed for each judgement based on method from (Coertjens_et_al_2017).
+	
+	statistical efficiency has been researched on \citet{Leijon_et_al_2019} and \citet{Pritikin_2020} for the bayesian dichotomous BTL model and the ordinal BTL model, respectively.
+\end{comment}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Models and hypothesis} \label{s_sect:models}
+%
+\textcolor{blue}{}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Measurement error model for entropy} \\
+%
+, e.g. if a statistical difference in SI between children with different hearing status, controlling for some other confounding factors
+
 As it is described in Section \ref{ss_sect:outcome}, our data set is composed of $320$ entropy measures, nested within $32$ children with $10$ replicates per child. Each entropy measure was bounded in the continuum $[0,1]$, as expected from equation (\ref{eq:entropy}).
 
 Previous research have already used the entropy measure as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}. However, on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as "anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference" \citep{McElreath_2020}. 
@@ -234,19 +223,22 @@ First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. 
 \textcolor{red}{(in process)} \\
 
 \begin{comment}
-- Normal measurement error model: 
-entropy_j ~ N( entropy_true_j, sigma_e) 
-
-- In (Faes_et_al_2021) they use a random effects model for the entropy. 
-entropy_j = entropy_true_j + error 
-error ~ N( 0, sigma_e) 
-* Notice both are the same (priors for entropy_true_j are needed) 
-
-- Beta measurement error model: 
-entropy_j ~ beta(alpha, beta) 
-alpha = mu*M        ->  mu = alpha / M (mean) 
-beta = (1 - mu)*M  ->  M = alpha + beta (prior sample size) 
-* where mu = entropy_true_j and M is a distribution centered in 10 (utterances) 
+	Identification of model:  
+	soft identification (see \citet{Depaoli_2021}) 
+	
+	- Normal measurement error model: 
+	entropy_j ~ N( entropy_true_j, sigma_e) 
+	
+	- In (Faes_et_al_2021) they use a random effects model for the entropy. 
+	entropy_j = entropy_true_j + error 
+	error ~ N( 0, sigma_e) 
+	* Notice both are the same (priors for entropy_true_j are needed) 
+	
+	- Beta measurement error model: 
+	entropy_j ~ beta(alpha, beta) 
+	alpha = mu*M        ->  mu = alpha / M (mean) 
+	beta = (1 - mu)*M  ->  M = alpha + beta (prior sample size) 
+	* where mu = entropy_true_j and M is a distribution centered in 10 (utterances) 
 \end{comment}
 %
 %
@@ -255,82 +247,18 @@ beta = (1 - mu)*M  ->  M = alpha + beta (prior sample size)
 \textcolor{red}{(in process)}
 
 \begin{comment}
-
-Considering the intelligibility of any stimulus is determined by three interrelated parties: the message, speaker, and listener, and that the inherent variability within each integrating part could be high, the current research assumes the utterances are equivalent among each other.
-
-It will consider the correlation with the entropy measure.
-%
-\begin{enumerate}
-	\item \textbf{Dichotomous CJ (CJ-D):} the Bradley-Terry-Luce model (BTL) \citep{Bradley_et_al_1952, Luce_1959}, used when the comparative judgments are dichotomous (CJ-D), 
+	
+	Considering the intelligibility of any stimulus is determined by three interrelated parties: the message, speaker, and listener, and that the inherent variability within each integrating part could be high, the current research assumes the utterances are equivalent among each other.
+	
+	It will consider the correlation with the entropy measure.
 	%
-	\item \textbf{Ordinal CJ (CJ-O):} the Generalized Bradley-Terry-Luce model BTL(k) \citep{Tutz_1986, Agresti_1992}, used when the comparative ordinal CJ (CJ-O).
-	%
-	\item \textbf{Absolute (holistic) judgments (HJ):}
-\end{enumerate}
-\end{comment}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Estimation procedure} \label{s_sect:estimation}
-%
-\textcolor{red}{(in process)}
-
-\begin{comment}
-We are going to work under the Bayesian framework, for details see latex code and variables to consider files. 
-
-Identification of model:  
-soft identification (see \citet{Depaoli_2021}) 
-
-justification 
-the benefits, and a comparison with the other options under the frequentist framework in \citet{Verhavert_2018}.
- 
-benefits:  
-see master thesis, and \citet{Verhavert_2018} (p. 42-43) 
-
-
-where \citep{Stan_2020} 
-\end{comment}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Evaluation} \label{s_sec:evaluation}
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{validity}
-%
-\textcolor{red}{(in process)}
-
-\begin{comment}
-correlate latent scores (from different methods) with entropy measures (see research proposal)
-
-\textbf{critique:} What about decision statements or think at loud rating process? (is it possible), \citet{Lesterhuis_2018} has shown their usefulness, while \citet{Boonen_et_al_2020} signals the need to know about the inner working of judgment processes.
-\end{comment}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{reliability}
-%
-\textcolor{red}{(in process)}
-
-\begin{comment}
-compare the Scale Separation Reliability (SSR, an inter-rater reliability measure), coming from CJ methods, with others for other methods
-
-- No intra-rater reliability, also known as test-retest reliability (Verhavert_2018, Reliability_wiki_2022) 
-- No Inter-method reliability,  assesses the degree to which test scores are consistent when there is a variation in the methods or instruments used (Verhavert_2018, Reliability_wiki_2022) 
-- No comparison of SSR vs the true correlation of the latent scale and entropy measures 
-* Justification: (Verhavert_2018, p. 156) " simulation studies could resolve the inconclusiveness regarding the SSR as a correlation with the truth."
-\end{comment}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{efficiency (time)}
-%
-\textcolor{red}{(in process)}
-
-\begin{comment}
-time needed for each judgement based on method from (Coertjens_et_al_2017).
-
-statistical efficiency has been researched on \citet{Leijon_et_al_2019} and \citet{Pritikin_2020} for the bayesian dichotomous BTL model and the ordinal BTL model, respectively.
+	\begin{enumerate}
+		\item \textbf{Dichotomous CJ (CJ-D):} the Bradley-Terry-Luce model (BTL) \citep{Bradley_et_al_1952, Luce_1959}, used when the comparative judgments are dichotomous (CJ-D), 
+		%
+		\item \textbf{Ordinal CJ (CJ-O):} the Generalized Bradley-Terry-Luce model BTL(k) \citep{Tutz_1986, Agresti_1992}, used when the comparative ordinal CJ (CJ-O).
+		%
+		\item \textbf{Absolute (holistic) judgments (HJ):}
+	\end{enumerate}
 \end{comment}
 %
 %

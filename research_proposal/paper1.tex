@@ -4,11 +4,11 @@
 % packages
 %\usepackage{11785_project}
 \usepackage[square,numbers]{natbib}
-\usepackage{graphicx, times}
 \usepackage[hidelinks]{hyperref}
-\usepackage{url}
-\usepackage{amsfonts,amsmath,amssymb}
-\usepackage{comment,csquotes,color,colortbl,enumitem}
+\usepackage[toc]{appendix}
+\usepackage{graphicx, times, url}
+\usepackage{amsfonts, amsmath, amssymb, listings}
+\usepackage{comment, csquotes, color, colortbl, enumitem}
 %
 % define margin for the pages
 \topmargin -10mm
@@ -24,8 +24,19 @@
 \graphicspath{{./images}}
 %
 % define color for the rows of the table
-	
 \definecolor{gray}{gray}{0.95}
+% 
+% to set the style of the code
+\lstset{
+	%	language=R, 				
+	basicstyle=\small\ttfamily,
+	stringstyle=\color{blue},
+	%	otherkeywords={0,1,2,3,4,5,6,7,8,9},
+	%	morekeywords={TRUE,FALSE},
+	%	deletekeywords={data,frame,length,as,character,R},
+	keywordstyle=\color{black},
+	commentstyle=\color{blue},
+}
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,6 +78,8 @@
 	\input 3_design
 	\input 4_analysis
 	%\input n_rest
+	\appendix
+	\include{appendixA}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% You should cite all sources mentioned in this proposal in the file 11785_project.bib
