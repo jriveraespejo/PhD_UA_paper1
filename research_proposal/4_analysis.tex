@@ -14,13 +14,13 @@ On the other hand, the outcome from the \textbf{transcription task} was obtained
 	H = H(\pmb{p}) = \frac{-\sum_{i=1}^{n} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(N)}
 \end{equation}
 %
-where $n$ denotes the number of word occurrences, $p_{i}$ the probability of the word occurrence, and $N$ the total number of aligned transcriptions per utterance.
+where $H$ is bounded in the continuum $[0,1]$, $n$ denotes the number of word occurrences, $p_{i}$ the probability of the word occurrence, and $N$ the total number of aligned transcriptions per utterance.
 %
 \begin{table}[h!]
 	\centering
-	\begin{tabular}{|| c | ccccc || } 
+	\begin{tabular}{| c | ccccc | } 
 		\hline
-		Transcription & \multicolumn{5}{c ||}{Utterance} \\ [0.5ex]
+		Transcription & \multicolumn{5}{c |}{Utterance} \\ [0.5ex]
 		\cline{2-6}
 		number & 1 & 2 & 3 & 4 & 5 \\ [0.5ex] 
 		\hline\hline
@@ -38,7 +38,7 @@ where $n$ denotes the number of word occurrences, $p_{i}$ the probability of the
 		\hline
 		5 & de & hond & zoekt & een & [X] \\
 		  & the & dog & searches & a & [X] \\ 
-		\hline
+		\hline\hline
 		Entropy & $0$ & $0.3109$ & $0.6555$ & $0.8277$ & $1$ \\
 		\hline
 		\multicolumn{4}{l}{\footnotesize{[B] = blank space, [X] = unidentifiable word}}
@@ -52,7 +52,7 @@ Entropy was used as an objective measure of SI, i.e. a quantification of (dis)ag
 
 Using Table \ref{tab:align_example}, we exemplify the entropy calculation for utterances $2$, $4$ and $5$, which represent relevant scenarios for the procedure. Notice that every calculation considers five transcriptions in total ($N=5$). 
 
-For the second utterance, we observe that four transcriptions identify it with the word \textit{jongen}, while the last with the word \textit{hond}. Therefore, we registered two word occurrences ($n=2$), with probabilities $\pmb{p} = (p_{1}, p_{2}) = (4/5, 1/5)$, and an entropy measure equal to:
+For the second utterance, we observe that four transcriptions identify it with the word \textit{jongen}, while the last with the word \textit{hond}. Therefore, we registered two word occurrences ($n=2$), with probabilities $\pmb{p} = (p_{1}, p_{2}) = (4/5, 1/5)$, and entropy measure equal to:
 %
 \begin{align*}
 	H &= \frac{-\sum_{i=1}^{2} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
@@ -62,7 +62,7 @@ For the second utterance, we observe that four transcriptions identify it with t
 	&\approx 0.3109
 \end{align*} 
 %
-For the fourth utterance, we observe that two transcriptions identify it with the word \textit{een}, one with \textit{de}, one with \textit{geen}, and one with a blank space [B]. Notice the blank space was not expected in such position, therefore, it was considered as a different word occurrence. As a result, the scenario had four word occurrences ($n=4$), with probabilities $\pmb{p} = (p_{1}, p_{2}, p_{3}, p_{4}) = (2/5, 1/5, 1/5, 1/5)$, and an entropy measure equal to:
+For the fourth utterance, we observe that two transcriptions identify it with the word \textit{een}, one with \textit{de}, one with \textit{geen}, and one with a blank space [B]. Notice the blank space was not expected in such position, therefore, it was considered as a different word occurrence. As a result, the scenario had four word occurrences ($n=4$), with probabilities $\pmb{p} = (p_{1}, p_{2}, p_{3}, p_{4}) = (2/5, 1/5, 1/5, 1/5)$, and entropy measure equal to:
 %
 \begin{align*}
 	H &= \frac{-\sum_{i=1}^{4} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
@@ -72,7 +72,7 @@ For the fourth utterance, we observe that two transcriptions identify it with th
 	&\approx 0.8277
 \end{align*} 
 %
-Finally, for the fifth utterance, we observe that all of the  transcriptions identify it with different words. Notice we consider the unidentifiable word [X] in the second transcription, as being different from the one in the last. This is done to avoid the artificial reduction of the entropy measure, as [X] values already indicate the lack of intelligibility of the word. Therefore, we registered five word occurrences ($n=5$), with probabilities $\pmb{p} = (p_{1}, \dots, p_{5}) = (1/5, \dots, 1/5)$, and an entropy measure equal to:
+Finally, for the fifth utterance, we observe that all of the  transcriptions identify it with different words. Notice we consider the unidentifiable word [X] in the second transcription, as being different from the one in the last. This is done to avoid the artificial reduction of the entropy measure, as [X] values already indicate the lack of intelligibility of the word. Therefore, we registered five word occurrences ($n=5$), with probabilities $\pmb{p} = (p_{1}, \dots, p_{5}) = (1/5, \dots, 1/5)$, and entropy measure equal to:
 %
 \begin{align*}
 	H &= \frac{-\sum_{i=1}^{5} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
@@ -86,7 +86,7 @@ Finally, for the fifth utterance, we observe that all of the  transcriptions ide
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Covariates} \label{ss_sect:covariates}
 %
-The characteristics of the selected children is detailed in Table \ref{tab:children_char} from Appendix \ref{appA:char}. The table includes all the variables used for the matching procedure in Section \ref{s_sect:children}, and additionally, shows the child's etiology, i.e. the cause of their hearing impairment, and their post-implant pure tone average (PTA), i.e. the child's subjective hearing sensitivity, aided and unaided by their hearing apparatus. No other variables are included as no known additional comorbidities, beside their hearing impairment, is suspected.
+The characteristics of the selected children is detailed in Table \ref{tab:children_char} from Appendix \ref{appA:char}. The table includes all the variables used for the matching procedure in Section \ref{s_sect:children}, and additionally, shows the child's etiology, i.e. the cause of their hearing impairment, and their post-implant pure tone average (PTA), i.e. the child's subjective hearing sensitivity, aided and unaided by their hearing apparatus. No other variables are included, as no known additional comorbidities, beside their hearing impairment, is suspected.
 
 From the table, \textcolor{red}{describe summaries from the table.}
 %
@@ -100,13 +100,15 @@ For the case of misfit analysis, we argue that such procedures cannot be used wi
 
 On the other hand, for the case of univariate outlier analysis, we argue that outlying observations are interesting cases to analyze \citep{McElreath_2020}, and usually they cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. 
 
-Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather make the model robust against their influence.
+Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather make the model robust against their influence, than to eliminate the observation.
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Model estimation} \label{s_sect:estimation}
 %
-The models proposed in sections \ref{s_sec:evaluation} and \ref{s_sect:models} will be estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we will use the Hamiltonian Monte Carlo algorithm (HMC) \cite{Duane_et_al_1987, Betancourt_et_al_2013, Neal_2012}. The software package that will provide us with the HMC machinery is \texttt{Stan} \cite{Stan_2020}, while we will use \texttt{R} \cite{R_2015, RStan_2020}, and its integration packages, to analyze its outputs.
+The models proposed in sections \ref{s_sect:evaluation} and \ref{s_sect:models} will be estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we will use the Hamiltonian Monte Carlo algorithm (HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Neal_2012}. 
+
+\texttt{Stan} \citep{Stan_2020} will be the software package that will provide us with the HMC machinery, while \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020}, the software that will allow us to analyze its outputs.
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,15 +118,16 @@ Following the successful and comprehensive analysis in \citet{vanDaal_2020} and 
 
 First, for the translation of our working hypotheses into statistical models, we will use Directed Acyclic Graphs (DAG) and probabilistic programming \citep{Jaynes_2003}. A DAG is the simplest representation of a Graphical Causal Model (GCM), a heuristic model that contains information not purely statistical, but unlike a detailed statistical model, it allow us to deduce which variable relationships can provide valid causal inferences \citep{Hernan_et_al_2020, McElreath_2020}. In summary, a DAG is a reasonable way to state our hypothesis, and make our assumption more transparent. However, abide by the \textit{no-free lunch} rule, the causal inferences produced under the DAG will only be valid if the assumed DAG is correct. In contrast, the probabilistic programming will serve as the algebraic formalist to define our statistical models.
 
-Second, to select among competing models, we will use the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}\footnote{\citet{vanDaal_2020} used the Akaike’s Information Criterion (AIC) \citep{Akaike_1974} with similar purposes.}. Two reasons justify our decision. First, both criteria allow us to embrace the full flexibility and information of our bayesian implementation (outlined in Section \ref{s_sect:estimation}). Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}, where the deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data\footnote{also defined as a model's \textit{measure of the relative distance from perfect (predictive) accuracy} \citep{McElreath_2020}.}. \citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure, that we do not need the KL divergence absolute value, as the \textit{true} distribution of our data is not available (otherwise, we would not need a statistical model). But rather, using the deviance difference between competing models, we can measure which model is the farthest from perfect (predictive) accuracy of our data\footnote{for the intuition and the detailed derivation of the argument see \citet{McElreath_2020} (p. 202-211)}.
+Second, to select among competing models, we will use the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}\footnote{\citet{vanDaal_2020} used the Akaike’s Information Criterion (AIC) \citep{Akaike_1974} with similar purposes.}. Two reasons justify our decision. First, both criteria allow us to embrace the full flexibility and information of our bayesian implementation (outlined in Section \ref{s_sect:models}). Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. \citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure that we do not need the KL divergence's absolute value, as the \textit{true} distribution of our data is not available (otherwise, we would not need a statistical model). But rather, using the deviance difference between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data\footnote{see \citet{McElreath_2020} (p. 202-211) for the intuition and detailed derivation of the argument.}.
 
 Finally, considering the evidence provided by the previous step, we proceed to make inferences based on one or multiple models.
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Model evaluation} \label{s_sec:evaluation}
+\subsection{Models and hypothesis} \label{s_sect:models}
 %
-Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate seven models that serve different, but interrelated purposes:
+Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate seven models that serve different, but interrelated, objectives:
+%
 \begin{enumerate} \itemsep1pt
 	\item[(1)] a measurement error model for entropy
 	\item[(2)] a measurement model for: 
@@ -141,84 +144,29 @@ Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate se
 	\end{enumerate}
 \end{enumerate} 
 %
-
-\textcolor{blue}{Model (1) will allow us to construct the \textit{most objective} measure of a child's SI ranking, and to test some research hypothesis of our interest. 
-%
-The second set of models (2a, 2b, 2c) will allow us to provide preliminary evidence on the reliability and validity of the rating procedures. For the reliability, We will compare 
-%
-the direction, magnitude, and quality of inference of the same research hypothesis outlined for Model (1), in the newly estimated models.
-}
-%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{validity}
+\subsubsection{Measurement error model} \\
 %
-\textcolor{red}{(in process)}
+Previous research already used the entropy measure as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}. However, on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in the modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as \textit{``anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference"} \citep{McElreath_2020}. 
 
-\begin{comment}
-	correlate latent scores (from different methods) with entropy measures (see research proposal)
-	
-	\textbf{critique:} What about decision statements or think at loud rating process? (is it possible), \citet{Lesterhuis_2018} has shown their usefulness, while \citet{Boonen_et_al_2020} signals the need to know about the inner working of judgment processes.
-\end{comment}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{reliability}
-%
-\textcolor{red}{(in process)}
+This claim is easier to understand using a though experiment within our research.  Consider we have two children with the same mean entropy, but the second child shows more variability, accross the $10$ utterances, than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have a similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility, across the $10$ utterances. 
 
-\begin{comment}
-	compare the Scale Separation Reliability (SSR, an inter-rater reliability measure), coming from CJ methods, with others for other methods
-	
-	- No intra-rater reliability, also known as test-retest reliability (Verhavert_2018, Reliability_wiki_2022) 
-	- No Inter-method reliability,  assesses the degree to which test scores are consistent when there is a variation in the methods or instruments used (Verhavert_2018, Reliability_wiki_2022) 
-	- No comparison of SSR vs the true correlation of the latent scale and entropy measures 
-	* Justification: (Verhavert_2018, p. 156) " simulation studies could resolve the inconclusiveness regarding the SSR as a correlation with the truth."
-\end{comment}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{efficiency (time)}
-%
-\textcolor{red}{(in process)}
-
-\begin{comment}
-	time needed for each judgement based on method from (Coertjens_et_al_2017).
-	
-	statistical efficiency has been researched on \citet{Leijon_et_al_2019} and \citet{Pritikin_2020} for the bayesian dichotomous BTL model and the ordinal BTL model, respectively.
-\end{comment}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Models and hypothesis} \label{s_sect:models}
-%
-\textcolor{blue}{}
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Measurement error model for entropy} \\
-%
-, e.g. if a statistical difference in SI between children with different hearing status, controlling for some other confounding factors
-
-As it is described in Section \ref{ss_sect:outcome}, our data set is composed of $320$ entropy measures, nested within $32$ children with $10$ replicates per child. Each entropy measure was bounded in the continuum $[0,1]$, as expected from equation (\ref{eq:entropy}).
-
-Previous research have already used the entropy measure as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}. However, on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as "anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference" \citep{McElreath_2020}. 
-
-This claim is easier to understand using a though experiment within our research. For example, imagine we have two children with the same mean entropy, but the second child shows more variability in the measure than the first. It is clear from the example that the average entropy measure informs about the child's average SI, indicating that both children have a similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child intelligibility across the $10$ utterances. A similiar intuition was presented in \citet{Boonen_et_al_2021}, but the paper only used the information in a descriptive analysis, rather than integrate it to the modeling process. 
-
-We argue that the estimation of such measurement error model is trivial under the bayesian framework, and we present it in the following lines.
-
-First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. The figure shows the $s$'th observed entropy measure $H^{O}_{is}$ nested within the $i$'th child, where $i=1, \dots, N_{c}$, $s=1, \dots, N_{s}$, with $N_{c} = 32$  and $N_{s} = 10$. Additionally, the figure reveals the observed entropy represents multiple instances of a "true" entropy $H^{T}_{i}$ for each child, but measured with error ($e_i$). Finally, we notice covariates are set to explain the "true" entropy.
+The intuition is similar to the one presented in \citet{Boonen_et_al_2021}. However on such paper, the authors only used this information in a descriptive analysis, rather than integrate it to the modeling process. We argue that the estimation of such measurement error model is trivial under the bayesian framework, and we present it in the following lines.
 %
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.4\linewidth]{entropy_ME.png}
+	\includegraphics[width=0.5\linewidth]{entropy_ME.png}
 	%
 	\caption[DAG for the measurement error model of entropy.]%
 	{DAG for the measurement error model of entropy. Circles represent latent variables, squares observed values or covariates, and large squares the nesting within specific units.}
 	\label{fig:entropy_ME}
 \end{figure}
 %
+
+Figure \ref{fig:entropy_ME} depicts the DAG representation of the model. As it is described in Section \ref{ss_sect:outcome}, our data set is composed of $320$ entropy measures, where the $s$'th observed entropy measure $H^{O}_{is}$ is nested within the $i$'th child ($s=1, \dots, N_{s}$, $i=1, \dots, N_{c}$, $N_{s} = 10$ utterances, and $N_{c} = 32$ children). Moreover, the figure reveal the observed entropy represent multiple instances of a child's "true" entropy $H^{T}_{i}$ measured with error $e_i$. Finally, the figure shows our hypothesis for the covariates. In this case, our hypothesis
+
+\textcolor{blue}{Due to the Universal Neonatal Hearing Screening (UNHS), auditory impairments are identified at an increasingly early age. As a consequence of this early diagnosis, rehabilitation can start at a very young age. Depending on aspects such as the locus and the severity of the hearing impairment, an acoustic hearing aid (HA) or a cochlear implant (CI) is fitted \citep{Korver_et_al_2017}.}
 
 \textcolor{red}{(in process)} \\
 
@@ -242,7 +190,8 @@ First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. 
 \end{comment}
 %
 %
-\noindent \textbf{Measurement models for the CJ and HJ procedures:} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Measurement models} \\
 %
 \textcolor{red}{(in process)}
 
@@ -262,3 +211,77 @@ First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. 
 \end{comment}
 %
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Integration models} \\
+%
+\textcolor{red}{(in process)} \\
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Model evaluation} \label{s_sect:evaluation}
+%
+As described in Section \ref{s_sect:models}, all seven models serve different but interrelated objectives.
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Objective ranking}
+%
+As expected, model (1) allow us to construct the \textit{most objective} measure of a child's SI ranking. Moreover, using such model we will be able to test some research hypothesis of our interest.
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Reliability}
+%
+The two remaining sets of models allow us to assess reliability in different ways. Under the second set of models (2a, 2b, 2c), we will be able to assess two forms of the inter-rater reliability: (a) the judges's reliability (JSR), and (b) the scale reliability, also known as the Scale Separation Reliability (SSR) \citep{Bramley_2015}. 
+
+Following \citet{Fisher_1992} and \citet{Wright_1996} the measures were defined as follows:
+%
+\begin{align}
+	JSR &= \frac{ G^{2}_{J} }{ (1 + G^{2}_{J}) }\; , \quad G_{J} = \frac{ \sigma_{\alpha} } { \sigma_{J} } \label{eq:JSR} \\
+	%
+	SSR &= \frac{ G^{2}_{\alpha} }{ (1 + G^{2}_{\alpha}) }\; , \quad G_{J} = \frac{ \sigma_{\alpha} } { \sum_{i=1}^{C} se_{\alpha, i} } \label{eq:SSR}
+\end{align}
+%
+
+\textcolor{red}{(in process)}
+
+\begin{comment}
+	compare the Scale Separation Reliability (SSR, an inter-rater reliability measure), coming from CJ methods, with others for other methods
+	
+	- No intra-rater reliability, also known as test-retest reliability (Verhavert_2018, Reliability_wiki_2022) 
+	- No Inter-method reliability,  assesses the degree to which test scores are consistent when there is a variation in the methods or instruments used (Verhavert_2018, Reliability_wiki_2022) 
+	- No comparison of SSR vs the true correlation of the latent scale and entropy measures 
+	* Justification: (Verhavert_2018, p. 156) " simulation studies could resolve the inconclusiveness regarding the SSR as a correlation with the truth."
+\end{comment}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{validity}
+%
+the direction, magnitude, and quality of inference of the same research hypothesis outlined for Model (1), in the newly estimated models.
+
+\textcolor{red}{(in process)}
+
+\begin{comment}
+	correlate latent scores (from different methods) with entropy measures (see research proposal)
+	
+	\textbf{critique:} What about decision statements or think at loud rating process? (is it possible), \citet{Lesterhuis_2018} has shown their usefulness, while \citet{Boonen_et_al_2020} signals the need to know about the inner working of judgment processes.
+\end{comment}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{time efficiency}
+%
+\textcolor{red}{(in process)}
+
+\begin{comment}
+	time needed for each judgement based on method from (Coertjens_et_al_2017).
+	
+	statistical efficiency has been researched on \citet{Leijon_et_al_2019} and \citet{Pritikin_2020} for the bayesian dichotomous BTL model and the ordinal BTL model, respectively.
+\end{comment}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{efficiency (statistical)}
+%
+\textcolor{red}{(in process)}
