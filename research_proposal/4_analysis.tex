@@ -156,10 +156,20 @@ The intuition is similar to the one presented in \citet{Boonen_et_al_2021}. Howe
 %
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.5\linewidth]{entropy_ME.png}
+	\begin{subfigure}{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{entropy_ME2.png}
+		\caption{}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{entropy_ME1.png}
+		\caption{}
+	\end{subfigure}
 	%
 	\caption[DAG for the measurement error model of entropy.]%
-	{DAG for the measurement error model of entropy. Circles represent latent variables, squares observed values or covariates, and large squares the nesting within specific units.}
+	{DAG for the measurement error model of entropy. (a) total effects of hearing status, (b) direct effects of hearing apparatus. Circles represent latent variables, squares observed values or covariates, and large squares the nesting within specific units.}
 	\label{fig:entropy_ME}
 \end{figure}
 %
@@ -167,6 +177,9 @@ The intuition is similar to the one presented in \citet{Boonen_et_al_2021}. Howe
 Figure \ref{fig:entropy_ME} depicts the DAG representation of the model. As it is described in Section \ref{ss_sect:outcome}, our data set is composed of $320$ entropy measures, where the $s$'th observed entropy measure $H^{O}_{is}$ is nested within the $i$'th child ($s=1, \dots, N_{s}$, $i=1, \dots, N_{c}$, $N_{s} = 10$ utterances, and $N_{c} = 32$ children). Moreover, the figure reveal the observed entropy represent multiple instances of a child's "true" entropy $H^{T}_{i}$ measured with error $e_i$. Finally, the figure shows our hypothesis for the covariates. In this case, our hypothesis
 
 \textcolor{blue}{Due to the Universal Neonatal Hearing Screening (UNHS), auditory impairments are identified at an increasingly early age. As a consequence of this early diagnosis, rehabilitation can start at a very young age. Depending on aspects such as the locus and the severity of the hearing impairment, an acoustic hearing aid (HA) or a cochlear implant (CI) is fitted \citep{Korver_et_al_2017}.}
+
+\textcolor{blue}{If we are interested in compare the group of kids with characteristics that lead to have either CI or HA (not independent of the effect of the apparatus), then we do not need to control for the counfounding variables etiology (E), proxy of locus, and PTA unaided hearing thresholds (PTA), proxy of severity. The previous would be the same as calculating the total effects, and it is depicted in panel (a) from Figure \ref{fig:entropy_ME}. On the contrary, if we seek to extract the effect of the apparatus, independent of the children's characteristics, then we need to control for E and PTA. The previous would be the same as calculating the direct effect of the apparatus, and it is depicted in panel (b) from Figure \ref{fig:entropy_ME}.}
+
 
 \textcolor{red}{(in process)} \\
 
