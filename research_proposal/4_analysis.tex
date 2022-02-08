@@ -148,15 +148,15 @@ Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Measurement error model} \\
 %
-Previous research already used the entropy measure as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}. However, on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in the modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as \textit{``anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference"} \citep{McElreath_2020}. 
+Previous research already used the replicated entropy measures as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}; however on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in the modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as \textit{``anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference"} \citep{McElreath_2020}. 
 
-This claim is easier to understand using a though experiment within our research.  Consider we have two children with the same mean entropy, but the second child shows more variability, accross the $10$ utterances, than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have a similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility, across the $10$ utterances. 
+This claim is easier to understand using a though experiment within our research.  Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances, than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have a similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility, across the $10$ utterances. 
 
-The intuition is similar to the one presented in \citet{Boonen_et_al_2021}. However on such paper, the authors only used this information in a descriptive analysis, rather than integrate it to the modeling process. We argue that the estimation of such measurement error model is trivial under the bayesian framework, and we present it in the following lines.
+The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}. Although the authors recognized the usefulness of the replicates' additional information, they only used it in a descriptive analysis, rather than integrate it into the modeling process. We argue that the inclusion of the replicated entropy measures, into what is known as a measurement error model, is trivial under the bayesian framework, and we present it in the following lines. Figure \ref{fig:entropy_ME} depicts the DAG representation of the model.
 %
 \begin{figure}[h]
 	\centering
-	\begin{subfigure}{0.4\textwidth}
+	\begin{subfigure}{0.435\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{entropy_ME2.png}
 		\caption{}
@@ -169,38 +169,45 @@ The intuition is similar to the one presented in \citet{Boonen_et_al_2021}. Howe
 	\end{subfigure}
 	%
 	\caption[DAG for the measurement error model of entropy.]%
-	{DAG for the measurement error model of entropy. (a) total effects of hearing status, (b) direct effects of hearing apparatus. Circles represent latent variables, squares observed values or covariates, and large squares the nesting within specific units.}
+	{DAG for the measurement error model of entropy. (a) \textit{total effects} of hearing status, (b) \textit{direct effects} of hearing apparatus. Circles represent latent variables, squares observed values or covariates, and large discontinuous squares the nesting within specific units.}
 	\label{fig:entropy_ME}
 \end{figure}
 %
 
-Figure \ref{fig:entropy_ME} depicts the DAG representation of the model. As it is described in Section \ref{ss_sect:outcome}, our data set is composed of $320$ entropy measures, where the $s$'th observed entropy measure $H^{O}_{is}$ is nested within the $i$'th child ($s=1, \dots, N_{s}$, $i=1, \dots, N_{c}$, $N_{s} = 10$ utterances, and $N_{c} = 32$ children). Moreover, the figure reveal the observed entropy represent multiple instances of a child's "true" entropy $H^{T}_{i}$ measured with error $e_i$. Finally, the figure shows our hypothesis for the covariates. In this case, our hypothesis
+First, for the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple instances of a child's \textit{true} SI index $H^{T}_{i}$ measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children.
 
-\textcolor{blue}{Due to the Universal Neonatal Hearing Screening (UNHS), auditory impairments are identified at an increasingly early age. As a consequence of this early diagnosis, rehabilitation can start at a very young age. Depending on aspects such as the locus and the severity of the hearing impairment, an acoustic hearing aid (HA) or a cochlear implant (CI) is fitted \citep{Korver_et_al_2017}.}
+Second, for the hypothesis part, we propose two sets of models. As we can see from Figure \ref{fig:entropy_ME}, the model in panel (a) use hearing status ($HS_{i}$) and ``hearing age" ($A_{i}$) as covariates. The use of hearing status is justified because we are interested in comparing SI among groups, defined by the children's hearing characteristics (NH, HI/CI, and HI/HA). On the other hand, we expect ``hearing age"\footnote{see section \ref{s_sect:children} to know how the variable is defined.} and its interaction with hearing status, to also have an effect on the \textit{true} SI measure, as previous evidence have shown the speech of HI children gradually approximate that of NH children \citep{Boonen_et_al_2019}.
 
-\textcolor{blue}{If we are interested in compare the group of kids with characteristics that lead to have either CI or HA (not independent of the effect of the apparatus), then we do not need to control for the counfounding variables etiology (E), proxy of locus, and PTA unaided hearing thresholds (PTA), proxy of severity. The previous would be the same as calculating the total effects, and it is depicted in panel (a) from Figure \ref{fig:entropy_ME}. On the contrary, if we seek to extract the effect of the apparatus, independent of the children's characteristics, then we need to control for E and PTA. The previous would be the same as calculating the direct effect of the apparatus, and it is depicted in panel (b) from Figure \ref{fig:entropy_ME}.}
+Notice the model depicted in panel (a) is interested on (what we can call) \textit{total effects}, i.e. the effects of the hearing characteristics, not independent from the effects of the hearing apparatus (cochlear implant or hearing aid). This is important to understand for two reasons. Since the hearing apparatus is fitted depending on aspects such as the locus and severity of the hearing impairment \citep{Korver_et_al_2017}: (1) such specific children's characteristics could confound the (beneficial) effects of using specific hearing apparatuses, while (2) because children are selected from a convenient sample, not representative of their respective populations (see section \ref{s_sect:children}), the need to control for such characteristics is paramount, if we seek to obtain effects that can generalize better and beyond our sample\footnote{follow the \textit{notes} folder, to see a graphical though experiment.}.
 
+Considering the previous, we propose the model depicted in panel (b), where we control for the possible confounding variables etiology ($E_{i}$), \textcolor{blue}{as a proxy of locus}, and unaided PTA ($PTA_{i}$), as a proxy for severity of the hearing impairment. Notice the model would estimate (what we can call) the \textit{direct effects} of the hearing apparatus, independent of the children's characteristics.
 
-\textcolor{red}{(in process)} \\
+As a next step, we proceed to use probabilistic programming to declare the algebraic structure of our models. Given that the model in panel (a) is nested within the model on panel (b), we declare only the model structure for the last:
+%
+\begin{align}
+	\text{\pmb{Likelihood:}} & \nonumber \\
+	%
+	\text{logit}\left( H^{O}_{ik} \right) & \sim \text{N} \left( H^{T}_{i}, \sigma_{H} \right) \\ \nonumber \\
+	%
+	\text{\pmb{True SI index:}} & \nonumber \\
+	H^{T}_{i} & = \alpha_{HS[i]} + \beta_{HS[i]} (A_{i} - \bar{A}) + \beta_{E[i]} + \beta_{P} PTA_{i} \\ \nonumber \\
+	%
+	\text{\pmb{Priors:}} & \nonumber \\
+	%
+	\sigma_{H} & \sim \text{Exp}(1) \\
+	%
+	\alpha_{HS[i]} & \sim \text{N}(0, 0.5) \\
+	%
+	\beta_{HS[i]} & \sim \text{N}(0 , 0.3) \\
+	%
+	\beta_{E[i]} & \sim \text{N}(0, 0.5) \\
+	%
+	\beta_{P} & \sim \text{N}(0, 0.3)
+\end{align}
+%
+where $\sigma_{H}$ denotes the variability of the replicated entropy measures, $\alpha_{HS[i]}$ the intercept and $\beta_{HS[i]}$ the slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, $\beta_{P}$ the slope for the PTA levels, and finally, $\text{logit}\left( H^{O}_{ik} \right) = \log \left[ H^{O}_{ik} / ( 1 - H^{O}_{ik} ) \right]$. Notice all the parameters are estimated in the logit scale and centered at $\bar{A}$, which denotes the minimum ``hearing age" in the sample. Additionally, notice we use mildly informative priors to state our lack of knowledge for the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}.
 
-\begin{comment}
-	Identification of model:  
-	soft identification (see \citet{Depaoli_2021}) 
-	
-	- Normal measurement error model: 
-	entropy_j ~ N( entropy_true_j, sigma_e) 
-	
-	- In (Faes_et_al_2021) they use a random effects model for the entropy. 
-	entropy_j = entropy_true_j + error 
-	error ~ N( 0, sigma_e) 
-	* Notice both are the same (priors for entropy_true_j are needed) 
-	
-	- Beta measurement error model: 
-	entropy_j ~ beta(alpha, beta) 
-	alpha = mu*M        ->  mu = alpha / M (mean) 
-	beta = (1 - mu)*M  ->  M = alpha + beta (prior sample size) 
-	* where mu = entropy_true_j and M is a distribution centered in 10 (utterances) 
-\end{comment}
+\textcolor{red}{(in process)}
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -209,6 +216,9 @@ Figure \ref{fig:entropy_ME} depicts the DAG representation of the model. As it i
 \textcolor{red}{(in process)}
 
 \begin{comment}
+	
+	Identification of model:  
+	soft identification (see \citet{Depaoli_2021}) 
 	
 	Considering the intelligibility of any stimulus is determined by three interrelated parties: the message, speaker, and listener, and that the inherent variability within each integrating part could be high, the current research assumes the utterances are equivalent among each other.
 	
@@ -252,7 +262,7 @@ Following \citet{Fisher_1992} and \citet{Wright_1996} the measures were defined 
 \begin{align}
 	JSR &= \frac{ G^{2}_{J} }{ (1 + G^{2}_{J}) }\; , \quad G_{J} = \frac{ \sigma_{\alpha} } { \sigma_{J} } \label{eq:JSR} \\
 	%
-	SSR &= \frac{ G^{2}_{\alpha} }{ (1 + G^{2}_{\alpha}) }\; , \quad G_{J} = \frac{ \sigma_{\alpha} } { \sum_{i=1}^{C} se_{\alpha, i} } \label{eq:SSR}
+	SSR &= \frac{ G^{2}_{\alpha} }{ (1 + G^{2}_{\alpha}) }\; , \quad G_{\alpha} = \frac{ \sigma_{\alpha} } { \sum_{i=1}^{C} se_{\alpha, i} } \label{eq:SSR}
 \end{align}
 %
 
