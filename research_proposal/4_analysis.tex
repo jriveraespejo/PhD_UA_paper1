@@ -118,7 +118,7 @@ Following the successful and comprehensive analysis in \citet{vanDaal_2020} and 
 
 First, for the translation of our working hypotheses into statistical models, we will use Directed Acyclic Graphs (DAG) and probabilistic programming \citep{Jaynes_2003}. A DAG is the simplest representation of a Graphical Causal Model (GCM), a heuristic model that contains information not purely statistical, but unlike a detailed statistical model, it allow us to deduce which variable relationships can provide valid causal inferences \citep{Hernan_et_al_2020, McElreath_2020}. In summary, a DAG is a reasonable way to state our hypothesis, and make our assumption more transparent. However, abide by the \textit{no-free lunch} rule, the causal inferences produced under the DAG will only be valid if the assumed DAG is correct. In contrast, the probabilistic programming will serve as the algebraic formalist to define our statistical models.
 
-Second, to select among competing models, we will use the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}\footnote{\citet{vanDaal_2020} used the Akaike’s Information Criterion (AIC) \citep{Akaike_1974} with similar purposes.}. Two reasons justify our decision. First, both criteria allow us to embrace the full flexibility and information of our bayesian implementation (outlined in Section \ref{s_sect:models}). Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. \citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure that we do not need the KL divergence's absolute value, as the \textit{true} distribution of our data is not available (otherwise, we would not need a statistical model). But rather, using the deviance difference between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data\footnote{see \citet{McElreath_2020} (p. 202-211) for the intuition and detailed derivation of the argument.}.
+Second, to select among competing models, we will use the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}\footnote{\citet{vanDaal_2020} used the Akaike’s Information Criterion (AIC) \citep{Akaike_1974} with similar purposes.}. Two reasons justify our decision. First, both criteria allow us to embrace the full flexibility and information of our bayesian implementation (outlined in Section \ref{s_sect:models}). Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. \citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure that we do not need the KL divergence's absolute value, as the \textit{true} distribution of our data is not available (otherwise, we would not need a statistical model). But rather, using the difference in deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data\footnote{see \citet{McElreath_2020} (p. 202-211) for the intuition and detailed derivation of the argument.}.
 
 Finally, considering the evidence provided by the previous step, we proceed to make inferences based on one or multiple models.
 %
@@ -148,11 +148,11 @@ Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Measurement error model} \\
 %
-Previous research already used the replicated entropy measures as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}; however on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in the modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as \textit{``anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference"} \citep{McElreath_2020}. 
+Previous research already used the replicated entropy measures as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}; however on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in the modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as \textit{anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference} \citep{McElreath_2020}. 
 
 This claim is easier to understand using a though experiment within our research.  Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances, than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have a similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility, across the $10$ utterances. 
 
-The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}. Although the authors recognized the usefulness of the replicates' additional information, they only used it in a descriptive analysis, rather than integrate it into the modeling process. We argue that the inclusion of the replicated entropy measures, into what is known as a measurement error model, is trivial under the bayesian framework, and we present it in the following lines. Figure \ref{fig:entropy_ME} depicts the DAG representation of the model.
+The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}. However, although the authors recognized the usefulness of the replicates' additional information, they only used it in a descriptive analysis, rather than integrate it into the modeling process. We argue that the inclusion of the replicated entropy measures, into what is known as a measurement error model, is trivial under the bayesian framework, and we present it in the following lines.
 %
 \begin{figure}[h]
 	\centering
@@ -174,40 +174,59 @@ The intuition derived from the previous though experiment is similar to the one 
 \end{figure}
 %
 
-First, for the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple instances of a child's \textit{true} SI index $H^{T}_{i}$ measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children.
+First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. For the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple realizations of a child's \textit{true} entropy $H^{T}_{i}$, measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children.
 
-Second, for the hypothesis part, we propose two sets of models. As we can see from Figure \ref{fig:entropy_ME}, the model in panel (a) use hearing status ($HS_{i}$) and ``hearing age" ($A_{i}$) as covariates. The use of hearing status is justified because we are interested in comparing SI among groups, defined by the children's hearing characteristics (NH, HI/CI, and HI/HA). On the other hand, we expect ``hearing age"\footnote{see section \ref{s_sect:children} to know how the variable is defined.} and its interaction with hearing status, to also have an effect on the \textit{true} SI measure, as previous evidence have shown the speech of HI children gradually approximate that of NH children \citep{Boonen_et_al_2019}.
+Second, for the hypothesis part, we propose two sets of models. As we can see from Figure \ref{fig:entropy_ME}, the model in panel (a) use hearing status ($HS_{i}$) and hearing age ($A_{i}$) as covariates. The use of hearing status is justified as we are interested in comparing SI among groups, defined by the children's hearing characteristics (NH, HI/CI, and HI/HA). On the other hand, we expect hearing age\footnote{see section \ref{s_sect:children} to know how the variable is defined.} and its interaction with hearing status, to also have an effect on the \textit{true} SI measure, as previous evidence have shown the speech of HI children gradually approximate that of NH children \citep{Boonen_et_al_2019}.
 
-Notice the model depicted in panel (a) is interested on (what we can call) \textit{total effects}, i.e. the effects of the hearing characteristics, not independent from the effects of the hearing apparatus (cochlear implant or hearing aid). This is important to understand for two reasons. Since the hearing apparatus is fitted depending on aspects such as the locus and severity of the hearing impairment \citep{Korver_et_al_2017}: (1) such specific children's characteristics could confound the (beneficial) effects of using specific hearing apparatuses, while (2) because children are selected from a convenient sample, not representative of their respective populations (see section \ref{s_sect:children}), the need to control for such characteristics is paramount, if we seek to obtain effects that can generalize better and beyond our sample\footnote{follow the \textit{notes} folder, to see a graphical though experiment.}.
+Notice the model depicted in panel (a) is interested on (what we can call) \textit{total effects}, i.e. the effects of the hearing characteristics, not independent from the effects of the hearing apparatus (cochlear implant or hearing aid). This is important to understand for two reasons. Since a hearing apparatus is fitted onto a child depending on aspects such as the locus and severity of his(her) hearing impairment \citep{Korver_et_al_2017}: (1) such specific children's characteristics could confound the (beneficial) effects of using specific hearing apparatuses, while (2) because children are selected from a convenient sample, not representative of their respective populations (see section \ref{s_sect:children}), the need to control for such characteristics is paramount, if we seek to obtain effects that can generalize better and beyond our sample\footnote{follow the \textit{notes} folder, to see a graphical though experiment.}.
 
-Considering the previous, we propose the model depicted in panel (b), where we control for the possible confounding variables etiology ($E_{i}$), \textcolor{blue}{as a proxy of locus}, and unaided PTA ($PTA_{i}$), as a proxy for severity of the hearing impairment. Notice the model would estimate (what we can call) the \textit{direct effects} of the hearing apparatus, independent of the children's characteristics.
+Considering the previous, we propose the model depicted in panel (b), where we control for the possible confounding variables etiology ($E_{i}$), \textcolor{blue}{as a proxy of locus}, and unaided PTA ($PTA_{i}$), as a proxy for severity of the hearing impairment. In that sense, the model would estimate (what we can call) the \textit{direct effects} of the hearing apparatus, independent of the children's characteristics.
 
-As a next step, we proceed to use probabilistic programming to declare the algebraic structure of our models. Given that the model in panel (a) is nested within the model on panel (b), we declare only the model structure for the last:
+Lastly, we proceed to use probabilistic programming to declare the algebraic structure of our models. Given the panel (a) model is nested within the panel (b) model, we declare only the model structure for the latter:
 %
 \begin{align}
-	\text{\pmb{Likelihood:}} & \nonumber \\
 	%
-	\text{logit}\left( H^{O}_{ik} \right) & \sim \text{N} \left( H^{T}_{i}, \sigma_{H} \right) \\ \nonumber \\
+	\text{likelihood:} & \nonumber \\
 	%
-	\text{\pmb{True SI index:}} & \nonumber \\
-	H^{T}_{i} & = \alpha_{HS[i]} + \beta_{HS[i]} (A_{i} - \bar{A}) + \beta_{E[i]} + \beta_{P} PTA_{i} \\ \nonumber \\
+	H^{O}_{ik} & \sim \text{BetaProp} \left( H^{T}_{i}, M_{i} \right) \\ 
 	%
-	\text{\pmb{Priors:}} & \nonumber \\
+	SI_{i} & \sim \text{N} \left( \mu_{i}, \sigma \right) \\
 	%
-	\sigma_{H} & \sim \text{Exp}(1) \\
+	\nonumber \\
+	%
+	%
+	\text{transformed parameters:} & \nonumber \\
+	%
+	H^{T}_{i} &= \text{logit}^{-1}( SI_{i} ) \\
+	%
+	M_{i} &= \kappa_{i} + 9 \\
+	%
+	\nonumber \\
+	%
+	%
+	\text{linear predictor:} & \nonumber \\
+	\mu_{i} & = \alpha_{HS[i]} + \beta_{HS[i]} (A_{i} - \bar{A}) + \alpha_{E[i]} + \beta_{P} PTA_{i} \\ 
+	%
+	\nonumber \\
+	%
+	%
+	\text{priors:} & \nonumber \\
+	%
+	\sigma & \sim \text{Exp}(1) \\
+	%
+	\kappa_{i} & \sim \text{Exp}(2) \\
 	%
 	\alpha_{HS[i]} & \sim \text{N}(0, 0.5) \\
 	%
 	\beta_{HS[i]} & \sim \text{N}(0 , 0.3) \\
 	%
-	\beta_{E[i]} & \sim \text{N}(0, 0.5) \\
+	\alpha_{E[i]} & \sim \text{N}(0, 0.5) \\
 	%
 	\beta_{P} & \sim \text{N}(0, 0.3)
+	%
 \end{align}
 %
-where $\sigma_{H}$ denotes the variability of the replicated entropy measures, $\alpha_{HS[i]}$ the intercept and $\beta_{HS[i]}$ the slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, $\beta_{P}$ the slope for the PTA levels, and finally, $\text{logit}\left( H^{O}_{ik} \right) = \log \left[ H^{O}_{ik} / ( 1 - H^{O}_{ik} ) \right]$. Notice all the parameters are estimated in the logit scale and centered at $\bar{A}$, which denotes the minimum ``hearing age" in the sample. Additionally, notice we use mildly informative priors to state our lack of knowledge for the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}.
-
-\textcolor{red}{(in process)}
+\textcolor{blue}{where $\sigma_{H}$ denotes the variability of the replicated entropy measures, $\alpha_{HS[i]}$ and $\beta_{HS[i]}$ the intercept and slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, $\beta_{P}$ the slope for the PTA levels, and finally, $\text{logit}\left( H^{O}_{ik} \right) = \log \left[ H^{O}_{ik} / ( 1 - H^{O}_{ik} ) \right]$. Notice all the parameters are estimated in the logit scale and centered at $\bar{A}$, which denotes the minimum hearing age in the sample. Additionally, notice we have used mildly informative priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. Finally, notice we can obtain the model in panel (a) if we do not consider etiology and PTA values in equation (2).}
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -305,6 +324,6 @@ the direction, magnitude, and quality of inference of the same research hypothes
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{efficiency (statistical)}
+\subsubsection{statistical efficiency}
 %
 \textcolor{red}{(in process)}
