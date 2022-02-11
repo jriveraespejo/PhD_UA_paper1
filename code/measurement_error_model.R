@@ -14,19 +14,661 @@ setwd('C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper
 
 
 
-
-# simulation 1 ####
+# simulation 1: ####
 # 
 # details:
+# Structure: centered
+# Outcome: easy generation M=10
+# Covariates: None
+#
+# generating function
+Hsim1 = function(I=32, K=10, seed=12345, 
+                 par=list(mu_a=0, s_a=1) ){
+  
+  # initial parameters
+  # I = 32 # children
+  # K = 10 # utterances
+  set.seed(seed)
+  a = rnorm(I, par$mu_a, par$s_a)
+  
+  # storage 1
+  Ht = data.frame(matrix(NA, nrow=I, ncol=3))
+  names(Ht) = c('child','SI','Ht')
+  Ht$child= 1:I
+  Ht$SI = a # true SI index
+  Ht$Ht = inv_logit(-Ht$SI) # true entropy (SI -> Ht: negative)
+  
+  # storage 2
+  N = I*K
+  H = data.frame(matrix(NA, nrow=N, ncol=3))
+  names(H) = c('child','utterance','H')
+  H$child = rep(1:I, each=K)
+  H$utterance = rep(1:K, I)
+  # str(H)
+  
+  # generating observed entropy
+  # i=1
+  for(i in 1:I){
+    index = H$child==i
+    set.seed(seed)
+    H$H[index] = rbeta2(n=K, prob=Ht$Ht[i], theta=10)
+  }
+  # View(H)
+  
+  # return value
+  return(list(H=H, Ht=Ht, par=list(mu_a=par$mu_a, s_a=par$s_a, a=a)))
+  
+}
+
+
+# generate data
+data_mom = Hsim1()
+Ht = data_mom$Ht
+H = data_mom$H
+
+
+# plot data
+plot( H$H, H$child, col='gray', pch=19, xlim=c(0,1), 
+      xlab='entropy', ylab='child ID')
+points( Ht$Ht, Ht$child, col='blue', pch=19)
+abline(h = H$child, lty=2, col='gray')
+abline(v = c(0, 1), lty=1, col='gray')
+
+
+# data list
+dlist = list(
+  N = nrow(H),
+  K = max(H$utterance), # utterances
+  I = nrow(Ht),
+  H = H$H,
+  cid = H$child )
+
+
+# measurement error model
+mcmc_code = "
+data{
+    int N;                // experimental runs
+    int K;                // replicates (utterances)
+    int I;                // experimental units (children)
+    real H[N];            // replicated entropies
+    int cid[N];           // child's id
+}
+parameters{
+    real mu_a;            // mean of population
+    real<lower=0> sigma_a;// variability of population
+    vector[I] a;          // intercept
+}
+transformed parameters{
+    vector[I] SI;         // true SI index (per child)
+    vector[I] Ht;         // true entropy (per child)
+    
+    SI = a;               // linear predictor
+    Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
+}
+model{
+    // hyperpriors
+    mu_a ~ normal( 0 , 0.5 );
+    sigma_a ~ exponential( 1 );
+    
+    // priors
+    a ~ normal( mu_a , sigma_a );
+    
+    // likelihood
+    for(n in 1:N){
+      H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
+    }
+}
+"
+
+# cmdstan
+set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
+save_code = "Hme.stan"
+writeLines(mcmc_code, con=file.path(getwd(), save_code) )
+mod = cmdstan_model( file.path(getwd(), save_code) )
+fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+res = rstan::read_stan_csv( fit$output_files() )
+
+
+# final comparison
+compare = precis( res, depth=2, pars=c('mu_a','sigma_a','a','SI','Ht') )
+compare$true = c(with(data_mom$par, c(mu_a, s_a, a) ), Ht$SI, Ht$Ht )
+compare$withinCI = with(compare, as.integer(true>=`5.5%` & true<=`94.5%`) )
+compare
+sum(compare$withinCI)/nrow(compare)
+# good samples for mu_a and sigma_a, 
+# a's are  also good
+# 100% true parameters inside CI
+
+
+
+
+
+
+
+
+# simulation 2: ####
+# 
+# details:
+# Structure: non-centered
+# Outcome: same as simulation 1
+# Covariates: same as simulation 2
+#
+# generate data
+data_mom = Hsim1()
+Ht = data_mom$Ht
+H = data_mom$H
+
+
+# plot data
+plot( H$H, H$child, col='gray', pch=19, xlim=c(0,1), 
+      xlab='entropy', ylab='child ID')
+points( Ht$Ht, Ht$child, col='blue', pch=19)
+abline(h = H$child, lty=2, col='gray')
+abline(v = c(0, 1), lty=1, col='gray')
+
+
+# data list
+dlist = list(
+  N = nrow(H),
+  K = max(H$utterance), # utterances
+  I = nrow(Ht),
+  H = H$H,
+  cid = H$child )
+
+
+# measurement error model
+mcmc_code = "
+data{
+    int N;                // experimental runs
+    int K;                // replicates (utterances)
+    int I;                // experimental units (children)
+    real H[N];            // replicated entropies
+    int cid[N];           // child's id
+}
+parameters{
+    real mu_a;            // mean of population
+    real<lower=0> sigma_a;// variability of population
+    vector[I] z_a;        // non-centered a
+}
+transformed parameters{
+    vector[I] a;          // intercept (per child)
+    vector[I] SI;         // true SI index (per child)
+    vector[I] Ht;         // true entropy (per child)
+
+    a = mu_a + sigma_a * z_a; // non-centering
+    SI = a;               // linear predictor
+    Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
+}
+model{
+    // hyperpriors
+    mu_a ~ normal( 0 , 0.5 );
+    sigma_a ~ exponential( 1 );
+    
+    // priors
+    z_a ~ std_normal();
+    
+    // likelihood
+    for(n in 1:N){
+      H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
+    }
+}
+"
+
+# cmdstan
+set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
+save_code = "Hme.stan"
+writeLines(mcmc_code, con=file.path(getwd(), save_code) )
+mod = cmdstan_model( file.path(getwd(), save_code) )
+fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+res = rstan::read_stan_csv( fit$output_files() )
+
+
+# final comparison
+compare = precis( res, depth=2, pars=c('mu_a','sigma_a','a','SI','Ht') )
+compare$true = c(with(data_mom$par, c(mu_a, s_a, a) ), Ht$SI, Ht$Ht )
+compare$withinCI = with(compare, as.integer(true>=`5.5%` & true<=`94.5%`) )
+compare
+sum(compare$withinCI)/nrow(compare)
+# worst samples for mu_a and sigma_a 
+# a's are equally good as previous simulation
+# 100% true parameters inside CI
+
+
+
+
+
+
+
+# simulation 3: ####
+# 
+# details:
+# Structure: centered
+# Outcome: easy generation M=10
+# Covariates: 
+# E -> HS:
+#   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
+#   some E=M -> HS=HI/HA, and some E=M -> HS=HI/CI (to break multicol)  
+# PTA -> HS:
+#   positive
+#   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
+#   PTA range, L=low, M1<M2=mid, H=high
+# A -> SI: 
+#   positive (more A, more SI)
+# HS -> SI: 
+#   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
+# E -> SI:
+#   negative (higher E, less SI)
+#   SI[E=N] > SI[E=L] > SI[E=M] > SI[E=H] 
+#   E severity: N=none, L=low, M=mid, H=high 
+# PTA -> SI:
+#   negative (more PTA, less SI)
+#
+#   ideally is non-linear
+#   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
+#   PTA range, L=low, M1<M2=mid, H=high
+#
+# function
+Hsim2 = function(I=32, K=10, seed=12345, 
+                 par=list( mu_a=0.5, 
+                           s_a=0.2,
+                           aE=-0.1,
+                           aHS=-0.4,
+                           bP=-0.1,
+                           bA=0.15 ) ){
+  
+  # # initial parameters
+  # I = 32 # children
+  # K = 10 # utterances
+  
+  # storage 1
+  Ht = data.frame(matrix(NA, nrow=I, ncol=6))
+  names(Ht) = c('child','E','PTA','A','HS','SI')
+  Ht$child = 1:I
+  
+  # generating relationships
+  set.seed(seed)
+  Ht$HS = c( rep(1, 12), rep(2, 10), rep(3, 10)) 
+  Ht$A = c( rep(7, 12), round(rnorm(20, 5, 1)) ) 
+  Ht$A = ifelse(Ht$A>7, 7, Ht$A)
+  
+  # no way to know true effects
+  Ht$E = c( rep(1, 12), 
+            sample(2:3, size=10, replace=T),
+            sample(3:4, size=10, replace=T)) 
+  
+  Ht$PTA = c( round(rnorm(12, 60, 10)), # first 12 NH 
+              round(rnorm(10, 90, 10)), # last 20
+              round(rnorm(10, 110, 20)))
+  
+  
+  # # final effects
+  # bE = -0.1
+  # bP = -0.1 # 1SD -> -0.1 SI, standardize(Ht$PTA)
+  # bHS = -0.4
+  # bA = 0.15 
+  
+  set.seed(seed)
+  a = rnorm(I, par$mu_a, par$s_a)
+  aE = par$aE
+  aHS = par$aHS
+  bP = par$bP
+  bA = par$bA
+  
+  Ht$SI = with(Ht, a + aE*E + aHS*HS + bA*( A - min(A) ) +
+                 bP * c( standardize(PTA) ) )
+  Ht$Ht = inv_logit(-Ht$SI) # true entropy (SI -> Ht: negative)
+  # hist(Ht$SI, breaks=100, xlim=c(-1,1))
+  # hist(Ht$Ht, breaks=100, xlim=c(0,1))
+  # well distributed
+  
+  
+  
+  # storage 2
+  N = I*K
+  H = data.frame(matrix(NA, nrow=N, ncol=3))
+  names(H) = c('child','utterance','H')
+  H$child = rep(1:I, each=K)
+  H$utterance = rep(1:K, I)
+  # str(H)
+  
+  # generating observed entropy
+  # i=1
+  for(i in 1:I){
+    index = H$child==i
+    H$H[index] = rbeta2(n=K, prob=Ht$Ht[i], theta=10)
+  }
+  # View(H)
+  
+  # return object
+  return(list( Ht=Ht, H=H, par=list( par=par, a=a) ) )
+  
+}
+
+
+# generate data
+data_mom = Hsim2()
+Ht = data_mom$Ht
+H = data_mom$H
+
+
+
+# plot data
+plot( H$H, H$child, col='gray', pch=19, xlim=c(0,1), 
+      xlab='entropy', ylab='child ID')
+points( Ht$Ht, 1:nrow(Ht), col='blue', pch=19)
+abline(h = H$child, lty=2, col='gray')
+abline(v = c(0, 1), lty=1, col='gray')
+
+
+
+# approximate effects (E + PTA -> HS)
+require(nnet)
+
+# data mom
+data_test = Ht[,c('E','PTA','HS')]
+data_test$HS = factor(data_test$HS)
+data_test$E = factor(data_test$E)
+data_test$PTA = standardize(data_test$PTA)
+
+# probability, reference HS=NH[1]
+model_test = multinom(HS ~ E + PTA, data=data_test)
+res_test = summary(model_test)
+z <- res_test$coefficients/res_test$standard.errors
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+round(inv_logit(coef(model_test)), 5)
+p
+# intercept -> non-significant
+# E=2 -> less prob of HS=3
+# E=3 -> non significant (Ho: b=1)
+# E=4 -> less prob of HS=2
+# PTA -> non-significant (if you use E)
+
+
+# probability, reference HS=NH[1]
+model_test = multinom(HS ~ PTA, data=data_test)
+res_test = summary(model_test)
+z <- res_test$coefficients/res_test$standard.errors
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+round(inv_logit(coef(model_test)), 5)
+p
+# intercept -> non-significant
+# PTA -> significant (if you do not use E)
+
+
+
+# data list
+dlist = list(
+  N = nrow(H),
+  K = max(H$utterance), # utterances
+  I = nrow(Ht),
+  cHS = max(Ht$HS),
+  cE = max(Ht$E),
+  H = H$H,
+  cid = H$child,
+  HS = Ht$HS,
+  A = with(Ht, A - min(A) ),
+  E = Ht$E,
+  PTA = c( standardize( Ht$PTA ) ) )
+
+
+# measurement error model
+mcmc_code = "
+data{
+    int N;                // experimental runs
+    int K;                // replicates (utterances)
+    int I;                // experimental units (children)
+    int cHS;              // categories in Hearing Status (HS)
+    int cE;               // categories in Etiology (E)
+    real H[N];            // replicated entropies
+    int cid[N];           // child's id
+    int HS[I];            // hearing status 
+    int A[I];             // hearing age
+    int E[I];             // etiology
+    real PTA[I];          // (standardized) pta values
+}
+parameters{
+    real mu_a;            // mean of population
+    real<lower=0> sigma_a;// variability of population
+    vector[I] a;          // intercept (per child)
+    vector[cE] aE;        // intercept (per E)
+    vector[cHS] aHS;      // intercept (per HS)
+    real bP;              // slope standardized PTA
+    real bA;              // slope (A - A_min)
+}
+transformed parameters{
+    vector[I] SI;         // true SI index (per child)
+    vector[I] Ht;         // true entropy (per child)
+    
+    // linear predictor
+    for(i in 1:I){
+      SI[i] =  a[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+    }
+    
+    // average entropy (SI -> Ht: negative)
+    Ht = inv_logit(-SI);  
+}
+model{
+    // hyperpriors
+    mu_a ~ normal( 0 , 0.5 );
+    sigma_a ~ exponential( 1 );
+    
+    // priors
+    a ~ normal( mu_a , sigma_a );
+    aE ~ normal( 0 , 0.5 );
+    aHS ~ normal( 0 , 0.5 );
+    bP ~ normal( 0 , 0.3 );
+    bA ~ normal( 0 , 0.3 );
+    
+    // likelihood
+    for(n in 1:N){
+      H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
+    }
+}
+"
+
+# cmdstan
+set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
+save_code = "Hme.stan"
+writeLines(mcmc_code, con=file.path(getwd(), save_code) )
+mod = cmdstan_model( file.path(getwd(), save_code) )
+fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+res = rstan::read_stan_csv( fit$output_files() )
+# divergent transitions (between 4-8 of 4000)
+
+
+
+# final comparison
+compare = precis( res, depth=2, pars=c('aE','aHS','bP','bA','mu_a','sigma_a','a','SI','Ht') )
+
+cE = max(Ht$E)
+cHS = max(Ht$HS)
+
+true_pars = with(data_mom$par,
+                 c( par$aE * c(1:cE), par$aHS * c(1:cHS),
+                    par$bP, par$bA, par$mu_a, par$s_a,
+                    a, Ht$SI, Ht$Ht) )
+compare$true = true_pars
+compare$withinCI = with(compare, as.integer(true>=`5.5%` & true<=`94.5%`) )
+compare
+sum(compare$withinCI)/nrow(compare)
+# poor samples for all parameters 
+# good samples for SI, Ht
+# 61% true parameters inside CI (depends on reference)
+
+
+# contrasts (to do)
+# res$`aE[1]`
+
+
+
+
+
+# simulation 4: ####
+# 
+# details:
+# Structure: non-centered
+# Outcome: easy generation M=10
+# Covariates: 
+# E -> HS:
+#   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
+#   some E=M -> HS=HI/HA, and some E=M -> HS=HI/CI (to break multicol)  
+# PTA -> HS:
+#   positive
+#   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
+#   PTA range, L=low, M1<M2=mid, H=high
+# A -> SI: 
+#   positive (more A, more SI)
+# HS -> SI: 
+#   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
+# E -> SI:
+#   negative (higher E, less SI)
+#   SI[E=N] > SI[E=L] > SI[E=M] > SI[E=H] 
+#   E severity: N=none, L=low, M=mid, H=high 
+# PTA -> SI:
+#   negative (more PTA, less SI)
+#
+#   ideally is non-linear
+#   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
+#   PTA range, L=low, M1<M2=mid, H=high
+#
+# generate data
+data_mom = Hsim2()
+Ht = data_mom$Ht
+H = data_mom$H
+
+
+# plot data
+plot( H$H, H$child, col='gray', pch=19, xlim=c(0,1), 
+      xlab='entropy', ylab='child ID')
+points( Ht$Ht, 1:nrow(Ht), col='blue', pch=19)
+abline(h = H$child, lty=2, col='gray')
+abline(v = c(0, 1), lty=1, col='gray')
+
+
+# data list
+dlist = list(
+  N = nrow(H),
+  K = max(H$utterance), # utterances
+  I = nrow(Ht),
+  cHS = max(Ht$HS),
+  cE = max(Ht$E),
+  H = H$H,
+  cid = H$child,
+  HS = Ht$HS,
+  A = with(Ht, A - min(A) ),
+  E = Ht$E,
+  PTA = c( standardize( Ht$PTA ) ) )
+
+
+# measurement error model
+mcmc_code = "
+data{
+    int N;                // experimental runs
+    int K;                // replicates (utterances)
+    int I;                // experimental units (children)
+    int cHS;              // categories in Hearing Status (HS)
+    int cE;               // categories in Etiology (E)
+    real H[N];            // replicated entropies
+    int cid[N];           // child's id
+    int HS[I];            // hearing status 
+    int A[I];             // hearing age
+    int E[I];             // etiology
+    real PTA[I];          // (standardized) pta values
+}
+parameters{
+    real mu_a;            // mean of population
+    real<lower=0> sigma_a;// variability of population
+    vector[I] z_a;        // intercept (per child) non-centered
+    vector[cE] aE;        // intercept (per E)
+    vector[cHS] aHS;      // intercept (per HS)
+    real bP;              // slope standardized PTA
+    real bA;              // slope (A - A_min)
+}
+transformed parameters{
+    vector[I] a;          // intercept (per child)
+    vector[I] SI;         // true SI index (per child)
+    vector[I] Ht;         // true entropy (per child)
+    
+    a = mu_a + sigma_a * z_a; // non-centering
+    
+    // linear predictor
+    for(i in 1:I){
+      SI[i] =  a[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+    }
+    
+    // average entropy (SI -> Ht: negative)
+    Ht = inv_logit(-SI);  
+}
+model{
+    // hyperpriors
+    mu_a ~ normal( 0 , 0.5 );
+    sigma_a ~ exponential( 1 );
+    
+    // priors
+    z_a ~ std_normal();
+    aE ~ normal( 0 , 0.5 );
+    aHS ~ normal( 0 , 0.5 );
+    bP ~ normal( 0 , 0.3 );
+    bA ~ normal( 0 , 0.3 );
+    
+    // likelihood
+    for(n in 1:N){
+      H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
+    }
+}
+"
+
+# cmdstan
+set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
+save_code = "Hme.stan"
+writeLines(mcmc_code, con=file.path(getwd(), save_code) )
+mod = cmdstan_model( file.path(getwd(), save_code) )
+fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+res = rstan::read_stan_csv( fit$output_files() )
+# no divergent transitions 
+
+
+# final comparison
+compare = precis( res, depth=2, pars=c('aE','aHS','bP','bA','mu_a','sigma_a','a','SI','Ht') )
+
+cE = max(Ht$E)
+cHS = max(Ht$HS)
+
+true_pars = with(data_mom$par,
+                 c( par$aE * c(1:cE), par$aHS * c(1:cHS),
+                    par$bP, par$bA, par$mu_a, par$s_a,
+                    a, Ht$SI, Ht$Ht) )
+compare$true = true_pars
+compare$withinCI = with(compare, as.integer(true>=`5.5%` & true<=`94.5%`) )
+compare
+sum(compare$withinCI)/nrow(compare)
+# great samples for all parameters 
+# great samples for SI, Ht
+# 62% true parameters inside CI (depends on reference)
+
+
+
+
+
+
+
+
+
+# simulation 5 ####
+# 
+# details:
+# Outcome = no known process behind (no known M)
 # Covariates: not modeled
 #
 # entropy function
-H = function(p, N){
+Hfun = function(p, N){
   -sum( ifelse(p == 0, 0,  p*log2(p) ) )/log2(N)
 }
 #
 # simulation function
-H_sim = function( children=32, words=10, judges=100, max_occ=100 ){
+H_sim3 = function( children=32, words=10, judges=100, max_occ=100 ){
   
   # # data
   # children = 32
@@ -85,7 +727,7 @@ H_sim = function( children=32, words=10, judges=100, max_occ=100 ){
   for(c in 1:children){
     index1 = with(prob_data, child==c)
     index2 = with(entropy_data, child==c)
-    entropy_data[index2, -1] = apply( prob_data[index1, -c(1:2)], 2, H, N=judges)
+    entropy_data[index2, -1] = apply( prob_data[index1, -c(1:2)], 2, Hfun, N=judges)
   }
   
   # results report
@@ -96,30 +738,30 @@ H_sim = function( children=32, words=10, judges=100, max_occ=100 ){
 }
 
 
-H_data = H_sim()$entropy_data
-H_data_long = melt(H_data, id.vars = 'child')
-H_data_long = H_data_long[order(H_data_long$child),]
+# generate data
+data_mom = H_sim3()$entropy_data
+H = melt(data_mom, id.vars = 'child')
+H = H[order(H$child),]
 
 
 # plot data
-with(H_data_long, 
-     plot( value, child, pch=19, xlim=c(0,1),
-           xlab='entropy', ylab='child id') )
-abline(h = H_data_long$child, lty=2)
+plot( H$value, H$child, pch=19, xlim=c(0,1),
+      xlab='entropy', ylab='child id') 
+abline(h = H$child, lty=2)
 
 
 
 # data list
 dlist = list(
-  N = nrow( H_data_long ),
-  K = 10, # utterances
-  I = length( unique( H_data_long$child ) ),
-  H = H_data_long$value,
-  cid = H_data_long$child
-)
+  N = nrow( H ),
+  K = length( unique( H$variable ) ), # utterances
+  I = max( H$child ),
+  H = H$value,
+  cid = H$child )
 
 
 # measurement error model
+# it does not handle zeros yet
 mcmc_code = "
 data{
     int N;                // experimental runs
@@ -129,47 +771,50 @@ data{
     int cid[N];           // child's id
 }
 parameters{
+    real mu_a;            // mean of population
+    real<lower=0> sigma_a;// variability of population
     vector[I] a;          // intercept
-    vector[I] SI;         // true SI index (per child)
-    real<lower=0> sigma;  // true Si variability
-    real<lower=0> kappa;  // extra degrees
 }
 transformed parameters{
+    vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
-    real M;               // *sample size*, should be close to 10?
-
-    Ht = inv_logit(SI);
-    M = kappa + 9.0;
+    
+    SI = a;               // linear predictor
+    Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
-    // parameter not followed
-    vector[I] mu;
+    // hyperpriors
+    mu_a ~ normal( 0 , 0.5 );
+    sigma_a ~ exponential( 1 );
     
     // priors
-    a ~ normal( 0 , 0.5 );
-    sigma ~ exponential( 4 );
-    kappa ~ exponential( 2 );
+    a ~ normal( mu_a , sigma_a );
     
-    // linear predictor (vectorized)
-    mu = a;
-    
-    // likelihood (vectorized)
-    SI ~ normal( mu , sigma );
+    // likelihood
     for(n in 1:N){
-      H[n] ~ beta_proportion( Ht[cid[n]] , M );
+      H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
     }
-    //H ~ beta_proportion( Ht[cid] , 10 ); // model to test
 }
 "
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "H_me.stan"
+save_code = "Hme.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
-H_me = rstan::read_stan_csv( fit$output_files() )
-# precis( H_me, depth=1 )
+res = rstan::read_stan_csv( fit$output_files() )
+
+
+# final comparison
+compare = precis( res, depth=2, pars=c('mu_a','sigma_a','a','SI','Ht') )
+compare$true = c(with(data_mom$par, c(mu_a, s_a, a) ), Ht$SI, Ht$Ht )
+compare$withinCI = with(compare, as.integer(true>=`5.5%` & true<=`94.5%`) )
+compare
+sum(compare$withinCI)/nrow(compare)
+# good samples for mu_a and sigma_a, 
+# a's are  also good
+# 100% true parameters inside CI
 
 
 
@@ -204,84 +849,4 @@ data_mom = data_mom[order(data_mom$children_id),]
 
 
 
-# data list
-dlist = list(
-  N = nrow( dH ),
-  K = 10, # utterances
-  I = length( unique( dH$children_id ) ),
-  cHS = length( unique( dH$hearing_status ) ),
-  cE = length( unique( dH$etiology ) ),
-  H = dH$entropy,
-  cid = dH$children_id,
-  HS = data_mom$hearing_status,
-  A = data_mom$hearing_age,
-  E = data_mom$etiology,
-  PTA = data_mom$pta
-)
 
-
-
-# measurement error model
-mcmc_code = "
-data{
-    int N;                // experimental runs
-    int K;                // replicates (utterances)
-    int I;                // experimental units (children)
-    int cHS;              // categories in Hearing Status (HS)
-    int cE;               // categories in Etiology (E)
-    int H[N];             // replicated entropies
-    int cid[N];           // child's id
-    int HS[I];            // hearing status 
-    int A[I];             // hearing age
-    int E[I];             // etiology
-    int PTA[I];           // pta values
-}
-parameters{
-    vector[cHS] a;        // intercepts, per HS
-    vector[cHS] bA;       // slope for A, per HS
-    vector[cE] aE;        // intercepts, per E
-    real bP;              // slope for PTA values
-    vector[I] SI;         // true SI index (per child)
-    real<lower=0> sigma;  // true Si variability
-}
-transformed parameters{
-    real A_bar;           // minimum age in sample
-    vector[I] Ht;         // true entropy (per child)
-    vector[I] M;          // *sample size*, should be close to 10?
-
-    A_bar = min(A);       
-    Ht = inv_logit(SI);
-    M = kappa + 9;
-}
-model{
-    // parameter not followed
-    vector[I] mu;
-    vector[I] kappa;
-    
-    // priors
-    a ~ normal( 0 , 0.5 );
-    bA ~ normal( 0 , 0.3 );
-    aE ~ normal( 0 , 0.5 );
-    bP ~ normal( 0 , 0.3 );
-    sigma ~ exponential( 1 );
-    kappa ~ exponential( 2 );
-    
-    // linear predictor (vectorized)
-    mu = a[HS] + bA[HS] * (A - A_bar) + aE[E] + bP * PTA;
-    
-    
-    // likelihood (vectorized)
-    SI ~ normal( mu , sigma );
-    H ~ beta_proportion( Ht[cid] , M[cid] );
-    //H ~ beta_proportion( Ht[cid] , 10 ); // model to test
-}
-"
-
-# # cmdstan
-# # set_cmdstan_path('~/cmdstan') # in case need it
-# save_code = "H_me.stan"
-# writeLines(mcmc_code, con=file.path(getwd(), 'txt', save_code) )
-# mod = cmdstan_model( file.path(getwd(), 'txt', save_code) )
-# fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
-# H_me = rstan::read_stan_csv( fit$output_files() )
-# # precis( H_me, depth=1 )
