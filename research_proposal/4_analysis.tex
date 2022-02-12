@@ -129,7 +129,7 @@ Finally, considering the evidence provided by the previous step, we proceed to m
 Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate seven models that serve different, but interrelated, objectives:
 %
 \begin{enumerate} \itemsep1pt
-	\item[(1)] a measurement error model for entropy
+	\item[(1)] a hierarchical beta model for entropy
 	\item[(2)] a measurement model for: 
 	\begin{enumerate} \itemsep1pt
 		\item absolute holistic judgment (HJ)
@@ -146,13 +146,13 @@ Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate se
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Measurement error model} \\
+\subsubsection{Hierarchical beta model} \\
 %
 Previous research already used the replicated entropy measures as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}; however on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in the modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as \textit{anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference} \citep{McElreath_2020}. 
 
-This claim is easier to understand using a though experiment within our research.  Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility, across the $10$ utterances. 
+This claim is easier to understand using a though experiment within our research.  Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility, across the $10$ utterances. \textcolor{red}{change the wording for hierarchical beta model}
 
-The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}. However, although the authors recognized the usefulness of the replicates' additional information, they only used it in a descriptive analysis, rather than integrate it into the modeling process. We argue that the inclusion of the replicated entropy measures, into what is known as a measurement error model, is trivial under the bayesian framework, and we present it in the following lines.
+The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}. However, although the authors recognized the usefulness of the replicates' additional information, they only used it in a descriptive analysis, rather than integrate it into the modeling process. We argue that the inclusion of the replicated entropy measures, into what is known as a hierarchical beta model, is trivial under the bayesian framework, and we present it in the following lines.
 %
 \begin{figure}[h]
 	\centering

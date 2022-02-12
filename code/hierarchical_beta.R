@@ -123,7 +123,7 @@ model{
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "Hme.stan"
+save_code = "Hbeta.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -218,7 +218,7 @@ model{
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "Hme.stan"
+save_code = "Hbeta.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -473,7 +473,7 @@ model{
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "Hme.stan"
+save_code = "Hbeta.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -691,7 +691,7 @@ model{
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "Hme.stan"
+save_code = "Hbeta.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -990,7 +990,7 @@ model{
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "Hme.stan"
+save_code = "Hbeta.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -1222,7 +1222,7 @@ model{
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "Hme.stan"
+save_code = "Hbeta.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -1477,7 +1477,7 @@ model{
 
 # cmdstan
 set_cmdstan_path('C:/Users/JRiveraEspejo/Documents/.cmdstanr/cmdstan-2.28.1') # in case need it
-save_code = "Hme.stan"
+save_code = "Hbeta.stan"
 writeLines(mcmc_code, con=file.path(getwd(), save_code) )
 mod = cmdstan_model( file.path(getwd(), save_code) )
 fit = mod$sample( data=dlist, chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
