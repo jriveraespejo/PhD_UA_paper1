@@ -42,7 +42,7 @@ file_id = function(chains_path, model_int){
 #     number_detect_par
 # description:
 #     it detects the names of the parameters in an object generated with
-#     the function precis(). 
+#     the function precis() or parameter_recovery(). 
 #     It outputs the location of the parameters (in numbers).
 # arguments:
 #     precis_object = object containing a 'precis' object
@@ -81,10 +81,10 @@ number_detect_par = function(precis_object, est_par){
 #     index_detect_par
 # description:  
 #     it detects the names of the parameters in an object generated with
-#     the function precis().
+#     the function precis() or parameter_recovery().
 #     It outputs a boolean vector of the parameters. 
 # arguments:
-#     precis_object = result object generated with rmse_pars() object   
+#     precis_object = object containing a 'precis' object'
 #     est_par = character vector with the names of parameters of interest
 #
 index_detect_par = function(precis_object, est_par){
@@ -131,7 +131,6 @@ rmse_pars = function(stan_object, est_par, true_par, seed=1){
   # stan_object = res
   # prec = 3
   # seed = 1
-
   
   # calculate rmse for samples vs true parameters
   set.seed(seed)
@@ -317,6 +316,7 @@ contrast_recovery = function(stan_object, est_diff, true_diff, prec=3, seed=1){
   rmse_sim = sqrt( colMeans( (diff - true_rep)^2 ) )
   res_diff$RMSE = round(rmse_sim, prec)  
   
+  # return object
   return(res_diff)
 }
 
@@ -336,10 +336,8 @@ recovery_plots = function(par_object, cont_object=NULL){
   # par_object = par_recovery
   # cont_object = NULL
   
-  
   # figure parameters
   opar = par()
-  
   
   # parameters of interest
   par_int = list( pop_par = c('mu_a','sigma_a','mu_the','sigma_the'), 
@@ -351,7 +349,6 @@ recovery_plots = function(par_object, cont_object=NULL){
   
   par_mom = list()
   par_row = c()
-  
   
   # identify parameter
   # i=2;j=1
@@ -440,7 +437,7 @@ trace_plot = function(stan_object, pars) {
   box(bty="l")
   axis(side=1, at=seq(0, wend, by=100))
   axis(side=2, at=yaxis, las=1 )
-  mtext(paste("n_eff =", round(neff_use, 0)), 3, adj = 1, cex = 1.1)
+  #mtext(paste("n_eff =", round(neff_use, 0)), 3, adj = 1, cex = 1.1)
   mtext(pars, 3, adj = 0, cex=1.1)
   for(c in 1:n_chains){
     lines(1:wend, post[, c, ], col=chain.cols[c], lwd = 0.5)
@@ -520,9 +517,9 @@ trank_plot = function(stan_object, pars, wide=50){
 #
 acf_plot = function(stan_object, pars){
   
-  # test
-  stan_object = res
-  pars = 'mu_a'
+  # # test
+  # stan_object = res
+  # pars = 'mu_a'
   
   # posterior
   post = rstan::extract(stan_object, pars=pars, permuted=FALSE)
@@ -576,388 +573,187 @@ tri_plot = function(stan_object, pars){
 
 
 
-
-
-
-
-
-
-# function:
-#     n_effective
-# description:  
-#     It joins the number of effective samples from two stan models.
-#     normally is used to compared the centered vs non-centered version.
-# arguments:
-#     stan_object1 = object containing a stanfit object
-#     stan_object2 = object containing a stanfit object
-#     est_par = character vector with the names of parameters of interest
-#
-n_effective = function(stan_object1, stan_object2, est_par){
-  
-  # stan model 1 (centered)
-  precis1 = precis(stan_object1, depth=4)
-  idx1 = number_detect_par(precis1, est_par)
-  
-  # stan model 2 (non-centered)
-  precis2 = precis(stan_object2, depth=4)
-  idx2 = number_detect_par(precis2, est_par)
-  
-  # plot
-  neff_table = data.frame(
-    centered=precis1$n_eff[idx1],
-    non_centered=precis2$n_eff[idx2]
-  )
-  
-  return(neff_table)
-}
-
-
 # function:
 #     stat_chain
 # description:  
-#     it extraxt the information of Rhat and n_eff 
+#     It extracts the number of effective samples (n_eff) and Rhat statistics
+#     from two parameter_recovery() objects
+#     Used to compared the centered vs non-centered parametrization.
 # arguments:
-#     c_list = data.frame generated with file_id() function
-#     chains_path = location of csv files corresponding to stanfit objects
-#     file_save = location to save files
-#     file_name = name of the file to save 
-#     contr_pars = set of paramerter to calculate contrasts
+#     par_object1 = object generated with parameter_recovery() function
+#                   (centered parametrization)
+#     par_object2 = object generated with parameter_recovery() function
+#                   (non-centered parametrization)
+#     pars = character vector with the names of parameters of interest
 #
-stat_chain = function(c_list, chains_path, file_save, file_name, contr_pars){
+stat_chain = function(par_object1, par_object2, pars){
   
   # # test
-  # c_list=chains_list
-  # chains_path=chains_path
-  # file_save=file.path(getwd(), 'figures4')
-  # file_name = 'stan_stats_no_mod'
-  # contr_pars = c('b_G','b_E','b_X')
+  # par_object1=par_recovery_C
+  # par_object2=par_recovery_NC
+  # pars='a_i'
   
-  # parameters
-  models_int = unique(c_list$model)
-  sample_sizes = unique(c_list$sample)
-  data_number = unique(c_list$data)
+  # identify parameters
+  idx1 = number_detect_par(par_object1, pars)
+  idx2 = number_detect_par(par_object2, pars)
   
-  # m=1
-  # s=1
-  # d=1
-  for(m in 1:length(models_int)){
-    for(s in 1:length(sample_sizes)){
-      for(d in 1:length(data_number)){
-        
-        ####
-        # simple parameter section
-        ####
-        
-        # identify files of interest
-        idx_files = with(chains_list, 
-                         model==models_int[m] &
-                           sample==sample_sizes[s] &
-                           data == data_number[d])
-        
-        fit_files = chains_list[idx_files, 1]
-        stan_model = rstan::read_stan_csv( file.path(chains_path, fit_files) )
-        
-        # calculate parameters
-        stan_result = precis(stan_model, depth=4)
-        
-        # storage
-        if( all(m==1, s==1, d==1) ){
-          stan_int = data.frame( model_type = models_int[m],
-                                 sample_size = sample_sizes[s],
-                                 data_number = data_number[d],
-                                 parameter = row.names(stan_result),
-                                 stan_result )
-        } else {
-          stan_int = rbind(stan_int,
-                           data.frame( model_type = models_int[m],
-                                       sample_size = sample_sizes[s],
-                                       data_number = data_number[d],
-                                       parameter = row.names(stan_result),
-                                       stan_result ) )
-        }
-        
-        ####
-        # contrasts section
-        ####
-        
-        # extract samples
-        post = extract.samples( stan_model )
-        idx = names(post) %in% contr_pars
-        
-        if( !all(idx==F) ){
-          
-          post = post[idx]
-          # names(post)
-          
-          # calculations
-          # k=1
-          for(k in 1:length(contr_pars) ){
-            
-            # selecting parameter
-            idx = number_detect_par(stan_result, contr_pars[k])
-            lab_par = rownames(stan_result)[idx]
-            npars = length(idx)
-            
-            # storage
-            # i=2
-            # j=3
-            for(i in 1:npars){
-              for(j in 1:npars){
-                
-                if(j>i){
-                  if(i == 1 & j==2 & k==1){
-                    diff = post[[contr_pars[k]]][,j] - post[[contr_pars[k]]][,i] 
-                    diff_name = paste( c( lab_par[j], lab_par[i]), collapse=' - ' )
-                  } else{
-                    diff = cbind(diff ,
-                                 post[[contr_pars[k]]][,j] - post[[contr_pars[k]]][,i] ) 
-                    diff_name = c(diff_name, 
-                                  paste( c( lab_par[j], lab_par[i]), collapse=' - ' ) )
-                  }
-                }
-                
-              }
-            }
-            
-          }
-          
-          # calculations
-          diff = data.frame(diff)
-          names(diff) = diff_name
-          res_diff = precis( diff, depth=4 )
-          
-          # contrast storage
-          res_diff = data.frame( model_type = models_int[m],
-                                 sample_size = sample_sizes[s],
-                                 data_number = data_number[d],
-                                 parameter = row.names(res_diff),
-                                 res_diff[,-5], 
-                                 n_eff = NA,
-                                 Rhat4 = NA)
-          stan_int = rbind(stan_int, res_diff)
-        }
-        
-        # remove row.names
-        row.names(stan_int) = NULL
-        
-        # remove unnecessary parameters
-        uu = c('zb_k','L_Rho_theta_sub','ztheta_sub','ztheta','m_mult','m_theta')
-        for(i in 1:length(uu)){
-          idx_mom = str_detect(stan_int$parameter, uu[i])
-          if(i==1){
-            idx = idx_mom
-          } else{
-            idx = idx | idx_mom
-          }
-        }
-        stan_int = stan_int[!idx,]
-        
-        # save file
-        save(stan_int, file=file.path(file_save, paste0(file_name, '.RData') ) )
-        print( paste0(models_int[m], '_J', sample_sizes[s], '_Ndata', data_number[d]) )
-        
-      }
-    }
-  }
+  # storage
+  stat_mom = list()
   
+  # saving info
+  stat_mom$n_eff = cbind(par_object1$n_eff[idx1], par_object2$n_eff[idx2])
+  stat_mom$n_eff = data.frame(stat_mom$n_eff)
+  names(stat_mom$n_eff) = c('neff_C','neff_NC')
+  rownames(stat_mom$n_eff) = rownames(par_object1)[idx1]
+  
+  stat_mom$Rhat = cbind(par_object1$Rhat4[idx1], par_object2$Rhat4[idx2])
+  stat_mom$Rhat = data.frame(stat_mom$Rhat)
+  names(stat_mom$Rhat) = c('neff_C','neff_NC')
+  rownames(stat_mom$Rhat) = rownames(par_object1)[idx1]
+  
+  # return object
+  return(stat_mom)
 }
 
 
-
 # function:
-#     plot_stat
+#     stat_plot
 # description:  
-#     It plots the statistics of interest 
+#     It plots the n_eff and Rhat from a centered and non-centered models
 # arguments:
-#     stat_object = object produced by the function stat_chain()
-#     info = statistics of interest
-#     par_int = parameters of interest
-#     model = options according to model in stat_chain
-#     ssize = sample size of simulation
-#     title = main title for the plot 
+#     par_object1 = object generated with parameter_recovery() function
+#                   (centered parametrization)
+#     par_object2 = object generated with parameter_recovery() function
+#                   (non-centered parametrization)
+#     pars = character vector with the names of parameters of interest
+#     cChain = cut-off chain size (default 4000 = 1000 samples x 4 chains)
+#     cRhat = cut-off Rhat (default = 1.05)
 #
-plot_stat = function(stat_object, info, par_int, model, ssize=100, title='(A)'){
+stat_plot = function(par_object1, par_object2, pars, cChain=4000, cRhat=1.05){
   
   # # test
-  # stat_object = stan_int
-  # info = 'n_eff'
-  # par_int = c( paste0('b_G[',1:2,']'),'b_A', paste0('b_E[',1:3,']'),
-  #              paste0('b_X[',1:4,']'))
-  # model = 'FOLV'
-  # ssize = 100
-  # title='(A)'
-  
-  
+  # par_object1=par_recovery_C
+  # par_object2=par_recovery_NC
+  # pars=pars='a_i'
+
   # identify the parameters
-  # i=1
-  for(i in 1:length(par_int)){
-    idx_pars_mom = stat_object$parameter == par_int[i]
-    if(i==1){
-      idx_pars = idx_pars_mom
-    } else{
-      idx_pars = idx_pars | idx_pars_mom
-    }
-  }
-  # sum(idx_pars)
-  
-  # identify models
-  model_int = unique(with(stat_object, model_type[str_detect(model_type, model)]))
-  for(i in 1:length(model_int)){
-    idx = with(stat_object, model_type==model_int[i] & sample_size==ssize & idx_pars)
-    stat_mom = stat_object[idx, c('sample_size','data_number','parameter', info)]
-    
-    if(i==1){
-      stat_final = stat_mom
-    } else{
-      stat_final = merge(stat_final, stat_mom, 
-                         by=c('sample_size','data_number','parameter'))
-    }
-  }
-  
-  # parameter color
-  par_mod = str_locate(stat_final$parameter, '[:digit:]')[,1] - 2
-  par_mod = ifelse( is.na(par_mod), 3, par_mod)
-  par_mod = str_sub(stat_final$parameter, start = 1, end=par_mod)
-  par_mod_un = unique(par_mod)
-  col_pars = rep(NA, nrow(stat_final))
-  for(i in 1:length(par_mod_un)){
-    col_pars = ifelse( par_mod==par_mod_un[i], 
-                       col.alpha(i, 0.4), col_pars) 
-  }
+  stat_mom = stat_chain(par_object1, par_object2, pars)
   
   # plot
-  idx_var = str_detect( names(stat_final), info)  
-  x_lim = range(stat_final[, idx_var])
-  plot(stat_final[,idx_var], xlim=x_lim, ylim=x_lim, main=title,
-       col=col_pars, pch=19,
+  par(mfrow=c(1, 2))
+
+  range_lim = range( stat_mom$n_eff )
+  range_lim[1] = ifelse(range_lim[1]>=cChain, cChain-200, range_lim[1])
+  range_lim[2] = ifelse(range_lim[2]<=cChain, cChain+200, range_lim[2])
+  x_lim = y_lim = range_lim
+  plot(stat_mom$n_eff, xlim=x_lim, ylim=x_lim, main='N effective',
+       col=col.alpha('black', 0.4), pch=19,
        xlab='Centered parametrization', ylab='Non-centered parametrization')
   abline(a=0, b=1, lty=2)
+  abline(v=cChain, h=cChain, lty=2)
   
-  if(info=='Rhat4'){
-    abline(v=1.05, h=1.05, lty=3, col=col.alpha('black', 0.6))
-    legend('top', horiz=T, par_mod_un, pch=19, col=unique(col_pars), bty='n')
-  } else{
-    legend('bottom', horiz=T, par_mod_un, pch=19, col=unique(col_pars), bty='n')
-  }
+  range_lim = range( stat_mom$Rhat )
+  range_lim[1] = ifelse(range_lim[1]>=cRhat, 1-0.005, range_lim[1])
+  range_lim[2] = ifelse(range_lim[2]<=cRhat, cRhat+0.005, range_lim[2])
+  x_lim = y_lim = range_lim
+  plot(stat_mom$Rhat, xlim=x_lim, ylim=x_lim, main='Rhat',
+       col=col.alpha('black', 0.4), pch=19,
+       xlab='Centered parametrization', ylab='Non-centered parametrization')
+  abline(v=cRhat, h=cRhat, lty=2)
+  
+  par(mfrow=c(1, 1))
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 
 # function:
-#     post_corr
+#     dist_plot
 # description:  
-#     Specific plots for corelations and loading of SOLV 
+#     plots the stimated density and observed entropies per children
 # arguments:
-#     c_list = data.frame generated with file_id() function
-#     file_save = location to save file
+#     stan_object = object containing a stanfit object (it can be a list also)
+#     true_data = repeated measures for entropy per child
+#     par_object = object generated with parameter_recovery() function
+#     M = shape parameter in dbeta2, default = NULL
+#     rsize = number of samples form posterior (default = 100)
+#     csize = number of children sampled (default = 16)
 #
-post_corr = function(c_list, file_save){
+dist_plot = function(stan_object, true_data, par_object, 
+                     M=NULL, rsize=100, csize=16, seed=1){
   
   # # test
-  # c_list = chains_list
-  # file_save = file.path(getwd(), 'figures5')
+  # stan_object = res_C
+  # true_data = data_true
+  # par_object = par_recovery_C
+  # M=NULL
+  # rsize=100
+  # csize=16
+  # seed=1
   
-  # parameters
-  mt = unique(c_list$model)
-  ss = unique(c_list$sample)
-  dn = unique(c_list$data)
+  # distribution Ht
+  post = extract.samples(stan_object)
   
-  # m=1
-  # s=1
-  # d=1
-  for(m in 1:length(mt)){
-    for(s in 1:length(ss)){
-      for(d in 1:length(dn)){
-        
-        # load data
-        idx_files = with(chains_list, model==mt[m] & sample==ss[s] &
-                           data == dn[d])
-        
-        fit_files = chains_list[idx_files, 1]
-        stan_model = rstan::read_stan_csv( file.path(chains_path, fit_files) )
-        
-        # extract and samples
-        post = extract.samples( stan_model )
-        idx = names(post) %in% c('Rho_theta_sub','loads')
-        post = post[idx]
-        post = as_tibble(data.frame(post))
-        post = post[,-c(4,7:8,10:12)]
-        names(post) = c(paste0('loads[',1:3,']'), 
-                        'Rho_theta_sub[1,2]','Rho_theta_sub[1,3]','Rho_theta_sub[2,3]')
-        # str(post)
-        
-        # plot
-        figure_name = paste0(mt[m],'_J',ss[s],'_Ndata',dn[d],'_corrplot_LR.png')
-        png( file.path(file_save, figure_name), 
-             units='cm', width=35, height=25, res=100)
-        pairs_panels(post, pch=19, 
-                     points.col=col.alpha('blue',0.05),
-                     hist.col=col.alpha('blue', 0.3), 
-                     col=col.alpha('red', 0.8))
-        dev.off()
-        
-        # advance
-        print( paste0(mt[m],'_J', ss[s], '_Ndata', dn[d]) )
-      }
-    }
+  # sampling entropy observations
+  set.seed(seed)
+  idx_row = sample(x=1:4000, size=rsize, replace=F)
+  idx_col = sample(x=1:32, size=csize, replace=F)
+  idx_col = idx_col[order(idx_col)]
+  
+  # extracting info
+  Ht_mom = post$Ht[idx_row, idx_col]
+  Ht_mean = colMeans(post$Ht)[idx_col] # mean distribution
+  
+  if( !is.null(M) & length(M)==1 ){
+    M_mom = matrix( rep(M, nrow(Ht_mom)*ncol(Ht_mom) ), ncol=ncol(Ht_mom) )
+    M_mean = colMeans(M_mom) # mean distribution
+  } else{
+    M_mom = post$M[idx_row, idx_col]
+    M_mean = colMeans(post$M)[idx_col] # mean distribution
   }
+  
+  
+  # identify Ht mean values and confidence intervals
+  idx = number_detect_par(par_object, 'Ht')
+  par_object = par_object[idx,]
+  par_object = par_object[idx_col,]
+  
+  
+  # plot
+  par(mfrow=c(4,4))
+  
+  # i=1
+  for(i in 1:ncol(Ht_mom) ){ # children
+    
+    # first sample
+    curve( dbeta2(x, Ht_mom[1,i], M_mom[1,i]), from=0, to=1, ylim=c(0, 6),
+           xlab='Entropy', ylab='Density', col=col.alpha('gray',0.3) )
+    mtext(paste("child = ", idx_col[i]), 3, adj = 1, cex = 1.1)
+    
+    # rest of samples
+    for(s in 2:nrow(Ht_mom) ){
+      curve( dbeta2(x, Ht_mom[s,i], M_mom[s,i]), from=0, to=1, add=T, 
+             xlab='Entropy', ylab='Density', col=col.alpha('gray',0.3))
+    }
+    
+    # mean distribution
+    curve( dbeta2(x, Ht_mean[i], M_mean[i]), from=0, to=1, lwd=2.5,
+           xlab='Entropy', ylab='Density', col='black', add=T)
+    
+    
+    # observations
+    points( true_data$H[true_data$child==idx_col[i]], 
+            rep( 0.3, sum(true_data$child==idx_col[i]) ), 
+            pch=19, col=col.alpha('blue', 0.4))
+    points( par_object$mean[i], 0, pch=19, col='red')
+    lines(x=with(par_object[i,], c(`5.5%`,`94.5%`)), y=rep(0, 2), col='red')
+    
+  }
+  
+  par(mfrow=c(1,1))
+  
 }
-
-
 
 
 
