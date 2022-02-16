@@ -32,15 +32,16 @@ data{
     int cid[N];           // child's id
 }
 parameters{
+    real a;               // fixed intercept
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] a;          // intercept
+    vector[I] a_i;        // random intercepts (per child)
 }
 transformed parameters{
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    SI = a;               // linear predictor
+    SI = a + a_i;         // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
@@ -49,7 +50,8 @@ model{
     sigma_a ~ exponential( 1 );
     
     // priors
-    a ~ normal( mu_a , sigma_a );
+    a ~ normal( 1 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
     
     // likelihood
     for(n in 1:N){
@@ -76,17 +78,18 @@ data{
     int cid[N];           // child's id
 }
 parameters{
+    real a;               // fixed intercept
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] z_a;        // non-centered a
+    vector[I] z_a;        // non-centered random interpcepts
 }
 transformed parameters{
-    vector[I] a;          // intercept (per child)
+    vector[I] a_i;        // random intercepts (per child)
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
 
-    a = mu_a + sigma_a * z_a; // non-centering
-    SI = a;               // linear predictor
+    a_i = mu_a + sigma_a * z_a; // non-centering
+    SI = a + a_i;         // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
@@ -95,6 +98,7 @@ model{
     sigma_a ~ exponential( 1 );
     
     // priors
+    a ~ normal(0, 0.5);
     z_a ~ std_normal();
     
     // likelihood
@@ -157,13 +161,14 @@ data{
     real PTA[I];          // (standardized) pta values
 }
 parameters{
+    real a;               // fixed intercept
+    vector[cE] aE;        // fixed intercept (per E)
+    vector[cHS] aHS;      // fixed intercept (per HS)
+    real bP;              // fixed slope standardized PTA
+    real bA;              // fixed slope (A - A_min)
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] a;          // intercept (per child)
-    vector[cE] aE;        // intercept (per E)
-    vector[cHS] aHS;      // intercept (per HS)
-    real bP;              // slope standardized PTA
-    real bA;              // slope (A - A_min)
+    vector[I] a_i;        // random intercepts (per child)
 }
 transformed parameters{
     vector[I] SI;         // true SI index (per child)
@@ -171,8 +176,8 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] =  a[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      // SI[i] =  a[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
       // multicollinearity between E and HS
     }
     
@@ -185,7 +190,8 @@ model{
     sigma_a ~ exponential( 1 );
     
     // priors
-    a ~ normal( mu_a , sigma_a );
+    a ~ normal( 0 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
     aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
@@ -221,25 +227,26 @@ data{
     real PTA[I];          // (standardized) pta values
 }
 parameters{
+    real a;               // fixed intercept
+    vector[cE] aE;        // fixed intercept (per E)
+    vector[cHS] aHS;      // fixed intercept (per HS)
+    real bP;              // fixed slope standardized PTA
+    real bA;              // fixed slope (A - A_min)
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] z_a;        // intercept (per child) non-centered
-    vector[cE] aE;        // intercept (per E)
-    vector[cHS] aHS;      // intercept (per HS)
-    real bP;              // slope standardized PTA
-    real bA;              // slope (A - A_min)
+    vector[I] z_a;        // random intercepts (per child) non-centered
 }
 transformed parameters{
-    vector[I] a;          // intercept (per child)
+    vector[I] a_i;        // random intercept (per child)
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    a = mu_a + sigma_a * z_a; // non-centering
+    a_i = mu_a + sigma_a * z_a; // non-centering
     
     // linear predictor
     for(i in 1:I){
-      SI[i] =  a[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      //SI[i] =  a[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      //SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
       // multicollinearity between E and HS
     }
     
@@ -252,6 +259,7 @@ model{
     sigma_a ~ exponential( 1 );
     
     // priors
+    a ~ normal(0 , 0.5);
     z_a ~ std_normal();
     aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -318,16 +326,17 @@ data{
     real PTA[I];          // (standardized) pta values
 }
 parameters{
+    real a;               // fixed intercepts
+    vector[cE] aE;        // fixed intercept (per E)
+    vector[cHS] aHS;      // fixed intercept (per HS)
+    real bP;              // fixed slope standardized PTA
+    real bA;              // fixed slope (A - A_min)
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] a;          // intercept (per child)
+    vector[I] a_i;        // random intercepts (per child)
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
     real<lower=0> M[I];   // df (per child)
-    vector[cE] aE;        // intercept (per E)
-    vector[cHS] aHS;      // intercept (per HS)
-    real bP;              // slope standardized PTA
-    real bA;              // slope (A - A_min)
 }
 transformed parameters{
     vector[I] SI;         // true SI index (per child)
@@ -335,8 +344,8 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] =  a[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      // SI[i] =  a[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
       // multicollinearity between E and HS
     }
     
@@ -351,7 +360,8 @@ model{
     sigma_the ~ exponential( 1 );
     
     // priors
-    a ~ normal( mu_a , sigma_a );
+    a ~ normal( 0 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
     M ~ lognormal( mu_the , sigma_the );
     aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -389,30 +399,31 @@ data{
     real PTA[I];          // (standardized) pta values
 }
 parameters{
+    real a;               // fixed intercept
+    vector[cE] aE;        // fixed intercept (per E)
+    vector[cHS] aHS;      // fixed intercept (per HS)
+    real bP;              // fixed slope standardized PTA
+    real bA;              // fixed slope (A - A_min)
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] z_a;        // noncentered intercept (per child)
+    vector[I] z_a;        // random intercept (per child) noncentered
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
     vector[I] z_M;        // noncentered df (per child)
-    vector[cE] aE;        // intercept (per E)
-    vector[cHS] aHS;      // intercept (per HS)
-    real bP;              // slope standardized PTA
-    real bA;              // slope (A - A_min)
 }
 transformed parameters{
-    vector[I] a;          // intercept (per child)
+    vector[I] a_i;        // intercept (per child)
     vector[I] M;          // df (per child)
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    a = mu_a + z_a * sigma_a;
-    M = exp( mu_the + z_M * sigma_the );
+    a_i = mu_a + sigma_a * z_a;
+    M = exp( mu_the + sigma_the * z_M );
     
     // linear predictor
     for(i in 1:I){
-      SI[i] =  a[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      // SI[i] =  a[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
       // multicollinearity between E and HS
     }
     
@@ -427,6 +438,7 @@ model{
     sigma_the ~ exponential( 1 );
     
     // priors
+    a ~ normal( 0 , 0.5 );
     z_a ~ std_normal();
     z_M ~ std_normal();
     aE ~ normal( 0 , 0.5 );
@@ -466,9 +478,10 @@ data{
     int cid[N];           // child's id
 }
 parameters{
+    real a;               // fixed intercept
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] a;          // intercept
+    vector[I] a_i;        // random intercept
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
     real<lower=0> M[I];   // df (per child)
@@ -477,7 +490,7 @@ transformed parameters{
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    SI = a;               // linear predictor
+    SI = a + a_i;         // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
@@ -489,7 +502,8 @@ model{
 
     
     // priors
-    a ~ normal( mu_a , sigma_a );
+    a ~ normal( 0 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
     M ~ lognormal( mu_the , sigma_the );
 
     
@@ -518,24 +532,25 @@ data{
     int cid[N];           // child's id
 }
 parameters{
+    real a;               // fixed intercepts
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] z_a;        // noncentered intercept (per child)
+    vector[I] z_a;        // random intercepts (per child) noncentered
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
     vector[I] z_M;        // noncentered df (per child)
 }
 transformed parameters{
-    vector[I] a;          // intercept (per child)
+    vector[I] a_i;        // random intercepts (per child)
     vector[I] M;          // df (per child)
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
     
-    a = mu_a + z_a * sigma_a;
-    M = exp( mu_the + z_M * sigma_the );
+    a_i = mu_a + sigma_a * z_a;
+    M = exp( mu_the + sigma_the * z_M );
     
-    SI = a;               // linear predictor
+    SI = a + a_i;         // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
@@ -547,6 +562,7 @@ model{
 
     
     // priors
+    a ~ normal( 0 , 0.5 );
     z_a ~ std_normal();
     z_M ~ std_normal();
 

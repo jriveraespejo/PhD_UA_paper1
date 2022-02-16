@@ -39,18 +39,32 @@ file_id = function(chains_path, model_int){
 
 
 # function:
-#     detect_parameter
+#     number_detect_par
 # description:
-#     it detects the names of the parameters in a stanfit object
+#     it detects the names of the parameters in an object generated with
+#     the function precis(). 
+#     It outputs the location of the parameters (in numbers).
 # arguments:
-#     stan_object = object containing a 'precis' object
+#     precis_object = object containing a 'precis' object
 #     est_par = character vector with the names of parameters of interest
 #
-detect_parameter = function(precis_object, est_par){
+number_detect_par = function(precis_object, est_par){
+  
+  # # test
+  # precis_object=res_stan
+  # est_par=par_est
 
-  # identify parameters of interest
+  # j=1
   for(j in 1:length(est_par)){
-    idx_mom = str_detect( row.names(precis_object), paste0('^(', est_par[j]) )
+    
+    # identify parameters of interest
+    if(est_par[j]=='a'){
+      idx_mom = row.names(precis_object) == est_par[j]
+    } else{
+      idx_mom = str_detect( row.names(precis_object), paste0('^',est_par[j]) )
+    }
+    
+    # generate output
     if(j==1){
       idx = which(idx_mom)
     } else{
@@ -64,19 +78,32 @@ detect_parameter = function(precis_object, est_par){
 
 
 # function:
-#     detect_par
+#     index_detect_par
 # description:  
 #     it detects the names of the parameters in an object generated with
-#     the function precis()
+#     the function precis().
+#     It outputs a boolean vector of the parameters. 
 # arguments:
 #     precis_object = result object generated with rmse_pars() object   
 #     est_par = character vector with the names of parameters of interest
 #
-detect_par = function(precis_object, est_par){
+index_detect_par = function(precis_object, est_par){
   
-  # identify parameters of interest
+  # # test
+  # precis_object=res_stan
+  # est_par=par_est
+  
+  # j=1
   for(j in 1:length(est_par)){
-    idx_mom = str_detect( row.names(precis_object), paste0('^', est_par[j]) )
+    
+    # identify parameters of interest
+    if(est_par[j]=='a'){
+      idx_mom = row.names(precis_object) == est_par[j]
+    } else{
+      idx_mom = str_detect( row.names(precis_object), paste0('^',est_par[j]) )
+    }
+    
+    # generate output
     if(j==1){
       idx = idx_mom
     } else{
@@ -176,17 +203,17 @@ parameter_recovery = function(stan_object, est_par, true_par,
   
   # # test
   # stan_object=res
-  # est_par=c('aHS','bP','bA','mu_a','sigma_a','mu_the','sigma_the','a','M','SI','Ht')
+  # est_par=par_est
   # true_par=par_true
   # prec=3
   # seed=1
   
   # get the point estimates
-  res_stan = precis(stan_object, depth=4, pars=est_par)
+  res_stan = precis(stan_object, depth=4) #, pars=est_par
   
   # identify parameters of interest
-  # idx = detect_parameter(res_stan, est_par)
-  res_stan = round( res_stan, prec) #[idx,]
+  idx = number_detect_par(res_stan, est_par)
+  res_stan = round( res_stan[idx,], prec) #
   
   
   # introduce true parameters
@@ -241,7 +268,7 @@ contrast_recovery = function(stan_object, est_diff, true_diff, prec=3, seed=1){
   for(k in 1:length(est_diff)){
     
     # selecting parameter
-    idx = detect_parameter(res_stan, est_diff[k])
+    idx = number_detect_par(res_stan, est_diff[k])
     lab_par = rownames(res_stan)[idx]
     npars = length(idx)
     
@@ -307,7 +334,7 @@ recovery_plots = function(par_object, cont_object=NULL){
   
   # # test
   # par_object = par_recovery
-  # cont_object = cont_recovery
+  # cont_object = NULL
   
   
   # figure parameters
@@ -316,8 +343,8 @@ recovery_plots = function(par_object, cont_object=NULL){
   
   # parameters of interest
   par_int = list( pop_par = c('mu_a','sigma_a','mu_the','sigma_the'), 
-                  reg_par = c('aHS','aE','bP','bA'),
-                  ext_par1 = 'a',
+                  reg_par = c('a','aHS','aE','bP','bA'),
+                  ext_par1 = 'a_i',
                   ext_par2 = 'M',
                   ext_par3 = 'SI',
                   ext_par4 = 'Ht')
@@ -329,19 +356,10 @@ recovery_plots = function(par_object, cont_object=NULL){
   # identify parameter
   # i=2;j=1
   for(i in 1:length(par_int)){
-    for(j in 1:length(par_int[[i]]) ){
-      
-      index = str_detect( rownames(par_object), paste0('^', par_int[[i]][j] ) )
-      
-      if(j==1){
-        par_mom[[i]] = par_object[index,]
-      } else{
-        par_mom[[i]] = rbind( par_mom[[i]], par_object[index,] )
-      }
-    }
+    idx = index_detect_par(par_object, est_par=par_int[[i]] )
+    par_mom[[i]] = par_object[idx,]
     par_row = c(par_row, nrow(par_mom[[i]]) )     # zero data
   }
-  
   par_mom = par_mom[par_row!=0] # only available data
   
   
@@ -578,11 +596,11 @@ n_effective = function(stan_object1, stan_object2, est_par){
   
   # stan model 1 (centered)
   precis1 = precis(stan_object1, depth=4)
-  idx1 = detect_parameter(precis1, est_par)
+  idx1 = number_detect_par(precis1, est_par)
   
   # stan model 2 (non-centered)
   precis2 = precis(stan_object2, depth=4)
-  idx2 = detect_parameter(precis2, est_par)
+  idx2 = number_detect_par(precis2, est_par)
   
   # plot
   neff_table = data.frame(
@@ -676,7 +694,7 @@ stat_chain = function(c_list, chains_path, file_save, file_name, contr_pars){
           for(k in 1:length(contr_pars) ){
             
             # selecting parameter
-            idx = detect_parameter(stan_result, contr_pars[k])
+            idx = number_detect_par(stan_result, contr_pars[k])
             lab_par = rownames(stan_result)[idx]
             npars = length(idx)
             

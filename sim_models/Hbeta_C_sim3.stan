@@ -13,16 +13,17 @@ data{
     real PTA[I];          // (standardized) pta values
 }
 parameters{
+    real a;               // fixed intercepts
+    vector[cE] aE;        // fixed intercept (per E)
+    vector[cHS] aHS;      // fixed intercept (per HS)
+    real bP;              // fixed slope standardized PTA
+    real bA;              // fixed slope (A - A_min)
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] a;          // intercept (per child)
+    vector[I] a_i;        // random intercepts (per child)
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
     real<lower=0> M[I];   // df (per child)
-    vector[cE] aE;        // intercept (per E)
-    vector[cHS] aHS;      // intercept (per HS)
-    real bP;              // slope standardized PTA
-    real bA;              // slope (A - A_min)
 }
 transformed parameters{
     vector[I] SI;         // true SI index (per child)
@@ -30,8 +31,8 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] =  a[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      // SI[i] =  a[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
       // multicollinearity between E and HS
     }
     
@@ -46,7 +47,8 @@ model{
     sigma_the ~ exponential( 1 );
     
     // priors
-    a ~ normal( mu_a , sigma_a );
+    a ~ normal( 0 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
     M ~ lognormal( mu_the , sigma_the );
     aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );

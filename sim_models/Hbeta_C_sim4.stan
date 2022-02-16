@@ -7,9 +7,10 @@ data{
     int cid[N];           // child's id
 }
 parameters{
+    real a;               // fixed intercept
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] a;          // intercept
+    vector[I] a_i;        // random intercept
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
     real<lower=0> M[I];   // df (per child)
@@ -18,7 +19,7 @@ transformed parameters{
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    SI = a;               // linear predictor
+    SI = a + a_i;         // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
@@ -30,7 +31,8 @@ model{
 
     
     // priors
-    a ~ normal( mu_a , sigma_a );
+    a ~ normal( 0 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
     M ~ lognormal( mu_the , sigma_the );
 
     
