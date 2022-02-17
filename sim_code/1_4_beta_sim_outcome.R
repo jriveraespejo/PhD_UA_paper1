@@ -15,7 +15,7 @@ setwd('C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper
 
 
 # # loading sources
-source( file.path( getwd(), 'sim_code', '0_beta_sim_extra.R') )
+source( file.path( getwd(), 'sim_code', '1_0_beta_sim_extra.R') )
 # source( file.path( getwd(), 'sim_code', '1_3_beta_sim_run.R') ) # run only once
 
 
@@ -618,6 +618,192 @@ dist_plot( stan_object=res_NC, true_data=data_true,
 # chain stats
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','mu_a','sigma_a',
                                                   'mu_the','sigma_the') )
+stat_plot(par_recovery_C, par_recovery_NC, pars='a_i' )
+stat_plot(par_recovery_C, par_recovery_NC, pars='M' )
+stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
+stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
+
+
+
+
+# simulation 5: ####
+# 
+# details:
+# Model: 2 types
+# Outcome: complex generation different M, zero/one values
+# Covariates: 
+# E -> HS:
+#   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
+#   some E=M -> HS=HI/HA, and some E=M -> HS=HI/CI (to break multicol)  
+# PTA -> HS:
+#   positive
+#   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
+#   PTA range, L=low, M1<M2=mid, H=high
+# A -> SI: 
+#   dSI/dA > 0 (more A, more SI)
+# HS -> SI: 
+#   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
+# A * HS -> SI: 
+#   dSI/dA[HS=NH] = dSI/dA[HI/CI] = dSI/dA[HS=HI/HA] = 0 
+#   (no different evolution)
+# E -> SI:
+#   negative (higher E, less SI)
+#   SI[E=N] > SI[E=L] > SI[E=M] > SI[E=H] 
+#   E severity: N=none, L=low, M=mid, H=high 
+# PTA -> SI:
+#   negative (more PTA, less SI)
+#
+#   ideally is non-linear
+#   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
+#   PTA range, L=low, M1<M2=mid, H=high
+#
+# read simulation
+data_nam = "Hbeta_sim5"
+model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
+load( model_data )
+
+par_true = with( data_storage$data_true,
+                 c( #par$aE * c(1:4), # four groups
+                   0, par$par$aHS * c(1:3), # three groups
+                   par$par$bP, rep(par$par$bA, 3),
+                   par$par$mu_a, par$par$s_a,
+                   par$par$mu_the, par$par$s_the,
+                   #1, 0 , 0, 1,
+                   par$a, Ht$M, Ht$SI, Ht$Ht) )
+
+diff_true = c( data_storage$data_true$par$par$aHS * c(1:2,1), rep(0, 3) ) 
+
+data_true = with(data_storage$data_list, data.frame(H=H, child=cid))
+
+
+## centered no cor ####
+model_nam = "Hbeta_C_sim5_nocor"
+model_out = file.path(getwd(), 'sim_chain')
+model_fit = file_id(model_out, model_nam) 
+res_C = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+
+
+# final comparison
+par_est = c('a','aHS','bP','bAHS','mu_a','sigma_a','mu_the','sigma_the','a_i','M','SI','Ht')
+par_recovery_C = parameter_recovery( stan_object = res_C,
+                                     est_par = par_est,
+                                     true_par = par_true)
+par_recovery_C
+# poor samples for almost all parameter
+#   worst samples for the same, when E and HS are in the model
+# good samples for some M, SI, Ht 
+#   (no matter E, HS, or both in model)
+
+sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
+# 76.4% true parameters inside CI (depends on reference)
+
+par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
+# maximum RMSE is for M[27]
+# not extreme however it estimates it too far
+
+
+
+
+# contrast comparison
+cont_recovery_C = contrast_recovery(stan_object = res_C,
+                                    est_diff = c('aHS','bAHS'),
+                                    true_diff = diff_true)
+cont_recovery_C
+# when use only HS in model, contrasts come out not good (upward biased)
+#   even with I=32
+#   because we break multicollinearity
+# when use E and HS in model, contrasts come all wrong,
+#   because of multicollinearity
+#   it does not matter if you increase I or K
+
+
+# recovery plot
+recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
+
+
+# triplot
+tri_plot(stan_object=res_C, pars=c('mu_a','sigma_a','mu_the','sigma_the'))
+tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP'))
+tri_plot(stan_object=res_C, pars= paste0('bAHS[',1:3,']') )
+tri_plot(stan_object=res_C, pars=paste0('a_i[', 1:5,']') )
+tri_plot(stan_object=res_C, pars=paste0('M[', 1:5,']') )
+tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
+tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
+
+
+
+# distributional plots
+dist_plot( stan_object=res_C, true_data=data_true, 
+           par_object=par_recovery_C, M=NULL)
+
+
+
+
+## non-centered no cor ####
+model_nam = "Hbeta_NC_sim5_nocor"
+model_out = file.path(getwd(), 'sim_chain')
+model_fit = file_id(model_out, model_nam) 
+res_NC = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+
+
+# final comparison
+par_est = c('a','aHS','bP','bAHS','mu_a','sigma_a','mu_the','sigma_the','a_i','M','SI','Ht')
+par_recovery_NC = parameter_recovery( stan_object = res_NC,
+                                      est_par = par_est,
+                                      true_par = par_true)
+par_recovery_NC
+# better samples for all parameters (except sigma_a)
+#   when only HS is in the model
+#   worst samples for all parameters, when E and HS are in the model
+
+sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
+# 75.7% true parameters inside CI (depends on reference)
+
+par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
+# maximum RMSE is for M[27]
+# not extreme however it estimates it completely different
+
+
+
+
+# contrast comparison
+cont_recovery_NC = contrast_recovery(stan_object = res_NC,
+                                     est_diff = c('aHS', 'bAHS'),
+                                     true_diff = diff_true)
+cont_recovery_NC
+# when use only HS in model, contrasts come out not good (upward biased)
+#   even with I=32
+#   because we break multicollinearity
+# when use E and HS in model, contrasts come all wrong,
+#   because of multicollinearity
+#   it does not matter if you increase I or K
+
+
+# recovery plot
+recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
+
+
+
+# triplot
+tri_plot(stan_object=res_NC, pars=c('mu_a','sigma_a','mu_the','sigma_the'))
+tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP'))
+tri_plot(stan_object=res_C, pars=paste0('bAHS[',1:3,']') )
+tri_plot(stan_object=res_NC, pars=paste0('a_i[', 1:5,']') )
+tri_plot(stan_object=res_NC, pars=paste0('M[', 1:5,']') )
+tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
+tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
+
+
+
+# distributional plots
+dist_plot( stan_object=res_NC, true_data=data_true, 
+           par_object=par_recovery_NC, M=NULL)
+
+
+
+# chain stats
+stat_plot(par_recovery_C, par_recovery_NC, 
+          pars=c('a','aHS','bP','bAHS','mu_a','sigma_a','mu_the','sigma_the') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='a_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='M' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )

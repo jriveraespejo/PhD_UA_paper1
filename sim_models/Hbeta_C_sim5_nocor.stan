@@ -13,31 +13,28 @@ data{
     real PTA[I];          // (standardized) pta values
 }
 parameters{
-    real a;               // fixed intercept
-    vector[cE] aE;        // fixed intercept (per E)
+    real a;               // fixed intercepts
+    //vector[cE] aE;        // fixed intercept (per E)
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
-    real bA;              // fixed slope (A - A_min)
+    //real bA;              // fixed slope (A - A_min) (if no different effect)
+    vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    vector[I] z_a;        // random intercept (per child) noncentered
+    vector[I] a_i;        // random intercepts (per child)
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
-    vector[I] z_M;        // noncentered df (per child)
+    real<lower=0> M[I];   // df (per child)
 }
 transformed parameters{
-    vector[I] a_i;        // intercept (per child)
-    vector[I] M;          // df (per child)
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    a_i = mu_a + sigma_a * z_a;
-    M = exp( mu_the + sigma_the * z_M );
-    
     // linear predictor
     for(i in 1:I){
-      SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bAHS[HS[i]]*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*A[i] + bP*PTA[i];
       // multicollinearity between E and HS
     }
     
@@ -45,7 +42,7 @@ transformed parameters{
     Ht = inv_logit(-SI);  
 }
 model{
-    // hyperpriors
+    // simple hyperpriors
     mu_a ~ normal( 0 , 0.5 );
     sigma_a ~ exponential( 1 );
     mu_the ~ normal( 0 , 0.5 );
@@ -53,12 +50,13 @@ model{
     
     // priors
     a ~ normal( 0 , 0.5 );
-    z_a ~ std_normal();
-    z_M ~ std_normal();
-    aE ~ normal( 0 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
+    M ~ lognormal( mu_the , sigma_the );
+    //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
-    bA ~ normal( 0 , 0.3 );
+    //bA ~ normal( 0 , 0.3 );
+    bAHS ~ normal( 0 , 0.3 );
     
     // likelihood
     for(n in 1:N){

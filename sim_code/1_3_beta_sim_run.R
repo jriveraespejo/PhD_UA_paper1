@@ -295,8 +295,8 @@ model_data = file.path(getwd(), 'sim_data', data_nam)
 load(model_data)
 
 
-## centered ####
-model_nam = "Hbeta_C_sim5.stan"
+## centered no cor ####
+model_nam = "Hbeta_C_sim5_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
@@ -304,11 +304,11 @@ mod$sample( data=data_storage$data_list,
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
-# YES divergent transitions: 900-1500 of 4000
+# YES divergent transitions: 150-450 of 4000
 
 
-## non-centered ####
-model_nam = "Hbeta_NC_sim5.stan"
+## non-centered no cor ####
+model_nam = "Hbeta_NC_sim5_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
@@ -317,3 +317,27 @@ mod$sample( data=data_storage$data_list,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
 # NO divergent transitions
+
+
+## centered cor ####
+model_nam = "Hbeta_C_sim5_cor.stan"
+model_in = file.path(getwd(), 'sim_models')
+model_out = file.path(getwd(), 'sim_chain')
+mod = cmdstan_model( file.path(model_in, model_nam) )
+mod$sample( data=data_storage$data_list, 
+            output_dir=model_out, 
+            output_basename = str_replace(model_nam, '.stan', ''),
+            chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+# YES divergent transitions: 100-300 of 4000
+
+
+## non-centered cor ####
+model_nam = "Hbeta_NC_sim5_cor.stan"
+model_in = file.path(getwd(), 'sim_models')
+model_out = file.path(getwd(), 'sim_chain')
+mod = cmdstan_model( file.path(model_in, model_nam) )
+mod$sample( data=data_storage$data_list, 
+            output_dir=model_out, 
+            output_basename = str_replace(model_nam, '.stan', ''),
+            chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+# YES divergent transitions: 90-150 of 4000

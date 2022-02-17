@@ -14,7 +14,7 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    vector[cE] aE;        // fixed intercept (per E)
+    //vector[cE] aE;        // fixed intercept (per E)
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
@@ -55,7 +55,7 @@ model{
     a ~ normal( 0 , 0.5 );
     z_a ~ std_normal();
     z_M ~ std_normal();
-    aE ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );

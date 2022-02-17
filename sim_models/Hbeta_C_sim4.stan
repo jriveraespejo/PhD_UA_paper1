@@ -29,13 +29,11 @@ model{
     mu_the ~ normal( 0 , 0.5 );
     sigma_the ~ exponential( 1 );
 
-    
     // priors
     a ~ normal( 0 , 0.5 );
     a_i ~ normal( mu_a , sigma_a );
     M ~ lognormal( mu_the , sigma_the );
 
-    
     // likelihood
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );

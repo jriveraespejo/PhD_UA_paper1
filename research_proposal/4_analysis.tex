@@ -148,9 +148,9 @@ Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate se
 %
 Previous research already used hierarchical models with the replicated entropy measures as outcomes \citep{Boonen_et_al_2021, Faes_et_al_2021}. Hierarchical models are powerful to control for heterogeneity in the data, and also to avoid pre-aggregating procedures that could be pernicious for a proper statistical inference \citep{McElreath_2020}. 
 
-These claims are easier to understand using a though experiment within our research. Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the heterogeneity across the $10$ utterances of such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility.
+These claims are easier to understand using a though experiment within our research. Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the entropy's heterogeneity across the $10$ utterances also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility.
 
-The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}, and it is what justify our use of a hierarchical model. More specifically, the use Hierarchical (Mixed) Beta Regression model \citep{Figueroa-Zuniga_et_al_2013}, for which we argue, its implementation is rather trivial under the bayesian framework, and we present it in the following lines.
+The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}, and it is what justify our use of a hierarchical model. More specifically, we will use a Hierarchical (Mixed) Beta Regression model \citep{Figueroa-Zuniga_et_al_2013}, for which we argue, its implementation is rather trivial under the bayesian framework, and we present it in the following lines.
 %
 \begin{figure}[h]
 	\centering
@@ -184,47 +184,56 @@ Lastly, we proceed to use probabilistic programming to declare the algebraic str
 %
 \begin{align}
 	%
-	\text{likelihood:} & \nonumber \\
+	\text{Likelihood:} & \nonumber \\
 	%
 	H^{O}_{ik} & \sim \text{BetaProp} \left( H^{T}_{i}, M_{i} \right) \\ 
 	%
-	SI_{i} & \sim \text{N} \left( \mu_{i}, \sigma \right) \\
+	\nonumber \\
+	%
+	%
+	\text{Transformed parameters:} & \nonumber \\
+	%
+	H^{T}_{i} &= \text{logit}^{-1}( -SI_{i} ) \\
 	%
 	\nonumber \\
 	%
 	%
-	\text{transformed parameters:} & \nonumber \\
-	%
-	H^{T}_{i} &= \text{logit}^{-1}( SI_{i} ) \\
-	%
-	M_{i} &= \kappa_{i} + 9 \\
+	\text{Linear predictor:} & \nonumber \\
+	SI_{i} & = a_{i} + \alpha + \alpha_{HS[i]} + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \alpha_{E[i]} + \beta_{P} PTA_{i} \\ 
 	%
 	\nonumber \\
 	%
 	%
-	\text{linear predictor:} & \nonumber \\
-	\mu_{i} & = \alpha_{HS[i]} + \beta_{HS[i]} (A_{i} - \bar{A}) + \alpha_{E[i]} + \beta_{P} PTA_{i} \\ 
+	\text{Priors:} & \nonumber \\
 	%
-	\nonumber \\
+	M_{i} & \sim \text{LN}( \mu_{M}, \sigma_{M}) \\
 	%
+	a_{i} & \sim \text{N}(\mu_{a}, \sigma_{a}) \\
 	%
-	\text{priors:} & \nonumber \\
-	%
-	\sigma & \sim \text{Exp}(1) \\
-	%
-	\kappa_{i} & \sim \text{Exp}(2) \\
-	%
+	\alpha & \sim \text{N}(0, 0.5) \\
 	\alpha_{HS[i]} & \sim \text{N}(0, 0.5) \\
 	%
-	\beta_{HS[i]} & \sim \text{N}(0 , 0.3) \\
+	\beta_{A, HS[i]} & \sim \text{N}(0 , 0.3) \\
 	%
 	\alpha_{E[i]} & \sim \text{N}(0, 0.5) \\
 	%
-	\beta_{P} & \sim \text{N}(0, 0.3)
+	\beta_{P} & \sim \text{N}(0, 0.3) \\
+	%
+	\nonumber \\
+	%
+	%
+	\text{Hyper-priors:} & \nonumber \\
+	%
+	\mu_{M} & \sim \text{N}(0, 5) \\
+	\sigma_{M} & \sim \text{Exp}(1) \\
+	\mu_{a} & \sim \text{N}(0, 0.5) \\
+	\sigma_{a} & \sim \text{Exp}(1)\\
 	%
 \end{align}
 %
-\textcolor{blue}{where $\sigma_{H}$ denotes the variability of the replicated entropy measures, $\alpha_{HS[i]}$ and $\beta_{HS[i]}$ the intercept and slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, $\beta_{P}$ the slope for the PTA levels, and finally, $\text{logit}\left( H^{O}_{ik} \right) = \log \left[ H^{O}_{ik} / ( 1 - H^{O}_{ik} ) \right]$. Notice all the parameters are estimated in the logit scale and centered at $\bar{A}$, which denotes the minimum hearing age in the sample. Additionally, notice we have used mildly informative priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. Finally, notice we can obtain the model in panel (a) if we do not consider etiology and PTA values in equation (2).}
+where $\text{logit}(x) = \log \left[ x / ( 1 - x ) \right]$, and $\text{logit}^{-1}(x) = \exp(x) / ( 1 + \exp(x) ) $. Additionally, a $\text{BetaProp}(\mu, \theta)$ distribution is equal to a $\text{Beta}(\alpha, \beta)$ distribution, with $\alpha=\mu \theta$, $\beta=(1-\mu)\theta$. For our purposes, $\mu = H^{T}_{i}$ and $\theta = M_{i}$, the latter denoting the ``sample size" of the distribution. Moreover, $a_{i}$ denote the children's random effects, $\alpha$ the fixed effects' intercept, $\alpha_{HS[i]}$ and $\beta_{A, HS[i]}$ the intercept and slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, and $\beta_{P}$ the slope for the standardized PTA levels. 
+
+Four important things need to be noticed from the previous algebraic structure. First, all the parameters are estimated in the logit scale and centered at $PTA_{i}=0$ and $\bar{A}$, which denotes the minimum hearing age in the sample. Second, use the latent ``sample size" parameter $M_{i}$ to model the heterogeneity/variability of the replicated entropies, instead of a latent measurement error $e_i$. This provides a valid way to model the entropy's variability, as the parameter defines the shape of the distribution. Third, we use mildly informative priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. Fourth and final, the panel (a) model can be obtained if we do not consider etiology and PTA values in equation (4).
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

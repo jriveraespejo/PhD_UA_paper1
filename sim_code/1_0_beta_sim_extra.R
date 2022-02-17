@@ -58,7 +58,7 @@ number_detect_par = function(precis_object, est_par){
   for(j in 1:length(est_par)){
     
     # identify parameters of interest
-    if(est_par[j]=='a'){
+    if(est_par[j] %in% c('a','bA') ){
       idx_mom = row.names(precis_object) == est_par[j]
     } else{
       idx_mom = str_detect( row.names(precis_object), paste0('^',est_par[j]) )
@@ -97,7 +97,7 @@ index_detect_par = function(precis_object, est_par){
   for(j in 1:length(est_par)){
     
     # identify parameters of interest
-    if(est_par[j]=='a'){
+    if(est_par[j] %in% c('a','bA') ){
       idx_mom = row.names(precis_object) == est_par[j]
     } else{
       idx_mom = str_detect( row.names(precis_object), paste0('^',est_par[j]) )
@@ -201,7 +201,7 @@ parameter_recovery = function(stan_object, est_par, true_par,
                               diff=F, prec=3, seed=1){
   
   # # test
-  # stan_object=res
+  # stan_object=res_C
   # est_par=par_est
   # true_par=par_true
   # prec=3
@@ -341,7 +341,8 @@ recovery_plots = function(par_object, cont_object=NULL){
   
   # parameters of interest
   par_int = list( pop_par = c('mu_a','sigma_a','mu_the','sigma_the'), 
-                  reg_par = c('a','aHS','aE','bP','bA'),
+                  reg_par = c('a','aHS','aE','bP','bA','bAHS'),
+                  cor_par = 'Rho',
                   ext_par1 = 'a_i',
                   ext_par2 = 'M',
                   ext_par3 = 'SI',

@@ -1,0 +1,46 @@
+# stan_version_major = 2
+# stan_version_minor = 28
+# stan_version_patch = 1
+# model = Hbeta_C_cor_sim5_model
+# start_datetime = 2022-02-17 15:19:06 UTC
+# method = sample (Default)
+#   sample
+#     num_samples = 1000 (Default)
+#     num_warmup = 1000 (Default)
+#     save_warmup = 0 (Default)
+#     thin = 1 (Default)
+#     adapt
+#       engaged = 1 (Default)
+#       gamma = 0.050000000000000003 (Default)
+#       delta = 0.80000000000000004 (Default)
+#       kappa = 0.75 (Default)
+#       t0 = 10 (Default)
+#       init_buffer = 75 (Default)
+#       term_buffer = 50 (Default)
+#       window = 25 (Default)
+#     algorithm = hmc (Default)
+#       hmc
+#         engine = nuts (Default)
+#           nuts
+#             max_depth = 10 (Default)
+#         metric = diag_e (Default)
+#         metric_file =  (Default)
+#         stepsize = 1 (Default)
+#         stepsize_jitter = 0 (Default)
+#     num_chains = 1 (Default)
+# id = 4
+# data
+#   file = C:/Users/JRIVER~1/AppData/Local/Temp/Rtmpkhhw1f/standata-53587e966853.json
+# init = 2 (Default)
+# random
+#   seed = 1579652206
+# output
+#   file = C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper1/sim_chain/Hbeta_NC_cor_sim5-4.csv
+#   diagnostic_file =  (Default)
+#   refresh = 100 (Default)
+#   sig_figs = -1 (Default)
+#   profile_file = C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper1/sim_chain/Hbeta_C_cor_sim5-profile-4.csv
+# num_threads = 1 (Default)
+# stanc_version = stanc3 v2.28.1
+# stancflags = --name=Hbeta_C_cor_sim5_model
+lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,divergent__,energy__,a,aE.1,aE.2,aE.3,aE.4,aHS.1,aHS.2,aHS.3,mu_aHS,bP,bA,bAHS.1,bAHS.2,bAHS.3,mu_bAHS,sigma_abHS.1,sigma_abHS.2,Rho.1.1,Rho.2.1,Rho.1.2,Rho.2.2,mu_a,sigma_a,a_i.1,a_i.2,a_i.3,a_i.4,a_i.5,a_i.6,a_i.7,a_i.8,a_i.9,a_i.10,a_i.11,a_i.12,a_i.13,a_i.14,a_i.15,a_i.16,a_i.17,a_i.18,a_i.19,a_i.20,a_i.21,a_i.22,a_i.23,a_i.24,a_i.25,a_i.26,a_i.27,a_i.28,a_i.29,a_i.30,a_i.31,a_i.32,mu_the,sigma_the,M.1,M.2,M.3,M.4,M.5,M.6,M.7,M.8,M.9,M.10,M.11,M.12,M.13,M.14,M.15,M.16,M.17,M.18,M.19,M.20,M.21,M.22,M.23,M.24,M.25,M.26,M.27,M.28,M.29,M.30,M.31,M.32,SI.1,SI.2,SI.3,SI.4,SI.5,SI.6,SI.7,SI.8,SI.9,SI.10,SI.11,SI.12,SI.13,SI.14,SI.15,SI.16,SI.17,SI.18,SI.19,SI.20,SI.21,SI.22,SI.23,SI.24,SI.25,SI.26,SI.27,SI.28,SI.29,SI.30,SI.31,SI.32,Ht.1,Ht.2,Ht.3,Ht.4,Ht.5,Ht.6,Ht.7,Ht.8,Ht.9,Ht.10,Ht.11,Ht.12,Ht.13,Ht.14,Ht.15,Ht.16,Ht.17,Ht.18,Ht.19,Ht.20,Ht.21,Ht.22,Ht.23,Ht.24,Ht.25,Ht.26,Ht.27,Ht.28,Ht.29,Ht.30,Ht.31,Ht.32

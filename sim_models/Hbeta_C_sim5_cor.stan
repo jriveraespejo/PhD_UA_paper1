@@ -14,17 +14,17 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    vector[cE] aE;        // fixed intercept (per E)
+    //vector[cE] aE;        // fixed intercept (per E)
     vector[cHS] aHS;      // fixed intercept (per HS)
     real mu_aHS;          // hyperparameter for aHS
     real bP;              // fixed slope standardized PTA
-    real bA;              // fixed slope (A - A_min)
+    //real bA;              // fixed slope (A - A_min)
     vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
     real mu_bAHS;         // hyperparameter for bAHS
     vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
+    corr_matrix[2] Rho;   // correlation matrix for aHS and bAHS
     real mu_a;            // mean of population
     real<lower=0> sigma_a;// variability of population
-    corr_matrix[2] Rho;   // correlation matrix for aHS and bAHS
     vector[I] a_i;        // random intercepts (per child)
     real mu_the;          // mean of df
     real<lower=0> sigma_the;// variability of df
@@ -36,8 +36,9 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = a + a_i[i] + aHS[HS[i]] + (bA + bAHS[HS[i]])*A[i] + bP*PTA[i];
-      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + (bA + bAHS[HS[i]])*A[i] + bP*PTA[i];
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bAHS[HS[i]]*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*A[i] + bP*PTA[i];
       // multicollinearity between E and HS
     }
     
@@ -76,9 +77,9 @@ model{
     a ~ normal( 0 , 0.5 );
     a_i ~ normal( mu_a , sigma_a );
     M ~ lognormal( mu_the , sigma_the );
-    aE ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
-    bA ~ normal( 0 , 0.3 );
+    //bA ~ normal( 0 , 0.3 );
     
     // likelihood
     for(n in 1:N){

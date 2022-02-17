@@ -15,7 +15,7 @@ setwd('C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper
 
 
 # loading sources
-source( file.path( getwd(), 'sim_code', '0_beta_sim_extra.R') )
+source( file.path( getwd(), 'sim_code', '1_0_beta_sim_extra.R') )
 
 
 
