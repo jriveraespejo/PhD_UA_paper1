@@ -354,8 +354,8 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 #   positive
 #   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
 #   PTA range, L=low, M1<M2=mid, H=high
-# A -> SI:
-#   positive (more A, more SI)
+# A -> SI: 
+#   dSI/dA > 0 (more A, more SI)
 # HS -> SI:
 #   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
 # E -> SI:

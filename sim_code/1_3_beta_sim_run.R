@@ -33,6 +33,10 @@ source( file.path( getwd(), 'sim_code', '1_2_beta_sim_function.R') )
 # Outcome: easy generation M=10, no zero values
 # Covariates: None
 #
+# simulating and saving data
+Hsim1(I=32, K=10, seed=12345, par=list(mu_a=0, s_a=1))
+
+
 # loading data
 data_nam = 'Hbeta_sim1.RData'
 model_data = file.path(getwd(), 'sim_data', data_nam)
@@ -95,6 +99,14 @@ mod$sample( data=data_storage$data_list,
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
 #   PTA range, L=low, M1<M2=mid, H=high
 #
+# simulating and saving data 
+Hsim2(I=32, K=10, seed=12345, 
+      prop=c(0.38, 0.31, 0.31), # proportion of children
+      par=list( mu_a=0.5, s_a=0.2, aE=-0.1, 
+                aHS=-0.4, bP=-0.1, bA=0.15 ))
+
+
+# loading data
 data_nam = 'Hbeta_sim2.RData'
 model_data = file.path(getwd(), 'sim_data', data_nam)
 load(model_data)
@@ -142,7 +154,7 @@ mod$sample( data=data_storage$data_list,
 #   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
 #   PTA range, L=low, M1<M2=mid, H=high
 # A -> SI: 
-#   positive (more A, more SI)
+#   dSI/dA > 0 (more A, more SI)
 # HS -> SI: 
 #   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
 # E -> SI:
@@ -156,6 +168,14 @@ mod$sample( data=data_storage$data_list,
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
 #   PTA range, L=low, M1<M2=mid, H=high
 #
+# simulating and saving data
+Hsim3(I=32, K=10, seed=12345,
+      prop=c(0.38, 0.31, 0.31), # proportion of children
+      par=list( mu_a=0.5, s_a=0.2, mu_the=1.5, s_the=0.5,
+                aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15 ))
+
+
+# loading data
 data_nam = 'Hbeta_sim3.RData'
 model_data = file.path(getwd(), 'sim_data', data_nam)
 load(model_data)
@@ -195,6 +215,10 @@ mod$sample( data=data_storage$data_list,
 # Outcome = no known process behind (no known M)
 # Covariates: not modeled
 #
+# simulating 
+Hsim4(children=32, words=10, judges=100, max_occ=50)
+
+# loading data
 data_nam = 'Hbeta_sim4.RData'
 model_data = file.path(getwd(), 'sim_data', data_nam)
 load(model_data)
@@ -214,6 +238,77 @@ mod$sample( data=data_storage$data_list,
 
 ## non-centered ####
 model_nam = "Hbeta_NC_sim4.stan"
+model_in = file.path(getwd(), 'sim_models')
+model_out = file.path(getwd(), 'sim_chain')
+mod = cmdstan_model( file.path(model_in, model_nam) )
+mod$sample( data=data_storage$data_list, 
+            output_dir=model_out, 
+            output_basename = str_replace(model_nam, '.stan', ''),
+            chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+# NO divergent transitions
+
+
+
+
+
+# simulation 5: ####
+# 
+# details:
+# Model: 2 types
+# Outcome: complex generation different M, zero/one values
+# Covariates: 
+# E -> HS:
+#   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
+#   some E=M -> HS=HI/HA, and some E=M -> HS=HI/CI (to break multicol)  
+# PTA -> HS:
+#   positive
+#   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
+#   PTA range, L=low, M1<M2=mid, H=high
+# A -> SI: 
+#   dSI/dA > 0 (more A, more SI)
+# HS -> SI: 
+#   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
+# A * HS -> SI: 
+#   dSI/dA[HS=NH] = dSI/dA[HI/CI] = dSI/dA[HS=HI/HA] = 0 
+#   (no different evolution)
+# E -> SI:
+#   negative (higher E, less SI)
+#   SI[E=N] > SI[E=L] > SI[E=M] > SI[E=H] 
+#   E severity: N=none, L=low, M=mid, H=high 
+# PTA -> SI:
+#   negative (more PTA, less SI)
+#
+#   ideally is non-linear
+#   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
+#   PTA range, L=low, M1<M2=mid, H=high
+#
+# simulating and saving data
+Hsim5(I=32, K=10, seed=12345,
+      prop=c(0.38, 0.31, 0.31), # proportion of children
+      par=list( mu_a=0.5, s_a=0.2, mu_the=1.5, s_the=0.5,
+                aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ))
+
+
+# loading data
+data_nam = 'Hbeta_sim5.RData'
+model_data = file.path(getwd(), 'sim_data', data_nam)
+load(model_data)
+
+
+## centered ####
+model_nam = "Hbeta_C_sim5.stan"
+model_in = file.path(getwd(), 'sim_models')
+model_out = file.path(getwd(), 'sim_chain')
+mod = cmdstan_model( file.path(model_in, model_nam) )
+mod$sample( data=data_storage$data_list, 
+            output_dir=model_out, 
+            output_basename = str_replace(model_nam, '.stan', ''),
+            chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+# YES divergent transitions: 900-1500 of 4000
+
+
+## non-centered ####
+model_nam = "Hbeta_NC_sim5.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )

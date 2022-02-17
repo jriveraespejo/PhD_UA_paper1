@@ -296,7 +296,7 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 #   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
 #   PTA range, L=low, M1<M2=mid, H=high
 # A -> SI: 
-#   positive (more A, more SI)
+#   dSI/dA > 0 (more A, more SI)
 # HS -> SI: 
 #   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
 # E -> SI:
@@ -577,3 +577,210 @@ model{
 # cmdstan
 model_nam = "Hbeta_NC_sim4.stan"
 writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
+
+
+
+
+# simulation 5: ####
+# 
+# details:
+# Model: 2 types
+# Outcome: complex generation different M, zero/one values
+# Covariates: 
+# E -> HS:
+#   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
+#   some E=M -> HS=HI/HA, and some E=M -> HS=HI/CI (to break multicol)  
+# PTA -> HS:
+#   positive
+#   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
+#   PTA range, L=low, M1<M2=mid, H=high
+# A -> SI: 
+#   dSI/dA > 0 (more A, more SI)
+# HS -> SI: 
+#   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
+# A * HS -> SI: 
+#   dSI/dA[HS=NH] = dSI/dA[HI/CI] = dSI/dA[HS=HI/HA] = 0 
+#   (no different evolution)
+# E -> SI:
+#   negative (higher E, less SI)
+#   SI[E=N] > SI[E=L] > SI[E=M] > SI[E=H] 
+#   E severity: N=none, L=low, M=mid, H=high 
+# PTA -> SI:
+#   negative (more PTA, less SI)
+#
+#   ideally is non-linear
+#   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
+#   PTA range, L=low, M1<M2=mid, H=high
+#
+## centered ####
+mcmc_code = "
+data{
+    int N;                // experimental runs
+    int K;                // replicates (utterances)
+    int I;                // experimental units (children)
+    int cHS;              // categories in Hearing Status (HS)
+    int cE;               // categories in Etiology (E)
+    real H[N];            // replicated entropies
+    int cid[N];           // child's id
+    int HS[I];            // hearing status 
+    int A[I];             // hearing age
+    int E[I];             // etiology
+    real PTA[I];          // (standardized) pta values
+}
+parameters{
+    real a;               // fixed intercepts
+    vector[cE] aE;        // fixed intercept (per E)
+    vector[cHS] aHS;      // fixed intercept (per HS)
+    real mu_aHS;          // hyperparameter for aHS
+    real bP;              // fixed slope standardized PTA
+    real bA;              // fixed slope (A - A_min)
+    vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
+    real mu_bAHS;         // hyperparameter for bAHS
+    vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
+    real mu_a;            // mean of population
+    real<lower=0> sigma_a;// variability of population
+    corr_matrix[2] Rho;   // correlation matrix for aHS and bAHS
+    vector[I] a_i;        // random intercepts (per child)
+    real mu_the;          // mean of df
+    real<lower=0> sigma_the;// variability of df
+    real<lower=0> M[I];   // df (per child)
+}
+transformed parameters{
+    vector[I] SI;         // true SI index (per child)
+    vector[I] Ht;         // true entropy (per child)
+    
+    // linear predictor
+    for(i in 1:I){
+      SI[i] = a + a_i[i] + aHS[HS[i]] + (bA + bAHS[HS[i]])*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + (bA + bAHS[HS[i]])*A[i] + bP*PTA[i];
+      // multicollinearity between E and HS
+    }
+    
+    // average entropy (SI -> Ht: negative)
+    Ht = inv_logit(-SI);  
+}
+model{
+    // parameter not to follow
+    vector[2] mu_abHS;    // hyperprior mean for aHS and bAHS
+    matrix[2,2] S_abHS;   // hyperprior SD for aHS and bAHS
+    vector[2] RE[cHS];    // declare storage for fixed effects
+    // first are columns, and then rows
+    
+    
+    // simple hyperpriors
+    mu_a ~ normal( 0 , 0.5 );
+    sigma_a ~ exponential( 1 );
+    mu_the ~ normal( 0 , 0.5 );
+    sigma_the ~ exponential( 1 );
+    
+    // hyperprior for correlated fixed effects
+    mu_aHS ~ normal( 0 , 0.5 ); 
+    mu_bAHS  ~ normal( 0 , 0.5 );
+    sigma_abHS ~ exponential( 1 );
+    Rho ~ lkj_corr( 2 );  
+
+    mu_abHS = [mu_aHS , mu_bAHS]';
+    S_abHS = quad_form_diag(Rho, sigma_abHS);
+    for ( c in 1:cHS ){ 
+      RE[c] = [aHS[c], bAHS[c]]';      // storage first fixed effects
+    }
+    RE ~ multi_normal( mu_abHS , S_abHS ); 
+
+    
+    // priors
+    a ~ normal( 0 , 0.5 );
+    a_i ~ normal( mu_a , sigma_a );
+    M ~ lognormal( mu_the , sigma_the );
+    aE ~ normal( 0 , 0.5 );
+    bP ~ normal( 0 , 0.3 );
+    bA ~ normal( 0 , 0.3 );
+    
+    // likelihood
+    for(n in 1:N){
+      H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
+    }
+}
+"
+
+# cmdstan
+model_nam = "Hbeta_C_sim5.stan"
+writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
+
+
+
+
+
+## non-centered ####
+mcmc_code = "
+data{
+    int N;                // experimental runs
+    int K;                // replicates (utterances)
+    int I;                // experimental units (children)
+    int cHS;              // categories in Hearing Status (HS)
+    int cE;               // categories in Etiology (E)
+    real H[N];            // replicated entropies
+    int cid[N];           // child's id
+    int HS[I];            // hearing status 
+    int A[I];             // hearing age
+    int E[I];             // etiology
+    real PTA[I];          // (standardized) pta values
+}
+parameters{
+    real a;               // fixed intercept
+    vector[cE] aE;        // fixed intercept (per E)
+    vector[cHS] aHS;      // fixed intercept (per HS)
+    real bP;              // fixed slope standardized PTA
+    real bA;              // fixed slope (A - A_min)
+    real mu_a;            // mean of population
+    real<lower=0> sigma_a;// variability of population
+    vector[I] z_a;        // random intercept (per child) noncentered
+    real mu_the;          // mean of df
+    real<lower=0> sigma_the;// variability of df
+    vector[I] z_M;        // noncentered df (per child)
+}
+transformed parameters{
+    vector[I] a_i;        // intercept (per child)
+    vector[I] M;          // df (per child)
+    vector[I] SI;         // true SI index (per child)
+    vector[I] Ht;         // true entropy (per child)
+    
+    a_i = mu_a + sigma_a * z_a;
+    M = exp( mu_the + sigma_the * z_M );
+    
+    // linear predictor
+    for(i in 1:I){
+      SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
+      // multicollinearity between E and HS
+    }
+    
+    // average entropy (SI -> Ht: negative)
+    Ht = inv_logit(-SI);  
+}
+model{
+    // hyperpriors
+    mu_a ~ normal( 0 , 0.5 );
+    sigma_a ~ exponential( 1 );
+    mu_the ~ normal( 0 , 0.5 );
+    sigma_the ~ exponential( 1 );
+    
+    // priors
+    a ~ normal( 0 , 0.5 );
+    z_a ~ std_normal();
+    z_M ~ std_normal();
+    aE ~ normal( 0 , 0.5 );
+    aHS ~ normal( 0 , 0.5 );
+    bP ~ normal( 0 , 0.3 );
+    bA ~ normal( 0 , 0.3 );
+    
+    // likelihood
+    for(n in 1:N){
+      H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
+    }
+}
+"
+
+# cmdstan
+model_nam = "Hbeta_NC_sim5.stan"
+writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
+

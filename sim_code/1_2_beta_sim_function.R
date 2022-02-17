@@ -34,6 +34,10 @@ Hsim1 = function(I=32, K=10, seed=12345,
   # initial parameters
   # I = 32 # children
   # K = 10 # utterances
+  # seed=12345
+  # par=list(mu_a=0, s_a=1)
+  
+  # simulation
   set.seed(seed)
   a = rnorm(I, par$mu_a, par$s_a)
   
@@ -81,9 +85,6 @@ Hsim1 = function(I=32, K=10, seed=12345,
   
 }
 
-# simulating 
-Hsim1()
-
 
 
 
@@ -124,6 +125,10 @@ Hsim2 = function(I=32, K=10, seed=12345,
   # # initial parameters
   # I = 32 # children
   # K = 10 # utterances
+  # seed=12345
+  # prop=c(0.38, 0.31, 0.31)
+  # par=list( mu_a=0.5, s_a=0.2, aE=-0.1, 
+  #           aHS=-0.4, bP=-0.1, bA=0.15 )
   
   # storage 1
   Ht = data.frame(matrix(NA, nrow=I, ncol=6))
@@ -209,10 +214,6 @@ Hsim2 = function(I=32, K=10, seed=12345,
 }
 
 
-# simulating 
-Hsim2()
-
-
 
 
 # simulation 3: ####
@@ -229,7 +230,7 @@ Hsim2()
 #   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
 #   PTA range, L=low, M1<M2=mid, H=high
 # A -> SI: 
-#   positive (more A, more SI)
+#   dSI/dA > 0 (more A, more SI)
 # HS -> SI: 
 #   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
 # E -> SI:
@@ -252,6 +253,10 @@ Hsim3 = function(I=32, K=10, seed=12345,
   # # initial parameters
   # I = 32 # children
   # K = 10 # utterances
+  # seed=12345
+  # prop=c(0.38, 0.31, 0.31)
+  # par=list( mu_a=0.5, s_a=0.2, mu_the=1.5, s_the=0.5,
+  #           aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15 )
   
   # storage 1
   Ht = data.frame(matrix(NA, nrow=I, ncol=6))
@@ -339,10 +344,6 @@ Hsim3 = function(I=32, K=10, seed=12345,
 }
 
 
-# simulating 
-Hsim3()
-
-
 
 
 
@@ -353,13 +354,13 @@ Hsim3()
 # Covariates: not modeled
 #
 # simulation function
-Hsim4 = function( children=32, words=10, judges=100, max_occ=100 ){
+Hsim4 = function( children=32, words=10, judges=100, max_occ=50 ){
   
   # # data
   # children = 32
   # words = 10 # utterances
   # judges = 100
-  # max_occ=10
+  # max_occ=50
   
   
   # full transcriptions (diff. numbers count as diff. words)
@@ -444,5 +445,143 @@ Hsim4 = function( children=32, words=10, judges=100, max_occ=100 ){
 }
 
 
-# simulating 
-Hsim4()
+
+
+# simulation 5: ####
+# 
+# details:
+# Model: 2 types
+# Outcome: complex generation different M, zero/one values
+# Covariates: 
+# E -> HS:
+#   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
+#   some E=M -> HS=HI/HA, and some E=M -> HS=HI/CI (to break multicol)  
+# PTA -> HS:
+#   positive
+#   PTA=L -> HS=NH, PTA=M1|M2 -> HS=HI/HA, PTA=M2|H -> HS=HI/CI
+#   PTA range, L=low, M1<M2=mid, H=high
+# A -> SI: 
+#   dSI/dA > 0 (more A, more SI)
+# HS -> SI: 
+#   SI[HS=NH] > SI[HS=HI/CI] > SI[HS=HI/HA]
+# A * HS -> SI: 
+#   dSI/dA[HS=NH] = dSI/dA[HI/CI] = dSI/dA[HS=HI/HA] = 0 
+#   (no different evolution)
+# E -> SI:
+#   negative (higher E, less SI)
+#   SI[E=N] > SI[E=L] > SI[E=M] > SI[E=H] 
+#   E severity: N=none, L=low, M=mid, H=high 
+# PTA -> SI:
+#   negative (more PTA, less SI)
+#
+#   ideally is non-linear
+#   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
+#   PTA range, L=low, M1<M2=mid, H=high
+#
+# function
+Hsim5 = function(I=32, K=10, seed=12345,
+                 prop=c(0.38, 0.31, 0.31), # proportion of children
+                 par=list( mu_a=0.5, s_a=0.2, mu_the=1.5, s_the=0.5,
+                           aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
+  
+  # # initial parameters
+  # I = 32 # children
+  # K = 10 # utterances
+  # seed=12345
+  # prop=c(0.38, 0.31, 0.31)
+  # par=list( mu_a=0.5, s_a=0.2, mu_the=1.5, s_the=0.5,
+  #           aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 )
+  
+  # storage 1
+  Ht = data.frame(matrix(NA, nrow=I, ncol=6))
+  names(Ht) = c('child','E','PTA','A','HS','SI')
+  Ht$child = 1:I
+  
+  
+  # generating relationships
+  set.seed(seed)
+  # prop=c(0.38, 0.31, 0.31)
+  prop = round( prop*I )
+  Ht$HS = c( rep(1, prop[1]), rep(2, prop[2]), rep(3, prop[3])) 
+  Ht$A = c( rep(7, prop[1]), round(rnorm( sum(prop[2:3]), 5, 1)) ) 
+  Ht$A = ifelse(Ht$A>7, 7, Ht$A)
+  
+  # no way to know true effects
+  Ht$E = c( rep(1, prop[1]), 
+            sample(2:3, size=prop[2], replace=T),
+            sample(3:4, size=prop[3], replace=T)) 
+  
+  Ht$PTA = c( round(rnorm(prop[1], 60, 10)), # first 12 NH 
+              round(rnorm(prop[2], 90, 10)), # last 20
+              round(rnorm(prop[3], 110, 20)))
+  
+  
+  # final effects
+  set.seed(seed)
+  a = rnorm(I, par$mu_a, par$s_a)
+  aE = par$aE
+  aHS = par$aHS
+  bP = par$bP
+  bA = par$bA
+  bAHS = par$bAHS # it has to be very small to make sense abs([0, 0.015])
+  
+  # # example
+  # data_mom = data.frame( eff = with(Ht, -0.015*( A - min(A) )*HS))
+  # data_mom$HS = as.integer(Ht$HS)
+  # data_mom %>%
+  #   group_by(HS) %>%
+  #   summarise(mean = mean(eff, na.rm=T), sd=sd(eff, na.rm=T))
+  
+  Ht$SI = with(Ht, a + aE*E + aHS*HS + bA*( A - min(A) ) + 
+                 bAHS*( A - min(A) )*HS +  
+                 bP * c( standardize(PTA) ) )
+  Ht$Ht = inv_logit(-Ht$SI) # true entropy (SI -> Ht: negative)
+  
+  Ht$M = rlnorm(I, meanlog = par$mu_the, sdlog= par$s_the) # degrees of freedom
+  Ht$M = round(Ht$M)
+  # hist(Ht$SI, breaks=100, xlim=c(-1,1))
+  # hist(Ht$Ht, breaks=100, xlim=c(0,1))
+  # well distributed
+  
+  
+  # storage 2
+  N = I*K
+  H = data.frame(matrix(NA, nrow=N, ncol=3))
+  names(H) = c('child','utterance','H')
+  H$child = rep(1:I, each=K)
+  H$utterance = rep(1:K, I)
+  # str(H)
+  
+  # generating observed entropy
+  # i=1
+  for(i in 1:I){
+    index = H$child==i
+    H$H[index] = rbeta2(n=K, prob=Ht$Ht[i], theta=Ht$M[i])
+  }
+  # View(H)
+  
+  
+  # data list
+  dlist = list(
+    N = nrow(H),
+    K = max(H$utterance), # utterances
+    I = nrow(Ht),
+    cHS = max(Ht$HS),
+    cE = max(Ht$E),
+    H = with(H, ifelse(H==0, 0.0001, ifelse(H==1, 0.9999, H)) ), # trick
+    cid = H$child,
+    HS = Ht$HS,
+    A = with(Ht, A - min(A) ),
+    E = Ht$E,
+    PTA = c( standardize( Ht$PTA ) ) )
+  
+  
+  # storage
+  data_storage = list(data_true=list( H=H, Ht=Ht, par=list( par=par, a=a) ),
+                      data_list=dlist)
+  
+  # save data
+  file_name = 'Hbeta_sim5.RData'
+  save(data_storage, file=file.path(getwd(), 'sim_data', file_name) )
+  
+}

@@ -14,7 +14,7 @@ On the other hand, the outcome from the \textbf{transcription task} was obtained
 	H = H(\pmb{p}) = \frac{-\sum_{i=1}^{n} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(N)}
 \end{equation}
 %
-where $H$ is bounded in the continuum $[0,1]$, $n$ denotes the number of word occurrences, $p_{i}$ the probability of the word occurrence, and $N$ the total number of aligned transcriptions per utterance.
+where $H$ is bounded in the continuum $[0,1]$, $n$ denotes the number of word occurrences within each utterance, $p_{i}$ the probability of such word occurrence, and $N$ the total number of aligned transcriptions per utterance.
 %
 \begin{table}[h!]
 	\centering
@@ -100,15 +100,13 @@ For the case of misfit analysis, we argue that such procedures cannot be used wi
 
 On the other hand, for the case of univariate outlier analysis, we argue that outlying observations are interesting cases to analyze \citep{McElreath_2020}, and usually they cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. 
 
-Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather make the model robust against their influence, than to eliminate the observation.
+Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather make the model robust against their influence, playing on the strengths of the bayesian framework, than to eliminate the observations. 
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Model estimation} \label{s_sect:estimation}
 %
-The models proposed in sections \ref{s_sect:evaluation} and \ref{s_sect:models} will be estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we will use the Hamiltonian Monte Carlo algorithm (HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Neal_2012}. 
-
-\texttt{Stan} \citep{Stan_2020} will be the software package that will provide us with the HMC machinery, while \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020}, the software that will allow us to analyze its outputs.
+The models proposed in sections \ref{s_sect:evaluation} and \ref{s_sect:models} will be estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we will use the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012}. \texttt{Stan} \citep{Stan_2020} will be the software package that will provide us with the No-U-Turn HMC machinery, while \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020}, the software that will allow us to analyze its outputs.
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,11 +146,11 @@ Considering the objectives outlined in Section \ref{seq:rq}, we will evaluate se
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Hierarchical beta model} \\
 %
-Previous research already used the replicated entropy measures as an outcome \citep{Boonen_et_al_2021, Faes_et_al_2021}; however on those cases, the authors decided to aggregate the measure to a mean value, in order to ease its handling in the modeling process. We argue this pre-aggregating procedure could be pernicious for a proper statistical inference, as \textit{anytime we use an average value, discarding the uncertainty around that average, we risk overconfidence and spurious inference} \citep{McElreath_2020}. 
+Previous research already used hierarchical models with the replicated entropy measures as outcomes \citep{Boonen_et_al_2021, Faes_et_al_2021}. Hierarchical models are powerful to control for heterogeneity in the data, and also to avoid pre-aggregating procedures that could be pernicious for a proper statistical inference \citep{McElreath_2020}. 
 
-This claim is easier to understand using a though experiment within our research.  Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the variability around such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility, across the $10$ utterances. \textcolor{red}{change the wording for hierarchical beta model}
+These claims are easier to understand using a though experiment within our research. Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the heterogeneity across the $10$ utterances of such mean entropy also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility.
 
-The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}. However, although the authors recognized the usefulness of the replicates' additional information, they only used it in a descriptive analysis, rather than integrate it into the modeling process. We argue that the inclusion of the replicated entropy measures, into what is known as a hierarchical beta model, is trivial under the bayesian framework, and we present it in the following lines.
+The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}, and it is what justify our use of a hierarchical model. More specifically, the use Hierarchical (Mixed) Beta Regression model \citep{Figueroa-Zuniga_et_al_2013}, for which we argue, its implementation is rather trivial under the bayesian framework, and we present it in the following lines.
 %
 \begin{figure}[h]
 	\centering
@@ -168,15 +166,15 @@ The intuition derived from the previous though experiment is similar to the one 
 		\caption{}
 	\end{subfigure}
 	%
-	\caption[DAG for the measurement error model of entropy.]%
-	{DAG for the measurement error model of entropy. (a) \textit{total effects} of hearing status, (b) \textit{direct effects} of hearing apparatus. Circles represent latent variables, squares observed values or covariates, and large discontinuous squares the nesting within specific units.}
+	\caption[DAG for the hierarchical beta regression model for entropy.]%
+	{DAG for the hierarchical beta regression model for entropy. (a) \textit{total effects} of hearing status, (b) \textit{direct effects} of hearing apparatus. Circles represent latent variables, squares observed values or covariates, and large discontinuous squares the nesting within specific units.}
 	\label{fig:entropy_ME}
 \end{figure}
 %
 
-First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. For the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple realizations of a child's \textit{true} entropy $H^{T}_{i}$, measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children. Moreover, we can say the child's \textit{true} entropy $H^{T}_{i}$ is explained by the child's speech intelligibility index $SI_{i}$.
+First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. For the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple realizations of a child's \textit{true} entropy $H^{T}_{i}$, measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children.
 
-Second, for the hypothesis part, we propose two sets of models. As we can see from Figure \ref{fig:entropy_ME}, the model in panel (a) use hearing status ($HS_{i}$) and hearing age ($A_{i}$) as covariates. The use of hearing status is justified as we are interested in comparing SI among groups, defined by the children's hearing characteristics (NH, HI/CI, and HI/HA). On the other hand, we expect hearing age\footnote{see section \ref{s_sect:children} to know how the variable is defined.} and its interaction with hearing status, to also have an effect on the \textit{true} SI measure, as previous evidence have shown the speech of HI children gradually approximate that of NH children \citep{Boonen_et_al_2019}.
+Second, for the hypothesis part, we can say the child's \textit{true} entropy $H^{T}_{i}$ is inversely explained by the child's speech intelligibility index $SI_{i}$, and in turn, the latter by a set of covariates. Notice from Figure \ref{fig:entropy_ME}, we propose two sets of models. The model in panel (a) use hearing status ($HS_{i}$) and hearing age ($A_{i}$) as covariates. The use of hearing status is justified as we are interested in comparing SI among groups, defined by the children's hearing characteristics (NH, HI/CI, and HI/HA). On the other hand, we expect hearing age\footnote{see section \ref{s_sect:children} to know how the variable is defined.} and its interaction with hearing status, to also have an effect on the SI index, as previous evidence have shown the speech of HI children gradually approximate that of NH children \citep{Boonen_et_al_2019}.
 
 Notice the model depicted in panel (a) is interested on (what we can call) \textit{total effects}, i.e. the effects of the hearing characteristics, not independent from the effects of the hearing apparatus (cochlear implant or hearing aid). This is important to understand for two reasons. Since a hearing apparatus is fitted onto a child depending on aspects such as the locus and severity of his(her) hearing impairment \citep{Korver_et_al_2017}: (1) such specific children's characteristics could confound the (beneficial) effects of using specific hearing apparatuses, while (2) because children are selected from a convenient sample, not representative of their respective populations (see section \ref{s_sect:children}), the need to control for such characteristics is paramount, if we seek to obtain effects that can generalize better and beyond our sample\footnote{follow the \textit{notes} folder, to see a graphical though experiment.}.
 
