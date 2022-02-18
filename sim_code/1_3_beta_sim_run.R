@@ -34,7 +34,13 @@ source( file.path( getwd(), 'sim_code', '1_2_beta_sim_function.R') )
 # Covariates: None
 #
 # simulating and saving data
-Hsim1(I=32, K=10, seed=12345, par=list(mu_a=0, s_a=1))
+Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     file_name='Hbeta_sim1.RData', # file_name need to include '.RData'
+     I=32, K=10, seed=12345,
+     p=c(0.38, 0.31, 0.31), # children prop. on each group
+     par=list( m_c=0, s_c=1, # children's random effects
+               m_M=10, s_M=NULL, # generation of df (M)
+               a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 ) )
 
 
 # loading data
@@ -48,7 +54,7 @@ model_nam = "Hbeta_C_sim1.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -60,7 +66,7 @@ model_nam = "Hbeta_NC_sim1.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -99,11 +105,14 @@ mod$sample( data=data_storage$data_list,
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
 #   PTA range, L=low, M1<M2=mid, H=high
 #
-# simulating and saving data 
-Hsim2(I=32, K=10, seed=12345, 
-      prop=c(0.38, 0.31, 0.31), # proportion of children
-      par=list( mu_a=0.5, s_a=0.2, aE=-0.1, 
-                aHS=-0.4, bP=-0.1, bA=0.15 ))
+# simulating and saving data
+Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     file_name='Hbeta_sim2.RData', # file_name need to include '.RData'
+     I=32, K=10, seed=12345,
+     p=c(0.38, 0.31, 0.31), # children prop. on each group
+     par=list( m_c=0, s_c=0.5, # children's random effects
+               m_M=10, s_M=NULL, # generation of df (M)
+               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
 
 
 # loading data
@@ -117,11 +126,11 @@ model_nam = "Hbeta_C_sim2.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
-# YES divergent transitions: 1-8 of 4000
+# YES divergent transitions: 0-8 of 4000
 
 
 ## non centered ####
@@ -129,7 +138,7 @@ model_nam = "Hbeta_NC_sim2.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -169,10 +178,13 @@ mod$sample( data=data_storage$data_list,
 #   PTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-Hsim3(I=32, K=10, seed=12345,
-      prop=c(0.38, 0.31, 0.31), # proportion of children
-      par=list( mu_a=0.5, s_a=0.2, mu_the=1.5, s_the=0.5,
-                aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15 ))
+Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     file_name='Hbeta_sim3.RData', # file_name need to include '.RData'
+     I=32, K=10, seed=12345,
+     p=c(0.38, 0.31, 0.31), # children prop. on each group
+     par=list( m_c=0, s_c=0.5, # children's random effects
+               m_M=1.5, s_M=0.5, # generation of df (M)
+               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
 
 
 # loading data
@@ -186,7 +198,7 @@ model_nam = "Hbeta_C_sim3.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -198,7 +210,7 @@ model_nam = "Hbeta_NC_sim3.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -216,7 +228,9 @@ mod$sample( data=data_storage$data_list,
 # Covariates: not modeled
 #
 # simulating 
-Hsim4(children=32, words=10, judges=100, max_occ=50)
+Esim2(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+      file_name='Hbeta_sim4.RData', # file_name need to include '.RData'
+      children=32, words=10, judges=100, max_occ=50)
 
 # loading data
 data_nam = 'Hbeta_sim4.RData'
@@ -229,7 +243,7 @@ model_nam = "Hbeta_C_sim4.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -241,7 +255,7 @@ model_nam = "Hbeta_NC_sim4.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -283,11 +297,13 @@ mod$sample( data=data_storage$data_list,
 #   PTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-Hsim5(I=32, K=10, seed=12345,
-      prop=c(0.38, 0.31, 0.31), # proportion of children
-      par=list( mu_a=0.5, s_a=0.2, mu_the=1.5, s_the=0.5,
-                aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ))
-
+Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     file_name='Hbeta_sim5.RData', # file_name need to include '.RData'
+     I=32, K=10, seed=12345,
+     p=c(0.38, 0.31, 0.31), # children prop. on each group
+     par=list( m_c=0, s_c=0.5, # children's random effects
+               m_M=1.5, s_M=0.5, # generation of df (M)
+               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
 
 # loading data
 data_nam = 'Hbeta_sim5.RData'
@@ -300,7 +316,7 @@ model_nam = "Hbeta_C_sim5_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -312,7 +328,7 @@ model_nam = "Hbeta_NC_sim5_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -324,7 +340,7 @@ model_nam = "Hbeta_C_sim5_cor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
@@ -336,7 +352,7 @@ model_nam = "Hbeta_NC_sim5_cor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=data_storage$data_list, 
+mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95

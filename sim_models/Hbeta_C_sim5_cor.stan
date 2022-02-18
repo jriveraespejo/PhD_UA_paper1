@@ -8,9 +8,9 @@ data{
     real H[N];            // replicated entropies
     int cid[N];           // child's id
     int HS[I];            // hearing status 
-    int A[I];             // hearing age
+    int Am[I];            // hearing age
     int E[I];             // etiology
-    real PTA[I];          // (standardized) pta values
+    real sPTA[I];         // (standardized) pta values
 }
 parameters{
     real a;               // fixed intercepts
@@ -23,11 +23,11 @@ parameters{
     real mu_bAHS;         // hyperparameter for bAHS
     vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
     corr_matrix[2] Rho;   // correlation matrix for aHS and bAHS
-    real mu_a;            // mean of population
-    real<lower=0> sigma_a;// variability of population
-    vector[I] a_i;        // random intercepts (per child)
-    real mu_the;          // mean of df
-    real<lower=0> sigma_the;// variability of df
+    real m_c;             // mean of population
+    real<lower=0> s_c;    // variability of population
+    vector[I] re_i;       // random intercepts (per child)
+    real m_M;             // mean of df
+    real<lower=0> s_M;    // variability of df
     real<lower=0> M[I];   // df (per child)
 }
 transformed parameters{
@@ -36,9 +36,9 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = a + a_i[i] + aHS[HS[i]] + bAHS[HS[i]]*A[i] + bP*PTA[i];
-      // SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*A[i] + bP*PTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
     
@@ -54,10 +54,10 @@ model{
     
     
     // simple hyperpriors
-    mu_a ~ normal( 0 , 0.5 );
-    sigma_a ~ exponential( 1 );
-    mu_the ~ normal( 0 , 0.5 );
-    sigma_the ~ exponential( 1 );
+    m_c ~ normal( 0 , 0.5 );
+    s_c ~ exponential( 1 );
+    m_M ~ normal( 0 , 0.5 );
+    s_M ~ exponential( 1 );
     
     // hyperprior for correlated fixed effects
     mu_aHS ~ normal( 0 , 0.5 ); 
@@ -68,15 +68,15 @@ model{
     mu_abHS = [mu_aHS , mu_bAHS]';
     S_abHS = quad_form_diag(Rho, sigma_abHS);
     for ( c in 1:cHS ){ 
-      RE[c] = [aHS[c], bAHS[c]]';      // storage first fixed effects
+      RE[c] = [aHS[c], bAHS[c]]';  // storage first fixed effects
     }
     RE ~ multi_normal( mu_abHS , S_abHS ); 
 
     
     // priors
     a ~ normal( 0 , 0.5 );
-    a_i ~ normal( mu_a , sigma_a );
-    M ~ lognormal( mu_the , sigma_the );
+    re_i ~ normal( m_c , s_c );
+    M ~ lognormal( m_M , s_M );
     //aE ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );

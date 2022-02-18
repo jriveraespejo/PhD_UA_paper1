@@ -1,32 +1,32 @@
 
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     real H[N];            // replicated entropies
     int cid[N];           // child's id
 }
 parameters{
     real a;               // fixed intercept
-    real mu_a;            // mean of population
-    real<lower=0> sigma_a;// variability of population
-    vector[I] a_i;        // random intercepts (per child)
+    real m_c;             // mean of population
+    real<lower=0> s_c;    // variability of population
+    vector[I] re_i;       // random intercepts (per child)
 }
 transformed parameters{
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    SI = a + a_i;         // linear predictor
+    SI = a + re_i;        // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
     // hyperpriors
-    mu_a ~ normal( 0 , 0.5 );
-    sigma_a ~ exponential( 1 );
+    m_c ~ normal( 0 , 0.5 );
+    s_c ~ exponential( 1 );
     
     // priors
     a ~ normal( 1 , 0.5 );
-    a_i ~ normal( mu_a , sigma_a );
+    re_i ~ normal( m_c , s_c );
     
     // likelihood
     for(n in 1:N){

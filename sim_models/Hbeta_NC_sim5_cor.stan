@@ -8,9 +8,9 @@ data{
     real H[N];            // replicated entropies
     int cid[N];           // child's id
     int HS[I];            // hearing status 
-    int A[I];             // hearing age
+    int Am[I];            // hearing age
     int E[I];             // etiology
-    real PTA[I];          // (standardized) pta values
+    real sPTA[I];         // (standardized) pta values
 }
 parameters{
     real a;               // fixed intercepts
@@ -22,11 +22,11 @@ parameters{
     real mu_bAHS;         // hyperparameter for bAHS
     vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
     cholesky_factor_corr[2] L_Rho; // cholesky factor for correlation matrix for aHS and bAHS
-    real mu_a;            // mean of population
-    real<lower=0> sigma_a;// variability of population
-    vector[I] z_a;        // random intercept (per child) noncentered
-    real mu_the;          // mean of df
-    real<lower=0> sigma_the;// variability of df
+    real m_c;             // mean of population
+    real<lower=0> s_c;    // variability of population
+    vector[I] z_re;        // random intercept (per child) noncentered
+    real m_M;             // mean of df
+    real<lower=0> s_M;    // variability of df
     vector[I] z_M;        // noncentered df (per child)
 }
 transformed parameters{
@@ -34,15 +34,15 @@ transformed parameters{
     matrix[2, cHS] RE;    // correlated fixed effects (2x4)
     vector[cHS] aHS;      // fixed intercept (per HS)
     vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
-    vector[I] a_i;        // intercept (per child)
+    vector[I] re_i;       // intercept (per child)
     vector[I] M;          // df (per child)
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     matrix[2, 2] Rho;     // correlation matrix
 
     // random effects and df's
-    a_i = mu_a + sigma_a * z_a;
-    M = exp( mu_the + sigma_the * z_M );
+    re_i = m_c + s_c*z_re;
+    M = exp( m_M + s_M*z_M );
     
     // correlated fixed effects
     mu_abHS = [mu_aHS , mu_bAHS]';
@@ -58,9 +58,9 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = a + a_i[i] + aHS[HS[i]] + bAHS[HS[i]]*A[i] + bP*PTA[i];
-      // SI[i] = a + a_i[i] + aHS[HS[i]] + bA*A[i] + bP*PTA[i];
-      // SI[i] = a + a_i[i] + aE[E[i]] + aHS[HS[i]] + (bA + bAHS[HS[i]])*A[i] + bP*PTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + (bA + bAHS[HS[i]])*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
     
@@ -71,9 +71,9 @@ model{
     
     // simple hyperpriors
     mu_a ~ normal( 0 , 0.5 );
-    sigma_a ~ exponential( 1 );
-    mu_the ~ normal( 0 , 0.5 );
-    sigma_the ~ exponential( 1 );
+    s_c ~ exponential( 1 );
+    m_M ~ normal( 0 , 0.5 );
+    s_M ~ exponential( 1 );
     
     // hyperprior for correlated fixed effects
     mu_aHS ~ normal( 0 , 0.5 ); 
@@ -84,7 +84,7 @@ model{
     
     // priors
     a ~ normal( 0 , 0.5 );
-    z_a ~ std_normal();
+    z_re ~ std_normal();
     z_M ~ std_normal();
     //aE ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
