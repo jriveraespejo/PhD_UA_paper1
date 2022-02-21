@@ -1,15 +1,15 @@
 
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     real H[N];            // replicated entropies
     int cid[N];           // child's id
 }
 parameters{
     real a;               // fixed intercept
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercept
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -24,14 +24,14 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
 
     // priors
     a ~ normal( 0 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
 
     // likelihood

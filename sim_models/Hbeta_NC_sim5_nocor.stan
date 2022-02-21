@@ -1,8 +1,8 @@
 
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -19,8 +19,8 @@ parameters{
     real bP;              // fixed slope standardized PTA
     //real bA;              // fixed slope (A - A_min)
     vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercept (per child) noncentered
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -33,15 +33,19 @@ transformed parameters{
     vector[I] Ht;         // true entropy (per child)
     
     // random effects and df's
-    re_i = m_c + s_c*z_re;
+    re_i = m_i + s_i*z_re;
     M = exp( m_M + s_M*z_M );
     
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // when no interaction
     }
     
     // average entropy (SI -> Ht: negative)
@@ -49,8 +53,8 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
     

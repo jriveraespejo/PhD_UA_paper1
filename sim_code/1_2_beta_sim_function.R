@@ -15,7 +15,7 @@ setwd('C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper
 
 
 # loading sources
-source( file.path( getwd(), 'sim_code', '1_0_beta_sim_extra.R') )
+source( file.path( getwd(), 'sim_code', '0_sim_extra.R') )
 
 
 
@@ -57,7 +57,7 @@ Esim = function(file_save, # file_save need to include getwd()
                 file_name, # file_name need to include '.RData'
                 I=32, K=10, seed=12345,
                 p=c(0.38, 0.31, 0.31), # children prop. on each group
-                par=list( m_c=0, s_c=0.5, # children's random effects
+                par=list( m_i=0, s_i=0.5, # children's random effects
                           m_M=1.5, s_M=0.5, # generation of df (M)
                           a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
   
@@ -84,21 +84,21 @@ Esim = function(file_save, # file_save need to include getwd()
   set.seed(seed)
   n = round( p*I )
   dT$HS = c( rep(1, n[1]), rep(2, n[2]), rep(3, n[3])) 
-  dT$A = c( rep(7, n[1]), round(rnorm( sum(n[2:3]), 5, 1)) ) 
+  dT$A = round( rnorm( sum(n), 5, 1) )
   dT$A = with(dT, ifelse(A>7, 7, A) )
   
   dT$E = c( rep(1, n[1]), # no way to know true effects
             sample(2:3, size=n[2], replace=T),
             sample(3:4, size=n[3], replace=T)) 
   
-  dT$PTA = c( round(rnorm(n[1], 60, 10)), # first 12 NH 
-              round(rnorm(n[2], 90, 10)), # next 10
-              round(rnorm(n[3], 110, 20))) # last 10
+  dT$PTA = c( round(rnorm(n[1], 60, 15)), # first 12 NH 
+              round(rnorm(n[2], 90, 15)), # next 10
+              round(rnorm(n[3], 110, 15))) # last 10
   
   
   # children's random effects
   set.seed(seed+1)
-  re_i = rnorm(I, par$m_c, par$s_c)
+  re_i = rnorm(I, par$m_i, par$s_i)
   dT$re_i = re_i 
   
   

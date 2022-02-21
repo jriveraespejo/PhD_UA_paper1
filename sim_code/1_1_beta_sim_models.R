@@ -1,17 +1,7 @@
 # preliminar ####
 rm(list=ls())
 
-librerias <- c('stringr','dplyr','ggplot2','ggpubr','knitr','tidyverse',
-               'reshape2','tinytex','gt','haven',
-               'dagitty','ellipse','mvtnorm','MASS','splines','gtools',
-               'rethinking','rstan','coda','runjags','rjags',#'loo'
-               'cmdstanr','posterior','bayesplot')
-sapply(librerias, require, character.only=T)
-# sapply(librerias, install.packages, character.only=T)
-
-
 setwd('C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper1')
-
 
 
 
@@ -33,8 +23,8 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
 }
 transformed parameters{
@@ -46,12 +36,12 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     
     // priors
-    a ~ normal( 1 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    a ~ normal( 0 , 0.5 );
+    re_i ~ normal( m_i , s_i );
     
     // likelihood
     for(n in 1:N){
@@ -72,15 +62,15 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     real H[N];            // replicated entropies
     int cid[N];           // child's id
 }
 parameters{
     real a;               // fixed intercept
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // non-centered random interpcepts
 }
 transformed parameters{
@@ -88,14 +78,14 @@ transformed parameters{
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
 
-    re_i = m_c + s_c*z_re;// non-centering
+    re_i = m_i + s_i*z_re;// non-centering
     SI = a + re_i;        // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     
     // priors
     a ~ normal(0, 0.5);
@@ -149,8 +139,8 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -166,8 +156,8 @@ parameters{
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
 }
 transformed parameters{
@@ -177,7 +167,9 @@ transformed parameters{
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
     
@@ -186,12 +178,12 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     
     // priors
     a ~ normal( 0 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    re_i ~ normal( m_i , s_i );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
@@ -215,8 +207,8 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -232,8 +224,8 @@ parameters{
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercepts (per child) non-centered
 }
 transformed parameters{
@@ -241,11 +233,13 @@ transformed parameters{
     vector[I] SI;         // true SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
-    re_i = m_c + s_c*z_re;// non-centering
+    re_i = m_i + s_i*z_re;// non-centering
     
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
       //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
@@ -255,8 +249,8 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     
     // priors
     a ~ normal(0 , 0.5);
@@ -314,8 +308,8 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -331,8 +325,8 @@ parameters{
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -345,7 +339,9 @@ transformed parameters{
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
     
@@ -354,14 +350,14 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
     
     // priors
     a ~ normal( 0 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -387,8 +383,8 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -404,8 +400,8 @@ parameters{
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercept (per child) noncentered
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -418,13 +414,15 @@ transformed parameters{
     vector[I] Ht;         // true entropy (per child)
     
     // random effects and dfs
-    re_i = m_c + s_c*z_re;
+    re_i = m_i + s_i*z_re;
     M = exp( m_M + s_M*z_M );
     
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
     
@@ -433,8 +431,8 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
     
@@ -473,15 +471,15 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     real H[N];            // replicated entropies
     int cid[N];           // child's id
 }
 parameters{
     real a;               // fixed intercept
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercept
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -496,14 +494,14 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
 
     // priors
     a ~ normal( 0 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
 
     // likelihood
@@ -525,15 +523,15 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     real H[N];            // replicated entropies
     int cid[N];           // child's id
 }
 parameters{
     real a;               // fixed intercepts
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercepts (per child) noncentered
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -547,7 +545,7 @@ transformed parameters{
     
     
     // random effects and dfs
-    re_i = m_c + s_c*z_re;
+    re_i = m_i + s_i*z_re;
     M = exp( m_M + s_M*z_M );
     
     SI = a + re_i;        // linear predictor
@@ -555,8 +553,8 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
 
@@ -614,8 +612,8 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -632,8 +630,8 @@ parameters{
     real bP;              // fixed slope standardized PTA
     //real bA;              // fixed slope (A - A_min) (if no different effect)
     vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -646,9 +644,13 @@ transformed parameters{
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a+ aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // when no interaction
     }
     
     // average entropy (SI -> Ht: negative)
@@ -656,14 +658,14 @@ transformed parameters{
 }
 model{
     // simple hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
     
     // priors
     a ~ normal( 0 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -688,8 +690,8 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 mcmc_code = "
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -706,8 +708,8 @@ parameters{
     real bP;              // fixed slope standardized PTA
     //real bA;              // fixed slope (A - A_min)
     vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercept (per child) noncentered
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
@@ -720,15 +722,19 @@ transformed parameters{
     vector[I] Ht;         // true entropy (per child)
     
     // random effects and df's
-    re_i = m_c + s_c*z_re;
+    re_i = m_i + s_i*z_re;
     M = exp( m_M + s_M*z_M );
     
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // when no interaction
     }
     
     // average entropy (SI -> Ht: negative)
@@ -736,8 +742,8 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     m_M ~ normal( 0 , 0.5 );
     s_M ~ exponential( 1 );
     
@@ -766,206 +772,214 @@ writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
 
 
 
-## centered cor ####
-mcmc_code = "
-data{
-    int N;                // experimental runs
-    int K;                // replicates (utterances)
-    int I;                // experimental units (children)
-    int cHS;              // categories in Hearing Status (HS)
-    int cE;               // categories in Etiology (E)
-    real H[N];            // replicated entropies
-    int cid[N];           // child's id
-    int HS[I];            // hearing status 
-    int Am[I];            // hearing age
-    int E[I];             // etiology
-    real sPTA[I];         // (standardized) pta values
-}
-parameters{
-    real a;               // fixed intercepts
-    //vector[cE] aE;        // fixed intercept (per E)
-    vector[cHS] aHS;      // fixed intercept (per HS)
-    real mu_aHS;          // hyperparameter for aHS
-    real bP;              // fixed slope standardized PTA
-    //real bA;              // fixed slope (A - A_min)
-    vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
-    real mu_bAHS;         // hyperparameter for bAHS
-    vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
-    corr_matrix[2] Rho;   // correlation matrix for aHS and bAHS
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
-    vector[I] re_i;       // random intercepts (per child)
-    real m_M;             // mean of df
-    real<lower=0> s_M;    // variability of df
-    real<lower=0> M[I];   // df (per child)
-}
-transformed parameters{
-    vector[I] SI;         // true SI index (per child)
-    vector[I] Ht;         // true entropy (per child)
-    
-    // linear predictor
-    for(i in 1:I){
-      SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
-    }
-    
-    // average entropy (SI -> Ht: negative)
-    Ht = inv_logit(-SI);  
-}
-model{
-    // parameter not to follow
-    vector[2] mu_abHS;    // hyperprior mean for aHS and bAHS
-    matrix[2,2] S_abHS;   // hyperprior SD for aHS and bAHS
-    vector[2] RE[cHS];    // declare storage for fixed effects
-    // first are columns, and then rows
-    
-    
-    // simple hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
-    m_M ~ normal( 0 , 0.5 );
-    s_M ~ exponential( 1 );
-    
-    // hyperprior for correlated fixed effects
-    mu_aHS ~ normal( 0 , 0.5 ); 
-    mu_bAHS  ~ normal( 0 , 0.5 );
-    sigma_abHS ~ exponential( 1 );
-    Rho ~ lkj_corr( 2 );  
-
-    mu_abHS = [mu_aHS , mu_bAHS]';
-    S_abHS = quad_form_diag(Rho, sigma_abHS);
-    for ( c in 1:cHS ){ 
-      RE[c] = [aHS[c], bAHS[c]]';  // storage first fixed effects
-    }
-    RE ~ multi_normal( mu_abHS , S_abHS ); 
-
-    
-    // priors
-    a ~ normal( 0 , 0.5 );
-    re_i ~ normal( m_c , s_c );
-    M ~ lognormal( m_M , s_M );
-    //aE ~ normal( 0 , 0.5 );
-    bP ~ normal( 0 , 0.3 );
-    //bA ~ normal( 0 , 0.3 );
-    
-    // likelihood
-    for(n in 1:N){
-      H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
-    }
-}
-"
-
-# saving
-model_nam = "Hbeta_C_sim5_cor.stan"
-writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
-
-
-
-
-
-## non-centered cor ####
-mcmc_code = "
-data{
-    int N;                // experimental runs
-    int K;                // replicates (utterances)
-    int I;                // experimental units (children)
-    int cHS;              // categories in Hearing Status (HS)
-    int cE;               // categories in Etiology (E)
-    real H[N];            // replicated entropies
-    int cid[N];           // child's id
-    int HS[I];            // hearing status 
-    int Am[I];            // hearing age
-    int E[I];             // etiology
-    real sPTA[I];         // (standardized) pta values
-}
-parameters{
-    real a;               // fixed intercepts
-    //vector[cE] aE;        // fixed intercept (per E)
-    matrix[2, cHS] z_abHS;// matrix of (2x4)
-    real mu_aHS;          // hyperparameter for aHS
-    real bP;              // fixed slope standardized PTA
-    //real bA;              // fixed slope (A - A_min)
-    real mu_bAHS;         // hyperparameter for bAHS
-    vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
-    cholesky_factor_corr[2] L_Rho; // cholesky factor for correlation matrix for aHS and bAHS
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
-    vector[I] z_re;        // random intercept (per child) noncentered
-    real m_M;             // mean of df
-    real<lower=0> s_M;    // variability of df
-    vector[I] z_M;        // noncentered df (per child)
-}
-transformed parameters{
-    vector[2] mu_abHS;    // hyperprior mean for aHS and bAHS
-    matrix[2, cHS] RE;    // correlated fixed effects (2x4)
-    vector[cHS] aHS;      // fixed intercept (per HS)
-    vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
-    vector[I] re_i;       // intercept (per child)
-    vector[I] M;          // df (per child)
-    vector[I] SI;         // true SI index (per child)
-    vector[I] Ht;         // true entropy (per child)
-    matrix[2, 2] Rho;     // correlation matrix
-
-    // random effects and df's
-    re_i = m_c + s_c*z_re;
-    M = exp( m_M + s_M*z_M );
-    
-    // correlated fixed effects
-    mu_abHS = [mu_aHS , mu_bAHS]';
-    RE = (diag_pre_multiply(sigma_abHS, L_Rho) * z_abHS)';
-    for(c in 1:cHS){
-      RE[c] = to_row_vector(mu_abHS) + RE[c];
-    }
-    aHS = RE[,1];
-    bAHS = RE[,2];
-    
-    // correlation matrix
-    Rho = multiply_lower_tri_self_transpose(L_Rho);
-    
-    // linear predictor
-    for(i in 1:I){
-      SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + (bA + bAHS[HS[i]])*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
-    }
-    
-    // average entropy (SI -> Ht: negative)
-    Ht = inv_logit(-SI);  
-}
-model{
-    
-    // simple hyperpriors
-    mu_a ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
-    m_M ~ normal( 0 , 0.5 );
-    s_M ~ exponential( 1 );
-    
-    // hyperprior for correlated fixed effects
-    mu_aHS ~ normal( 0 , 0.5 ); 
-    mu_bAHS  ~ normal( 0 , 0.5 );
-    sigma_abHS ~ exponential( 1 );
-    L_Rho ~ lkj_corr_cholesky( 2 ); 
-
-    
-    // priors
-    a ~ normal( 0 , 0.5 );
-    z_re ~ std_normal();
-    z_M ~ std_normal();
-    //aE ~ normal( 0 , 0.5 );
-    bP ~ normal( 0 , 0.3 );
-    //bA ~ normal( 0 , 0.3 );
-    to_vector( z_abHS ) ~ std_normal();
-    
-    // likelihood
-    for(n in 1:N){
-      H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
-    }
-}
-"
-
-# saving
-model_nam = "Hbeta_NC_sim5_cor.stan"
-writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
+# ## centered cor ####
+# mcmc_code = "
+# data{
+#     int N;                // experimental runs
+#     int I;                // experimental units (children)
+#     int K;                // replicates (utterances)
+#     int cHS;              // categories in Hearing Status (HS)
+#     int cE;               // categories in Etiology (E)
+#     real H[N];            // replicated entropies
+#     int cid[N];           // child's id
+#     int HS[I];            // hearing status 
+#     int Am[I];            // hearing age
+#     int E[I];             // etiology
+#     real sPTA[I];         // (standardized) pta values
+# }
+# parameters{
+#     real a;               // fixed intercepts
+#     //vector[cE] aE;        // fixed intercept (per E)
+#     vector[cHS] aHS;      // fixed intercept (per HS)
+#     real mu_aHS;          // hyperparameter for aHS
+#     real bP;              // fixed slope standardized PTA
+#     //real bA;              // fixed slope (A - A_min)
+#     vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
+#     real mu_bAHS;         // hyperparameter for bAHS
+#     vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
+#     corr_matrix[2] Rho;   // correlation matrix for aHS and bAHS
+#     real m_i;             // mean of population
+#     real<lower=0> s_i;    // variability of population
+#     vector[I] re_i;       // random intercepts (per child)
+#     real m_M;             // mean of df
+#     real<lower=0> s_M;    // variability of df
+#     real<lower=0> M[I];   // df (per child)
+# }
+# transformed parameters{
+#     vector[I] SI;         // true SI index (per child)
+#     vector[I] Ht;         // true entropy (per child)
+#     
+#     // linear predictor
+#     for(i in 1:I){
+#       SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+#       // no multicollinearity between E and HS
+#       
+#       //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+#       // multicollinearity between E and HS
+#       
+#       //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+#       // when no interaction
+#     }
+#     
+#     // average entropy (SI -> Ht: negative)
+#     Ht = inv_logit(-SI);  
+# }
+# model{
+#     // parameter not to follow
+#     vector[2] mu_abHS;    // hyperprior mean for aHS and bAHS
+#     matrix[2,2] S_abHS;   // hyperprior SD for aHS and bAHS
+#     vector[2] RE[cHS];    // declare storage for fixed effects
+#     // first are columns, and then rows
+#     
+#     
+#     // simple hyperpriors
+#     m_i ~ normal( 0 , 0.5 );
+#     s_i ~ exponential( 1 );
+#     m_M ~ normal( 0 , 0.5 );
+#     s_M ~ exponential( 1 );
+#     
+#     // hyperprior for correlated fixed effects
+#     mu_aHS ~ normal( 0 , 0.5 ); 
+#     mu_bAHS  ~ normal( 0 , 0.5 );
+#     sigma_abHS ~ exponential( 1 );
+#     Rho ~ lkj_corr( 2 );  
+# 
+#     mu_abHS = [mu_aHS , mu_bAHS]';
+#     S_abHS = quad_form_diag(Rho, sigma_abHS);
+#     for ( c in 1:cHS ){ 
+#       RE[c] = [aHS[c], bAHS[c]]';  // storage first fixed effects
+#     }
+#     RE ~ multi_normal( mu_abHS , S_abHS ); 
+# 
+#     
+#     // priors
+#     a ~ normal( 0 , 0.5 );
+#     re_i ~ normal( m_i , s_i );
+#     M ~ lognormal( m_M , s_M );
+#     //aE ~ normal( 0 , 0.5 );
+#     bP ~ normal( 0 , 0.3 );
+#     //bA ~ normal( 0 , 0.3 );
+#     
+#     // likelihood
+#     for(n in 1:N){
+#       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
+#     }
+# }
+# "
+# 
+# # saving
+# model_nam = "Hbeta_C_sim5_cor.stan"
+# writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
+# 
+# 
+# 
+# 
+# 
+# ## non-centered cor ####
+# mcmc_code = "
+# data{
+#     int N;                // experimental runs
+#     int I;                // experimental units (children)
+#     int K;                // replicates (utterances)
+#     int cHS;              // categories in Hearing Status (HS)
+#     int cE;               // categories in Etiology (E)
+#     real H[N];            // replicated entropies
+#     int cid[N];           // child's id
+#     int HS[I];            // hearing status 
+#     int Am[I];            // hearing age
+#     int E[I];             // etiology
+#     real sPTA[I];         // (standardized) pta values
+# }
+# parameters{
+#     real a;               // fixed intercepts
+#     //vector[cE] aE;        // fixed intercept (per E)
+#     matrix[2, cHS] z_abHS;// matrix of (2x4)
+#     real mu_aHS;          // hyperparameter for aHS
+#     real bP;              // fixed slope standardized PTA
+#     //real bA;              // fixed slope (A - A_min)
+#     real mu_bAHS;         // hyperparameter for bAHS
+#     vector<lower=0>[2] sigma_abHS; // variability for aHS and bAHS
+#     cholesky_factor_corr[2] L_Rho; // cholesky factor for correlation matrix for aHS and bAHS
+#     real m_i;             // mean of population
+#     real<lower=0> s_i;    // variability of population
+#     vector[I] z_re;        // random intercept (per child) noncentered
+#     real m_M;             // mean of df
+#     real<lower=0> s_M;    // variability of df
+#     vector[I] z_M;        // noncentered df (per child)
+# }
+# transformed parameters{
+#     vector[2] mu_abHS;    // hyperprior mean for aHS and bAHS
+#     matrix[2, cHS] RE;    // correlated fixed effects (2x4)
+#     vector[cHS] aHS;      // fixed intercept (per HS)
+#     vector[cHS] bAHS;     // fixed interaction (A - A_min)*HS
+#     vector[I] re_i;       // intercept (per child)
+#     vector[I] M;          // df (per child)
+#     vector[I] SI;         // true SI index (per child)
+#     vector[I] Ht;         // true entropy (per child)
+#     matrix[2, 2] Rho;     // correlation matrix
+# 
+#     // random effects and df's
+#     re_i = m_i + s_i*z_re;
+#     M = exp( m_M + s_M*z_M );
+#     
+#     // correlated fixed effects
+#     mu_abHS = [mu_aHS , mu_bAHS]';
+#     RE = (diag_pre_multiply(sigma_abHS, L_Rho) * z_abHS)';
+#     for(c in 1:cHS){
+#       RE[c] = to_row_vector(mu_abHS) + RE[c];
+#     }
+#     aHS = RE[,1];
+#     bAHS = RE[,2];
+#     
+#     // correlation matrix
+#     Rho = multiply_lower_tri_self_transpose(L_Rho);
+#     
+#     // linear predictor
+#     for(i in 1:I){
+#       SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+#       // no multicollinearity between E and HS
+#       
+#       //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+#       // multicollinearity between E and HS
+#       
+#       //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+#       // when no interaction
+#     }
+#     
+#     // average entropy (SI -> Ht: negative)
+#     Ht = inv_logit(-SI);  
+# }
+# model{
+#     
+#     // simple hyperpriors
+#     m_i ~ normal( 0 , 0.5 );
+#     s_i ~ exponential( 1 );
+#     m_M ~ normal( 0 , 0.5 );
+#     s_M ~ exponential( 1 );
+#     
+#     // hyperprior for correlated fixed effects
+#     mu_aHS ~ normal( 0 , 0.5 ); 
+#     mu_bAHS  ~ normal( 0 , 0.5 );
+#     sigma_abHS ~ exponential( 1 );
+#     L_Rho ~ lkj_corr_cholesky( 2 ); 
+# 
+#     
+#     // priors
+#     a ~ normal( 0 , 0.5 );
+#     z_re ~ std_normal();
+#     z_M ~ std_normal();
+#     //aE ~ normal( 0 , 0.5 );
+#     bP ~ normal( 0 , 0.3 );
+#     //bA ~ normal( 0 , 0.3 );
+#     to_vector( z_abHS ) ~ std_normal();
+#     
+#     // likelihood
+#     for(n in 1:N){
+#       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
+#     }
+# }
+# "
+# 
+# # saving
+# model_nam = "Hbeta_NC_sim5_cor.stan"
+# writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )

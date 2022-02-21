@@ -14,7 +14,7 @@ setwd('C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper
 
 
 # loading sources
-source( file.path( getwd(), 'sim_code', '2_0_HJ_sim_extra.R') )
+source( file.path( getwd(), 'sim_code', '0_sim_extra.R') )
 
 
 
@@ -54,7 +54,7 @@ source( file.path( getwd(), 'sim_code', '2_0_HJ_sim_extra.R') )
 HJsim = function(file_save, file_name, # file_save need to include getwd()
                  I=32, K=10, D=20, J=80, seed=12345,
                  p=c(0.38, 0.31, 0.31), # children prop. on each group
-                 par=list( m_c=0, s_c=0.5, # children's random effects
+                 par=list( m_i=0, s_i=0.5, # children's random effects
                            l=NULL, # variability in children's observed SIs
                            m_j=0, s_j=0.5, # judges' random effects
                            a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
@@ -84,21 +84,21 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   set.seed(seed)
   n = round( p*I )
   dT$HS = c( rep(1, n[1]), rep(2, n[2]), rep(3, n[3])) 
-  dT$A = c( rep(7, n[1]), round(rnorm( sum(n[2:3]), 5, 1)) ) 
+  dT$A = round( rnorm( sum(n), 5, 1) )
   dT$A = with(dT, ifelse(A>7, 7, A) )
   
   dT$E = c( rep(1, n[1]), # no way to know true effects
             sample(2:3, size=n[2], replace=T),
             sample(3:4, size=n[3], replace=T)) 
   
-  dT$PTA = c( round(rnorm(n[1], 60, 10)), # first 12 NH 
-              round(rnorm(n[2], 90, 10)), # next 10
-              round(rnorm(n[3], 110, 20))) # last 10
+  dT$PTA = c( round(rnorm(n[1], 60, 15)), # first 12 NH 
+              round(rnorm(n[2], 90, 15)), # next 10
+              round(rnorm(n[3], 110, 15))) # last 10
   
   
   # children's random effects
   set.seed(seed+1)
-  re_i = rnorm(I, par$m_c, par$s_c)
+  re_i = rnorm(I, par$m_i, par$s_i)
   dT$re_i = re_i 
   
   # linear predictor / SI index
@@ -109,10 +109,13 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   
   # variability of SI
   set.seed(seed-1)
-  if( !is.numeric(par$l) ){ par$l = 20 } # high rate, low variability
-  dT$s_SI = rexp(n=I, rate=par$l)
+  if( !is.numeric(par$l) ){ 
+    dT$s_SI = 0.1 # same and low variability for measurement
+  } else{
+    dT$s_SI = rexp(n=I, rate=par$l)
+  }  
   
-  
+
   # generating utterance values
   start = min(which(str_detect(names(dT), 'u[:digit:]{1,2}[:punct:]')))-1
   set.seed(seed+2)
@@ -167,7 +170,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   }
   
   # observed score
-  dO$score = round( inv_logit(dO$SI)*100 )
+  dO$SIo = round( inv_logit(dO$SI)*100 )
   # table(dO$score)
   
   
@@ -187,12 +190,12 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
     
     # child's data
     HS = dT$HS,
-    A = with(dT, A-min(A) ), # centered at minimum
+    Am = with(dT, A-min(A) ), # centered at minimum
     E = dT$E,
     sPTA = c( standardize( dT$PTA ) ),
     
     # observed data
-    SI = with(dO, ifelse(SI==0, 0.0001, ifelse(SI==1, 0.9999, SI/100)) ), # trick
+    HJb = with(dO, ifelse(SIo==0, 0.0001, ifelse(SIo==100, 0.9999, SIo/100)) ), # trick
     cid = dO$child_id,
     uid = dO$utt_id,
     jid = dO$judge_id

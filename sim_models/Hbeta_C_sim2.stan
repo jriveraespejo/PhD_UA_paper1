@@ -1,8 +1,8 @@
 
 data{
     int N;                // experimental runs
-    int K;                // replicates (utterances)
     int I;                // experimental units (children)
+    int K;                // replicates (utterances)
     int cHS;              // categories in Hearing Status (HS)
     int cE;               // categories in Etiology (E)
     real H[N];            // replicated entropies
@@ -18,8 +18,8 @@ parameters{
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
 }
 transformed parameters{
@@ -29,7 +29,9 @@ transformed parameters{
     // linear predictor
     for(i in 1:I){
       SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
     
@@ -38,12 +40,12 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     
     // priors
     a ~ normal( 0 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    re_i ~ normal( m_i , s_i );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );

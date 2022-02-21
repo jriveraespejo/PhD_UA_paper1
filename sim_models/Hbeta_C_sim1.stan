@@ -8,8 +8,8 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    real m_c;             // mean of population
-    real<lower=0> s_c;    // variability of population
+    real m_i;             // mean of population
+    real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
 }
 transformed parameters{
@@ -21,12 +21,12 @@ transformed parameters{
 }
 model{
     // hyperpriors
-    m_c ~ normal( 0 , 0.5 );
-    s_c ~ exponential( 1 );
+    m_i ~ normal( 0 , 0.5 );
+    s_i ~ exponential( 1 );
     
     // priors
-    a ~ normal( 1 , 0.5 );
-    re_i ~ normal( m_c , s_c );
+    a ~ normal( 0 , 0.5 );
+    re_i ~ normal( m_i , s_i );
     
     // likelihood
     for(n in 1:N){

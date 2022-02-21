@@ -38,7 +38,7 @@ Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd
      file_name='Hbeta_sim1.RData', # file_name need to include '.RData'
      I=32, K=10, seed=12345,
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_c=0, s_c=1, # children's random effects
+     par=list( m_i=0, s_i=1, # children's random effects
                m_M=10, s_M=NULL, # generation of df (M)
                a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 ) )
 
@@ -110,7 +110,7 @@ Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd
      file_name='Hbeta_sim2.RData', # file_name need to include '.RData'
      I=32, K=10, seed=12345,
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_c=0, s_c=0.5, # children's random effects
+     par=list( m_i=0, s_i=0.5, # children's random effects
                m_M=10, s_M=NULL, # generation of df (M)
                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
 
@@ -182,7 +182,7 @@ Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd
      file_name='Hbeta_sim3.RData', # file_name need to include '.RData'
      I=32, K=10, seed=12345,
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_c=0, s_c=0.5, # children's random effects
+     par=list( m_i=0, s_i=0.5, # children's random effects
                m_M=1.5, s_M=0.5, # generation of df (M)
                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
 
@@ -301,7 +301,7 @@ Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd
      file_name='Hbeta_sim5.RData', # file_name need to include '.RData'
      I=32, K=10, seed=12345,
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_c=0, s_c=0.5, # children's random effects
+     par=list( m_i=0, s_i=0.5, # children's random effects
                m_M=1.5, s_M=0.5, # generation of df (M)
                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
 
@@ -335,25 +335,25 @@ mod$sample( data=mom$dL,
 # NO divergent transitions
 
 
-## centered cor ####
-model_nam = "Hbeta_C_sim5_cor.stan"
-model_in = file.path(getwd(), 'sim_models')
-model_out = file.path(getwd(), 'sim_chain')
-mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=mom$dL, 
-            output_dir=model_out, 
-            output_basename = str_replace(model_nam, '.stan', ''),
-            chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
-# YES divergent transitions: 100-300 of 4000
-
-
-## non-centered cor ####
-model_nam = "Hbeta_NC_sim5_cor.stan"
-model_in = file.path(getwd(), 'sim_models')
-model_out = file.path(getwd(), 'sim_chain')
-mod = cmdstan_model( file.path(model_in, model_nam) )
-mod$sample( data=mom$dL, 
-            output_dir=model_out, 
-            output_basename = str_replace(model_nam, '.stan', ''),
-            chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
-# YES divergent transitions: 90-150 of 4000
+# ## centered cor ####
+# model_nam = "Hbeta_C_sim5_cor.stan"
+# model_in = file.path(getwd(), 'sim_models')
+# model_out = file.path(getwd(), 'sim_chain')
+# mod = cmdstan_model( file.path(model_in, model_nam) )
+# mod$sample( data=mom$dL, 
+#             output_dir=model_out, 
+#             output_basename = str_replace(model_nam, '.stan', ''),
+#             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+# # YES divergent transitions: 100-300 of 4000
+# 
+# 
+# ## non-centered cor ####
+# model_nam = "Hbeta_NC_sim5_cor.stan"
+# model_in = file.path(getwd(), 'sim_models')
+# model_out = file.path(getwd(), 'sim_chain')
+# mod = cmdstan_model( file.path(model_in, model_nam) )
+# mod$sample( data=mom$dL, 
+#             output_dir=model_out, 
+#             output_basename = str_replace(model_nam, '.stan', ''),
+#             chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+# # YES divergent transitions: 90-150 of 4000

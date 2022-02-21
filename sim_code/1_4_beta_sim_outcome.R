@@ -15,7 +15,7 @@ setwd('C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper
 
 
 # # loading sources
-source( file.path( getwd(), 'sim_code', '1_0_beta_sim_extra.R') )
+source( file.path( getwd(), 'sim_code', '0_sim_extra.R') )
 # source( file.path( getwd(), 'sim_code', '1_3_beta_sim_run.R') ) # run only once
 
 
@@ -28,13 +28,47 @@ source( file.path( getwd(), 'sim_code', '1_0_beta_sim_extra.R') )
 # Outcome: easy generation M=10, no zero values
 # Covariates: None
 #
-# read simulation
+## data ####
 data_nam = "Hbeta_sim1"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
 load( model_data )
+# mom
 
-par_true = with(mom$dS, c(par$a, par$m_c, par$s_c, dT$re_i, dT$m_SI, dT$m_H) )
+
+## plotting data ####
+Amin = min(mom$dS$dT$A)
+mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
+                                   E=E[cid], sPTA=sPTA[cid], H=H) )
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:3, labels = T)
+
+with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:4, labels = T)
+
+
+
+## parameters ####
+par_true = with(mom$dS, c(par$a, par$m_i, par$s_i, dT$re_i, dT$m_SI, dT$m_H) )
 data_true = with(mom$dL, data.frame(H=H, child=cid))
+
+
 
 
 ## centered ####
@@ -45,20 +79,20 @@ res_C = rstan::read_stan_csv( file.path( model_out, model_fit ) )
 
 
 # final comparison
-par_est = c('a','m_c','s_c','re_i','SI','Ht')
+par_est = c('a','m_i','s_i','re_i','SI','Ht')
 par_recovery_C = parameter_recovery( stan_object = res_C,
                                    est_par = par_est,
                                    true_par = par_true)
 par_recovery_C
-# not so good samples for a, m_c, but good for s_c, 
+# not so good samples for a, m_i, but good for s_i, 
 # re_i's are also not so good
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
-# 67.7% true parameters inside CI
+# 81.8% true parameters inside CI
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
 # maximum RMSE is for re_i[11] (not the most extreme)
-# which( mom$dS$dT$re_i == max(mom$dS$dT$re_i) )
+# with(mom$dS$dT, which( re_i == max( abs(re_i) ) ) )
 
 
 # recovery plot
@@ -66,7 +100,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=NULL)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_c','s_c'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i'))
 tri_plot(stan_object=res_C, pars=c('a'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
@@ -93,7 +127,7 @@ par_recovery_NC = parameter_recovery( stan_object = res_NC,
                                    est_par = par_est,
                                    true_par = par_true)
 par_recovery_NC
-# better samples for a and m_c, worst for s_c 
+# better samples for a and m_i, worst for s_i 
 # re_i's better than centered model
 
 sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
@@ -102,7 +136,7 @@ sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
 # maximum RMSE is for re_i[11] (not the most extreme)
 # better samples for this model, now has the right direction and is in CI
-# which( mom$dS$dT$re_i == max(mom$dS$dT$re_i) )
+# with(mom$dS$dT, which( re_i == max( abs(re_i) ) ) )
 
 
 # recovery plot
@@ -110,7 +144,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=NULL)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('m_c','s_c'))
+tri_plot(stan_object=res_NC, pars=c('m_i','s_i'))
 tri_plot(stan_object=res_NC, pars='a')
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
@@ -124,7 +158,7 @@ dist_plot( stan_object=res_NC, true_data=data_true,
 
 
 # chain stats
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_c','s_c') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='a' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
@@ -163,20 +197,53 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
 #   PTA range, L=low, M1<M2=mid, H=high
 #
-# read simulation
+## data ####
 data_nam = "Hbeta_sim2"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
 load( model_data )
+# mom
 
+
+## plotting data ####
+Amin = min(mom$dS$dT$A)
+mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
+                                   E=E[cid], sPTA=sPTA[cid], H=H) )
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:3, labels = T)
+
+with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:4, labels = T)
+
+
+
+## parameters ####
 par_true = with( mom$dS,
                  c( #par$aE * c(1:4), # four groups
                    par$a, par$aHS * c(1:3), # three groups
-                   par$bP, par$bA, par$m_c, par$s_c,
+                   par$bP, par$bA, par$m_i, par$s_i,
                    dT$re_i, dT$m_SI, dT$m_H) )
 
 diff_true = mom$dS$par$aHS * c(1:2,1)
 
 data_true = with(mom$dL, data.frame(H=H, child=cid))
+
 
 
 ## approximate effects ####
@@ -226,21 +293,22 @@ res_C = rstan::read_stan_csv( file.path( model_out, model_fit ) )
 
 
 # final comparison
-par_est = c('a','aHS','bP','bA','m_c','s_c','re_i','SI','Ht')
+par_est = c('a','aHS','bP','bA','m_i','s_i','re_i','SI','Ht')
 par_recovery_C = parameter_recovery( stan_object = res_C,
                                    est_par = par_est,
                                    true_par = par_true)
 par_recovery_C
-# poor samples for a, m_c, aHS, bP, bA and re_i, when only HS is in the model
+# poor samples for a, m_i and re_i, when only HS is in the model
 #   worst samples for the same, when E and HS are in the model
-# good samples for s_c, SI, Ht (no matter E, HS, or both in model)
+# good samples for the rest (no matter E, HS, or both in model)
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
-# 85.6% true parameters inside CI (depends on reference)
+# 88.5% true parameters inside CI (depends on reference)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for aHS[1]
-# completely different than the effect
+# maximum RMSE is for re_i[30] (not the extreme)
+# completely different in sign
+# with(mom$dS$dT, which( re_i == max( abs(re_i) ) ) )
 
 
 
@@ -249,9 +317,8 @@ cont_recovery_C = contrast_recovery(stan_object = res_C,
                                   est_diff = 'aHS',
                                   true_diff = diff_true)
 cont_recovery_C
-# when use only HS in model, contrasts are over estimated
+# when use only HS in model, contrasts are slightly over/under estimated
 #   because we break multicollinearity
-
 # when use E and HS in model, contrasts come all wrong,
 #   because of multicollinearity
 #   it does not matter if you increase I or K
@@ -262,7 +329,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_c','s_c'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i'))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
@@ -289,15 +356,16 @@ par_recovery_NC = parameter_recovery( stan_object = res_NC,
                                    est_par = par_est,
                                    true_par = par_true)
 par_recovery_NC
-# great samples for all parameters, except s_c
+# great samples for all parameters, except s_i
 # great samples for re_i, SI, Ht
 
 sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
-# 85.6% true parameters inside CI (depends on reference)
+# 87.5% true parameters inside CI (depends on reference)
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for aHS[1]
+# maximum RMSE is for re_i[30] (not the extreme)
 # completely different effect
+# with(mom$dS$dT, which( re_i == max( abs(re_i) ) ) )
 
 
 
@@ -306,7 +374,7 @@ cont_recovery_NC = contrast_recovery(stan_object = res_NC,
                                   est_diff = 'aHS',
                                   true_diff = diff_true)
 cont_recovery_NC
-# when use only HS, contrasts come over-estimated
+# when use only HS, contrasts come slightly over/under estimated
 #   even when we break multicollinearity
 # when use E and HS, contrasts come all wrong,
 #   because of multicollinearity
@@ -318,7 +386,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('m_c','s_c'))
+tri_plot(stan_object=res_NC, pars=c('m_i','s_i'))
 tri_plot(stan_object=res_NC, pars=c( 'a',paste0('aHS[',1:3,']'), 'bP', 'bA' ))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
@@ -331,7 +399,7 @@ dist_plot( stan_object=res_NC, true_data=data_true,
 
 
 # chain stats
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_c','s_c') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
@@ -370,21 +438,53 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
 #   PTA range, L=low, M1<M2=mid, H=high
 #
-# read simulation
+## data ####
 data_nam = "Hbeta_sim3"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
 load( model_data )
+# mom
 
+
+## plotting data ####
+Amin = min(mom$dS$dT$A)
+mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
+                                   E=E[cid], sPTA=sPTA[cid], H=H) )
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:3, labels = T)
+
+with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:4, labels = T)
+
+
+## parameters ####
 par_true = with( mom$dS,
                  c( #par$aE * c(1:4), # four groups
                    par$a, par$aHS*c(1:3), # three groups
                    par$bP, par$bA, 
-                   par$m_c, par$s_c, par$m_M, par$s_M,
+                   par$m_i, par$s_i, par$m_M, par$s_M,
                    dT$re_i, dT$M, dT$m_SI, dT$m_H) )
 
 diff_true = mom$dS$par$aHS * c(1:2,1)
 
 data_true = with(mom$dL, data.frame(H=H, child=cid))
+
 
 
 ## centered ####
@@ -395,22 +495,22 @@ res_C = rstan::read_stan_csv( file.path( model_out, model_fit ) )
 
 
 # final comparison
-par_est = c('a','aHS','bP','bA','m_c','s_c','m_M','s_M','re_i','M','SI','Ht')
+par_est = c('a','aHS','bP','bA','m_i','s_i','m_M','s_M','re_i','M','SI','Ht')
 par_recovery_C = parameter_recovery( stan_object = res_C,
                                    est_par = par_est,
                                    true_par = par_true)
 par_recovery_C
-# poor samples for m_c, and re_i, when only HS is in the model
+# poor samples for a, m_i and re_i, when only HS is in the model
 #   worst samples for the same, when E and HS are in the model
 # good samples for all the rest 
 #   (no matter E, HS, or both in model)
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
-# 77.5% true parameters inside CI (depends on reference)
+# 80.4% true parameters inside CI (depends on reference)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for M[30] (one of the two extreme values)
-# which( mom$dS$dT$M == max(mom$dS$dT$M) )
+# maximum RMSE is for M[6] (NOT one of the two extreme values)
+# with(mom$dS$dT, which( M == max( abs(M) ) ) )
 
 
 
@@ -419,7 +519,7 @@ cont_recovery_C = contrast_recovery(stan_object = res_C,
                                   est_diff = 'aHS',
                                   true_diff = diff_true)
 cont_recovery_C
-# when use only HS in model, contrasts over-estimated
+# when use only HS in model, contrasts more over/under estimated
 #   because we break multicollinearity
 # when use E and HS in model, contrasts come all wrong,
 #   because of multicollinearity
@@ -431,7 +531,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_c','s_c','m_M','s_M'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_M','s_M'))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA' ))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('M[', 1:5,']') )
@@ -464,11 +564,11 @@ par_recovery_NC
 #   worst samples for all parameters, when E and HS are in the model
 
 sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
-# 79.7% true parameters inside CI (depends on reference)
+# 80.4% true parameters inside CI (depends on reference)
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for M[30] (one of the two extreme)
-# which( mom$dS$dT$M == max(mom$dS$dT$M) )
+# maximum RMSE is for M[6] (NOT one of the two extreme)
+# with(mom$dS$dT, which( M == max(M) ) )
 
 
 
@@ -477,7 +577,7 @@ cont_recovery_NC = contrast_recovery(stan_object = res_NC,
                                   est_diff = 'aHS',
                                   true_diff = diff_true)
 cont_recovery_NC
-# when use only HS in model, contrasts come over-estimated
+# when use only HS in model, contrasts come over/under estimated
 #   because we break multicollinearity
 # when use E and HS in model, contrasts come all wrong,
 #   because of multicollinearity
@@ -490,7 +590,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('m_c','s_c','m_M','s_M'))
+tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_M','s_M'))
 tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA' ))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('M[', 1:5,']') )
@@ -506,7 +606,7 @@ dist_plot( stan_object=res_NC, true_data=data_true,
 
 
 # chain stats
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_c','s_c','m_M','s_M') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_M','s_M') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='M' )
@@ -527,11 +627,14 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 # Outcome = no known process behind (no known M)
 # Covariates: not modeled
 #
-# read simulation
+## data ####
 data_nam = "Hbeta_sim4"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
 load( model_data )
+# mom
 
+
+## parameters ####
 data_true = with(mom$dL, data.frame(H=H, child=cid))
 
 
@@ -543,12 +646,12 @@ res_C = rstan::read_stan_csv( file.path( model_out, model_fit ) )
 
 
 # final comparison
-par_est = c('a','m_c','s_c','m_M','s_M','re_i','M','SI','Ht')
+par_est = c('a','m_i','s_i','m_M','s_M','re_i','M','SI','Ht')
 par_recovery_C = parameter_recovery( stan_object = res_C,
                                    est_par = par_est,
                                    true_par = rep(NA, 133) ) # no true par
 par_recovery_C
-# no good samples for a, m_c, s_c
+# no good samples for a and m_i
 # no good samples for re_i's or M's
 # NO NEED to test CI
 
@@ -558,7 +661,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=NULL)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('a','m_c','s_c','m_M','s_M'))
+tri_plot(stan_object=res_C, pars=c('a','m_i','s_i','m_M','s_M'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('M[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
@@ -585,7 +688,7 @@ par_recovery_NC = parameter_recovery( stan_object = res_NC,
                                    est_par = par_est,
                                    true_par = rep(NA, 133) ) # no true par
 par_recovery_NC
-# great samples for all except s_c
+# great samples for all except m_M and s_m
 # NO NEED to test CI
 
 
@@ -594,7 +697,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=NULL)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('a','m_c','s_c','m_M','s_M'))
+tri_plot(stan_object=res_NC, pars=c('a','m_i','s_i','m_M','s_M'))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('M[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
@@ -609,7 +712,7 @@ dist_plot( stan_object=res_NC, true_data=data_true,
 
 
 # chain stats
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','m_c','s_c','m_M','s_M') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','m_i','s_i','m_M','s_M') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='M' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
@@ -649,16 +752,48 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
 #   PTA range, L=low, M1<M2=mid, H=high
 #
-# read simulation
+## data ####
 data_nam = "Hbeta_sim5"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
 load( model_data )
+# mom
 
+
+## plotting data ####
+Amin = min(mom$dS$dT$A)
+mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
+                                   E=E[cid], sPTA=sPTA[cid], H=H) )
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+par(mfrow=c(2,2))
+with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
+with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
+par(mfrow=c(1,1))
+
+
+with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:3, labels = T)
+
+with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
+axis(side=1, at=1:4, labels = T)
+
+
+
+## parameters ####
 par_true = with( mom$dS,
                  c( #par$aE * c(1:4), # four groups
                    par$a, par$aHS * c(1:3), # three groups
                    par$bP, par$bAHS*c(1:3),
-                   par$m_c, par$s_c, par$m_M, par$s_M,
+                   par$m_i, par$s_i, par$m_M, par$s_M,
                    #1, 0 , 0, 1,
                    dT$re_i, dT$M, dT$m_SI, dT$m_H) )
 
@@ -675,22 +810,22 @@ res_C = rstan::read_stan_csv( file.path( model_out, model_fit ) )
 
 
 # final comparison
-par_est = c('a','aHS','bP','bAHS','m_c','s_c','m_M','s_M','re_i','M','SI','Ht')
+par_est = c('a','aHS','bP','bAHS','m_i','s_i','m_M','s_M','re_i','M','SI','Ht')
 par_recovery_C = parameter_recovery( stan_object = res_C,
                                      est_par = par_est,
                                      true_par = par_true)
 par_recovery_C
-# poor samples for mc, m_M, s_M, and re_i
+# poor samples for a, m_i, s_M, and re_i
 #   worst samples for the same, when E and HS are in the model
 # good samples for the rest
 #   (no matter E, HS, or both in model)
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
-# 83.6% true parameters inside CI (depends on reference)
+# 81.4% true parameters inside CI (depends on reference)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for M[30] (one of the two extreme)
-# which( mom$dS$dT$M == max(mom$dS$dT$M) )
+# maximum RMSE is for M[13] (one of the two extreme)
+# with(mom$dS$dT, which( M == max(M) ) )
 
 
 
@@ -712,7 +847,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_c','s_c','m_M','s_M'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_M','s_M'))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP'))
 tri_plot(stan_object=res_C, pars= paste0('bAHS[',1:3,']') )
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
@@ -746,11 +881,11 @@ par_recovery_NC
 #   worst samples for all parameters, when E and HS are in the model
 
 sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
-# 82.1% true parameters inside CI (depends on reference)
+# 82.9% true parameters inside CI (depends on reference)
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for M[30] (one of the two extreme)
-# which( mom$dS$dT$M == max(mom$dS$dT$M) )
+# maximum RMSE is for M[13] (one of the two extreme)
+# with(mom$dS$dT, which( M == max(M) ) )
 
 
 
@@ -773,9 +908,9 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('m_c','s_c','m_M','s_M'))
-tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP'))
-tri_plot(stan_object=res_C, pars=paste0('bAHS[',1:3,']') )
+tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_M','s_M'))
+tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP'))
+tri_plot(stan_object=res_NC, pars=paste0('bAHS[',1:3,']') )
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('M[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
@@ -790,7 +925,7 @@ dist_plot( stan_object=res_NC, true_data=data_true,
 
 
 # chain stats
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_c','s_c','m_M','s_M') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_M','s_M') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bAHS') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='M' )
