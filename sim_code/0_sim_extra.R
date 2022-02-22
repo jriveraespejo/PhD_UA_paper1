@@ -340,7 +340,7 @@ recovery_plots = function(par_object, cont_object=NULL){
   opar = par()
   
   # parameters of interest
-  par_int = list( p1 = c('m_i','s_i','m_M','s_M','m_j','s_j'), 
+  par_int = list( p1 = c('m_i','s_i','m_M','s_M','m_j','s_j','s_HJ','s_SI'), 
                   p2 = c('a','aHS','aE','bP','bA','bAHS'),
                   p3 = 'Rho',
                   p4 = 're_i',

@@ -66,7 +66,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   # J = 80 # number of judges
   # seed=12345
   # p=c(0.38, 0.31, 0.31)
-  # par=list( m_c=0, s_c=0.5, # children's random effects
+  # par=list( m_i=0, s_i=0.5, # children's random effects
   #           l=NULL, # variability in children's observed SIs
   #           m_j=0, s_j=0.5, # judges' random effects
   #           a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 )
@@ -98,7 +98,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   
   # children's random effects
   set.seed(seed+1)
-  re_i = rnorm(I, par$m_i, par$s_i)
+  re_i = rnorm(I, mean=par$m_i,sd=par$s_i)
   dT$re_i = re_i 
   
   # linear predictor / SI index
@@ -131,8 +131,8 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   
   # 2. observed data ####
   N = I*K*D
-  dO = data.frame(matrix(NA, nrow=N, ncol=6))
-  names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','SI')
+  dO = data.frame(matrix(NA, nrow=N, ncol=7))
+  names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','SI','SIo')
   dO$child_id = rep(1:I, each=K*D)
   dO$utt_id = rep(1:K, I*D)
   dO = dO[with(dO, order(child_id, utt_id) ),]
@@ -153,7 +153,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   
   # judges' random effects
   set.seed(seed+3)
-  re_j = rnorm(J, par$m_j, par$s_j)
+  re_j = rnorm(J, mean=par$m_j, sd=par$s_j)
   dO$re_j = re_j[dO$judge_id]
   
   
@@ -175,7 +175,14 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   
   
   
-  # 3. list data ####
+  # 3. reduced data
+  dR = dO %>%
+    group_by(child_id, utt_id) %>%
+    summarise(m_sSIo=mean( SIo/100 ), s_sSIo=sd( SIo/100 ) )
+  
+  
+  
+  # 4. list data ####
   dL = list(
     # dimensions
     N = nrow(dO), # observations
@@ -183,6 +190,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
     K = max(dO$utt_id), # utterances
     J = max(dO$judge_id), # judges
     D = max(dO$dup_id), # duplicate
+    R = max(dO$child_id) * max(dO$utt_id), # total replicates
     
     # category numbers
     cHS = max(dT$HS),
@@ -194,17 +202,23 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
     E = dT$E,
     sPTA = c( standardize( dT$PTA ) ),
     
-    # observed data
-    HJb = with(dO, ifelse(SIo==0, 0.0001, ifelse(SIo==100, 0.9999, SIo/100)) ), # trick
+    # full observed data
+    # HJ = with(dO, ifelse(SIo==0, 0.001, ifelse(SIo==100, 0.999, SIo/100)) ), # bounded
+    HJ = with(dO, c( scale(SIo) ) ), # standardized
     cid = dO$child_id,
     uid = dO$utt_id,
-    jid = dO$judge_id
+    jid = dO$judge_id,
     
+    # reduced data
+    m_HJ = dR$m_sSIo,
+    s_HJ = dR$s_sSIo,
+    rcid = dR$child_id,
+    ruid = dR$utt_id
   )
   
   
-  # 4. save data ####
-  mom = list(dS=list( dT=dT, dO=dO, par=par), dL=dL)
+  # 5. save data ####
+  mom = list(dS=list( dT=dT, dO=dO, dR=dR, par=par), dL=dL)
   save(mom, file=file.path(file_save, file_name) )
   
 }  
