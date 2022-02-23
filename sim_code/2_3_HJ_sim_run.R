@@ -61,7 +61,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2) 
 # 7 out of 4000 hit the max_treedepth, good speed
 # this warnings are not as serious as divergent transitions
 # (see https://mc-stan.org/docs/2_29/cmdstan-guide/diagnose.html)
@@ -86,7 +86,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # 1770 out of 4000 hit the max_treedepth, really slow
 #
 # after increasing it, no more issues, but even slower
@@ -160,7 +160,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # NO divergent transitions
 
 
@@ -174,7 +174,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # NO divergent transitions
 
 
@@ -214,7 +214,7 @@ HJsim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getw
       I=32, K=10, D=20, J=80, seed=12345,
       p=c(0.38, 0.31, 0.31), # children prop. on each group
       par=list( m_i=0, s_i=0.5, # children's random effects
-                l=NULL, # variability in children's observed SIs
+                l=4, # variability in children's observed SIs
                 m_j=0, s_j=0.5, # judges' random effects
                 a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
 
@@ -235,7 +235,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # divergent transitions
 
 
@@ -249,7 +249,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # divergent transitions
 
 
@@ -259,7 +259,7 @@ mod$sample( data=mom$dL,
 # 
 # details:
 # Model: 2 types
-# Outcome: complex generation different M, zero/one values
+# Outcome: complex generation, s_HJ different for all children
 # Covariates: 
 # E -> HS:
 #   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
@@ -292,7 +292,7 @@ HJsim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getw
       I=32, K=10, D=20, J=80, seed=12345,
       p=c(0.38, 0.31, 0.31), # children prop. on each group
       par=list( m_i=0, s_i=0.5, # children's random effects
-                l=NULL, # variability in children's observed SIs
+                l=4, # variability in children's observed SIs
                 m_j=0, s_j=0.5, # judges' random effects
                 a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
 
@@ -301,10 +301,11 @@ HJsim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getw
 data_nam = 'HJ_sim4.RData'
 model_data = file.path(getwd(), 'sim_data', data_nam)
 load(model_data)
+# mom
 
 
 ## centered ####
-model_nam = "HJ_C_sim4.stan"
+model_nam = "HJ_C_sim4_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
@@ -313,13 +314,13 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # divergent transitions
 
 
 
 ## non-centered ####
-model_nam = "HJ_NC_sim4.stan"
+model_nam = "HJ_NC_sim4_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
@@ -328,7 +329,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # divergent transitions
 
 
@@ -339,7 +340,7 @@ mod$sample( data=mom$dL,
 #
 # details:
 # Model: 2 types
-# Outcome: complex generation, s_HJ different for all children, reduced data
+# Outcome: simple generation, s_HJ equal for all children, reduced data
 # Covariates:
 # E -> HS:
 #   HS[E=N]=NH, HS[E=L|M]=HI/HA, HS[E=M|H]=HI/CI
@@ -394,7 +395,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # YES divergent transitions: 50-800 out of 8000
 
 
@@ -409,6 +410,6 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000) 
+            iter_warmup=2000, iter_sampling=2000, thin=2)
 # YES divergent transitions; 50-600 out of 8000
 

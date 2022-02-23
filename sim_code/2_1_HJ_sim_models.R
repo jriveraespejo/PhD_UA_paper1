@@ -489,7 +489,7 @@ model{
       // assuming a [0,1] measure
       // no issues with the max_tree_length, and samples way to slow
       
-      HJ[n] ~ normal( mu , s_HJ );
+      HJ[n] ~ normal( mu , s_HJ[cid[n]] );
       // assuming a [-oo,+oo] measure (standardized)
       // no issues with the max_tree_length, and good speed
     }
@@ -565,7 +565,7 @@ model{
     // priors
     s_HJ ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
-    aE ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
@@ -584,7 +584,7 @@ model{
       // assuming a [0,1] measure
       // no issues with the max_tree_length, and samples way to slow
       
-      HJ[n] ~ normal( mu , s_HJ );
+      HJ[n] ~ normal( mu , s_HJ[cid[n]] );
       // assuming a [-oo,+oo] measure (standardized)
       // no issues with the max_tree_length, and good speed
     }
@@ -692,7 +692,7 @@ model{
     // priors
     s_HJ ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
-    aE ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
@@ -712,7 +712,7 @@ model{
       // assuming a [0,1] measure
       // no issues with the max_tree_length, and samples way to slow
       
-      HJ[n] ~ normal( mu , s_HJ );
+      HJ[n] ~ normal( mu , s_HJ[cid[n]] );
       // assuming a [-oo,+oo] measure (standardized)
       // no issues with the max_tree_length, and good speed
     }
@@ -792,7 +792,7 @@ model{
     // priors
     s_HJ ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
-    aE ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
@@ -812,7 +812,7 @@ model{
       // assuming a [0,1] measure
       // no issues with the max_tree_length, and samples way to slow
       
-      HJ[n] ~ normal( mu , s_HJ );
+      HJ[n] ~ normal( mu , s_HJ[cid[n]] );
       // assuming a [-oo,+oo] measure (standardized)
       // no issues with the max_tree_length, and good speed
     }
@@ -901,7 +901,7 @@ transformed parameters{
       //m_SI[i] = re_i[i] + a;
       // simple model
       
-      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS, interaction
 
       //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
@@ -929,7 +929,7 @@ model{
     // likelihood
     SI ~ normal( m_SI, s_SI);
     for(r in 1:R){
-      m_HJ[r] ~ normal( inv_logit( SI[rcid[r]] ) , s_HJ[r]);
+      m_HJ[r] ~ normal( inv_logit( SI[rcid[r]] ), s_HJ[r]);
     }
 }
 "
@@ -985,7 +985,7 @@ transformed parameters{
       //m_SI[i] = re_i[i] + a;
       // simple model
       
-      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS, interaction
 
       //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
@@ -1013,7 +1013,7 @@ model{
     // likelihood
     SI ~ normal( m_SI, s_SI);
     for(r in 1:R){
-      m_HJ[r] ~ normal( inv_logit( SI[rcid[r]] ) , s_HJ[r]);
+      m_HJ[r] ~ normal( inv_logit( SI[rcid[r]] ), s_HJ[r]);
     }
 }
 "

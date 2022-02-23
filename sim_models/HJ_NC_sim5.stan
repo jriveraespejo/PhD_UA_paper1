@@ -19,7 +19,7 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    vector[cE] aE;        // fixed intercept (per E)
+    //vector[cE] aE;        // fixed intercept (per E)
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
@@ -42,7 +42,7 @@ transformed parameters{
       //m_SI[i] = re_i[i] + a;
       // simple model
       
-      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS, interaction
 
       //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
@@ -59,7 +59,7 @@ model{
 
     // priors
     a ~ normal( 0 , 0.5 );
-    aE ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
@@ -70,7 +70,7 @@ model{
     // likelihood
     SI ~ normal( m_SI, s_SI);
     for(r in 1:R){
-      m_HJ[r] ~ normal( inv_logit( SI[rcid[r]] ) , s_HJ[r]);
+      m_HJ[r] ~ normal( inv_logit( SI[rcid[r]] ), s_HJ[r]);
     }
 }
 

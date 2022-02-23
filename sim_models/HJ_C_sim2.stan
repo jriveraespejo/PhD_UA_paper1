@@ -18,7 +18,7 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    vector[cE] aE;        // fixed intercept (per E)
+    //vector[cE] aE;        // fixed intercept (per E)
     vector[cHS] aHS;      // fixed intercept (per HS)
     real bP;              // fixed slope standardized PTA
     real bA;              // fixed slope (A - A_min)
@@ -34,10 +34,10 @@ transformed parameters{
     vector[I] SI;         // true SI index (per child)
 
     for(i in 1:I){
-      //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
 }
@@ -54,7 +54,7 @@ model{
     // priors
     s_HJ ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
-    aE ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
@@ -64,7 +64,18 @@ model{
     // likelihood
     for(n in 1:N){
       mu = SI[cid[n]] + re_j[jid[n]];
-      logit( HJ[n] ) ~ normal( mu , s_HJ );
+      
+      //logit(HJ[n]) ~ normal( mu , s_HJ );
+      // assuming a [0,1] measure
+      // it has issues with the max_tree_length, and samples way to slow
+      
+      //HJ[n] ~ normal( inv_logit(mu) , s_HJ );
+      // assuming a [0,1] measure
+      // no issues with the max_tree_length, and samples way to slow
+      
+      HJ[n] ~ normal( mu , s_HJ );
+      // assuming a [-oo,+oo] measure (standardized)
+      // no issues with the max_tree_length, and good speed
     }
 }
 
