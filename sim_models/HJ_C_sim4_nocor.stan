@@ -29,6 +29,7 @@ parameters{
     real m_j;             // mean of judges' random effects
     real<lower=0> s_j;    // sd of judges's random effects
     vector[J] re_j;       // random intercepts (per judge)
+    real<lower=0> l;      // rate for s_HJ (to learn from data)
     real<lower=0> s_HJ[I];// variability of measurement (per child)
 }
 transformed parameters{
@@ -57,7 +58,8 @@ model{
     s_j ~ exponential( 1 );
     
     // priors
-    s_HJ ~ exponential( 2 );
+    s_HJ ~ exponential( l );
+    l ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );

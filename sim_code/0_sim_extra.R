@@ -322,6 +322,78 @@ contrast_recovery = function(stan_object, est_diff, true_diff, prec=3, seed=1){
 
 
 
+
+# function:
+#     data_plots
+# description:  
+#     It plots all relevant data plots 
+# arguments:
+#     d = data from simulation
+#     xdata = string identifying data to plot on x axis
+#             options: A, Am, PTA, sPTA, HS, E
+#     ydata = string identifying data to plot on y axis
+#             options: H, HJ, SI
+#     alpha = color parameter
+#     os = plot the original scale (default os=F)
+#           available only for: HJ, CJD, CJO
+#     reduce = reduced data (default reduce=F)
+#           available only for: HJ, CJD, CJO
+#
+data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
+  
+  # # test
+  # d=mom
+  # xdata='Am'
+  # ydata='HJ'
+  # alpha=0.01
+  # os=F
+  # reduce=T
+  
+  # working data
+  mom_plot = with(mom, data.frame(cid=dL$cid, 
+                                  HS=dL$HS[dL$cid], 
+                                  E=dL$E[dL$cid],
+                                  Am=dL$Am[dL$cid], 
+                                  A=dS$dT$A[dL$cid],
+                                  PTA=dS$dT$PTA[dL$cid],
+                                  sPTA=dL$sPTA[dL$cid] ) )
+  if( ydata=='H' ){
+    mom_plot[,ydata] = mom$dL[ydata]
+  } else if( ydata=='HJ' & !reduce ){
+    mom_plot[,ydata] = mom$dL[ydata]
+    mom_plot$SIo = mom$dS$dO$SIo
+  } else if( ydata=='HJ' & reduce ){
+    mom_plot$m_HJ = mom$dL$m_HJ
+    mom_plot$s_HJ = mom$dL$s_HJ
+  }
+  
+  if( ydata=='HJ' & os){
+    ydata='SIo'
+  } else if ( ydata=='HJ' & reduce ){
+    ydata='m_HJ'
+  }
+  
+  # making plots
+  if(xdata=='Am' | xdata=='A' | xdata=='PTA' | xdata=='sPTA'){
+    
+    par(mfrow=c(2,2))
+    plot(mom_plot[,c(xdata,ydata)], pch=19, col=col.alpha('black', alpha))
+    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
+    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
+    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
+    par(mfrow=c(1,1))  
+    
+  } else if(xdata=='HS' | xdata=='E'){
+    
+    cxdata = unique(mom_plot[,c(xdata)])
+    plot(mom_plot[,c(xdata,ydata)], pch=19, xaxt="n", col=col.alpha('black', alpha))
+    axis(side=1, at=cxdata, labels = T)
+  }
+  
+}
+
+
+
 # function:
 #     recovery_plots
 # description:  
@@ -671,46 +743,54 @@ stat_plot = function(par_object1, par_object2, pars, cChain=4000, cRhat=1.05){
 
 
 # function:
-#     dist_plot
+#     distH_plot
 # description:  
-#     plots the stimated density and observed entropies per children
+#     plots the estimated density and observed entropies per children
 # arguments:
 #     stan_object = object containing a stanfit object (it can be a list also)
 #     true_data = repeated measures for entropy per child
 #     par_object = object generated with parameter_recovery() function
-#     M = shape parameter in dbeta2, default = NULL
+#     M = shape parameter in dbeta2, default = 10
 #     rsize = number of samples form posterior (default = 100)
 #     csize = number of children sampled (default = 16)
+#     model = model for which we made the plot (default=H, entropy)
+#             available models: H, HJ, CJD, CJO
+#     alpha1, alpha2 = color alpha parameters
 #
-dist_plot = function(stan_object, true_data, par_object, 
-                     M=NULL, rsize=100, csize=16, seed=1){
+distH_plot = function(stan_object, true_data, par_object, 
+                      M=10, rsize=100, csize=16, seed=1,
+                      alpha1=0.3, alpha2=0.4){ 
   
   # # test
   # stan_object = res_C
   # true_data = data_true
   # par_object = par_recovery_C
-  # M=NULL
+  # M=10
   # rsize=100
   # csize=16
   # seed=1
+  
   
   # distribution Ht
   post = extract.samples(stan_object)
   
   # sampling entropy observations
+  nchain= dim(post$SI)
   set.seed(seed)
-  idx_row = sample(x=1:4000, size=rsize, replace=F)
-  idx_col = sample(x=1:32, size=csize, replace=F)
+  idx_row = sample(x=1:nchain[1], size=rsize, replace=F)
+  idx_col = sample(x=1:nchain[2], size=csize, replace=F)
   idx_col = idx_col[order(idx_col)]
   
+  
   # extracting info
-  Ht_mom = post$Ht[idx_row, idx_col]
-  Ht_mean = colMeans(post$Ht)[idx_col] # mean distribution
+  out_mom = post$Ht[idx_row, idx_col]
+  out_mean = colMeans(post$Ht)[idx_col] # mean distribution
   
   if( !is.null(M) & length(M)==1 ){
-    M_mom = matrix( rep(M, nrow(Ht_mom)*ncol(Ht_mom) ), ncol=ncol(Ht_mom) )
+    M_mom = matrix( rep(M, nrow(out_mom)*ncol(out_mom) ), 
+                    ncol=ncol(out_mom) )
     M_mean = colMeans(M_mom) # mean distribution
-  } else{
+  } else {
     M_mom = post$M[idx_row, idx_col]
     M_mean = colMeans(post$M)[idx_col] # mean distribution
   }
@@ -726,28 +806,28 @@ dist_plot = function(stan_object, true_data, par_object,
   par(mfrow=c(4,4))
   
   # i=1
-  for(i in 1:ncol(Ht_mom) ){ # children
+  for(i in 1:ncol(out_mom) ){ # children
     
     # first sample
-    curve( dbeta2(x, Ht_mom[1,i], M_mom[1,i]), from=0, to=1, ylim=c(0, 6),
-           xlab='Entropy', ylab='Density', col=col.alpha('gray',0.3) )
+    curve( dbeta2(x, out_mom[1,i], M_mom[1,i]), from=0, to=1, ylim=c(0, 6),
+           xlab='Entropy', ylab='Density', col=col.alpha('gray',alpha1) )
     mtext(paste("child = ", idx_col[i]), 3, adj = 1, cex = 1.1)
     
     # rest of samples
-    for(s in 2:nrow(Ht_mom) ){
-      curve( dbeta2(x, Ht_mom[s,i], M_mom[s,i]), from=0, to=1, add=T, 
-             xlab='Entropy', ylab='Density', col=col.alpha('gray',0.3))
+    for(s in 2:nrow(out_mom) ){
+      curve( dbeta2(x, out_mom[s,i], M_mom[s,i]), from=0, to=1, add=T, 
+             xlab='Entropy', ylab='Density', col=col.alpha('gray',alpha1))
     }
     
     # mean distribution
-    curve( dbeta2(x, Ht_mean[i], M_mean[i]), from=0, to=1, lwd=2.5,
+    curve( dbeta2(x, out_mean[i], M_mean[i]), from=0, to=1, lwd=2.5,
            xlab='Entropy', ylab='Density', col='black', add=T)
     
     
     # observations
     points( true_data$H[true_data$child==idx_col[i]], 
             rep( 0.3, sum(true_data$child==idx_col[i]) ), 
-            pch=19, col=col.alpha('blue', 0.4))
+            pch=19, col=col.alpha('blue', alpha2))
     points( par_object$mean[i], 0, pch=19, col='red')
     lines(x=with(par_object[i,], c(`5.5%`,`94.5%`)), y=rep(0, 2), col='red')
     
@@ -757,6 +837,104 @@ dist_plot = function(stan_object, true_data, par_object,
   
 }
 
+
+
+
+# # function:
+# #     distHJ_plot
+# # description:  
+# #     plots the estimated density and observed HJ scores per children
+# # arguments:
+# #     stan_object = object containing a stanfit object (it can be a list also)
+# #     true_data = repeated measures for entropy per child
+# #     par_object = object generated with parameter_recovery() function
+# #     M = shape parameter in dbeta2, default = 10
+# #     rsize = number of samples form posterior (default = 100)
+# #     csize = number of children sampled (default = 16)
+# #     model = model for which we made the plot (default=H, entropy)
+# #             available models: H, HJ, CJD, CJO
+# #     alpha1, alpha2 = color alpha parameters
+# #
+# distHJ_plot = function(stan_object, true_data, par_object, 
+#                       M=10, rsize=100, csize=16, seed=1,
+#                       alpha1=0.3, alpha2=0.4){ 
+#   
+#   # test
+#   stan_object = res_C
+#   true_data = data_true
+#   par_object = par_recovery_C
+#   rsize=100
+#   csize=16
+#   seed=1
+#   
+#   
+#   # distribution Ht
+#   post = extract.samples(stan_object)
+#   # str(post)
+#   
+#   # sampling entropy observations
+#   nchain= dim(post$SI)
+#   set.seed(seed)
+#   idx_row = sample(x=1:nchain[1], size=rsize, replace=F)
+#   idx_col = sample(x=1:nchain[2], size=csize, replace=F)
+#   idx_col = idx_col[order(idx_col)]
+#   
+#   
+#   # extracting info
+#   out_mom = post$SI[idx_row, idx_col]
+#   out_mean = colMeans(post$SI)[idx_col] # mean distribution
+#   out_sd = apply(post$SI, 2, sd)[idx_col]
+#   
+#   # if( length(s_)==1 ){
+#   #   M_mom = matrix( rep(M, nrow(out_mom)*ncol(out_mom) ), 
+#   #                   ncol=ncol(out_mom) )
+#   #   M_mean = colMeans(M_mom) # mean distribution
+#   # } else {
+#   #   M_mom = post$M[idx_row, idx_col]
+#   #   M_mean = colMeans(post$M)[idx_col] # mean distribution
+#   # }
+#   
+#   
+#   # identify Ht mean values and confidence intervals
+#   idx = number_detect_par(par_object, 'SI')
+#   par_object = par_object[idx,]
+#   par_object = par_object[idx_col,]
+#   
+#   
+#   # plot
+#   par(mfrow=c(4,4))
+#   
+#   # i=1
+#   for(i in 1:ncol(out_mom) ){ # children
+#     
+#     # first sample
+#     curve( dnorm(x, out_mom[1,i], M_mom[1,i]), from=0, to=1, ylim=c(0, 6),
+#            xlab='Entropy', ylab='Density', col=col.alpha('gray',alpha1) )
+#     mtext(paste("child = ", idx_col[i]), 3, adj = 1, cex = 1.1)
+#     
+#     # rest of samples
+#     for(s in 2:nrow(out_mom) ){
+#       curve( dbeta2(x, out_mom[s,i], M_mom[s,i]), from=0, to=1, add=T, 
+#              xlab='Entropy', ylab='Density', col=col.alpha('gray',alpha1))
+#     }
+#     
+#     # mean distribution
+#     curve( dbeta2(x, out_mean[i], M_mean[i]), from=0, to=1, lwd=2.5,
+#            xlab='Entropy', ylab='Density', col='black', add=T)
+#     
+#     
+#     # observations
+#     points( true_data$H[true_data$child==idx_col[i]], 
+#             rep( 0.3, sum(true_data$child==idx_col[i]) ), 
+#             pch=19, col=col.alpha('blue', alpha2))
+#     points( par_object$mean[i], 0, pch=19, col='red')
+#     lines(x=with(par_object[i,], c(`5.5%`,`94.5%`)), y=rep(0, 2), col='red')
+#     
+#   }
+#   
+#   par(mfrow=c(1,1))
+#   
+# }
 
 
 

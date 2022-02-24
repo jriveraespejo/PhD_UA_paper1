@@ -443,6 +443,7 @@ parameters{
     real m_j;             // mean of judges' random effects
     real<lower=0> s_j;    // sd of judges's random effects
     vector[J] re_j;       // random intercepts (per judge)
+    real<lower=0> l;      // rate for s_HJ (to learn from data)
     real<lower=0> s_HJ[I];// variability of measurement (per child)
 }
 transformed parameters{
@@ -468,7 +469,8 @@ model{
     s_j ~ exponential( 1 );
     
     // priors
-    s_HJ ~ exponential( 2 );
+    s_HJ ~ exponential( l );
+    l ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -533,15 +535,18 @@ parameters{
     real m_j;             // mean of judges' random effects
     real<lower=0> s_j;    // sd of judges's random effects
     vector[J] z_j;        // (standardized) random intercepts (per judge)
-    real<lower=0> s_HJ[I];// variability of measurement (per child)
+    real<lower=0> l;      // rate for s_HJ (to learn from data)
+    real<lower=0> z_HJ[I];// (standardized) variability of measurement (per child)
 }
 transformed parameters{
     vector[I] re_i;       // random intercepts (per child)
     vector[J] re_j;       // random intercepts (per judge)
+    real<lower=0> s_HJ[I];// variability of measurement (per child)
     vector[I] SI;         // true SI index (per child)
 
     re_i = m_i + s_i*z_i;
     re_j = m_j + s_j*z_j;
+    s_HJ = l*z_HJ;
 
     // linear predictor
     for(i in 1:I){
@@ -563,8 +568,8 @@ model{
     s_j ~ exponential( 1 );
     
     // priors
-    s_HJ ~ exponential( 2 );
-    a ~ normal( 0 , 0.5 );
+    z_HJ ~ exponential( 1 );
+    l ~ exponential( 2 );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
@@ -662,6 +667,7 @@ parameters{
     real m_j;             // mean of judges' random effects
     real<lower=0> s_j;    // sd of judges's random effects
     vector[J] re_j;       // random intercepts (per judge)
+    real<lower=0> l;      // rate for s_HJ (to learn from data)
     real<lower=0> s_HJ[I];// variability of measurement (per child)
 }
 transformed parameters{
@@ -690,7 +696,8 @@ model{
     s_j ~ exponential( 1 );
     
     // priors
-    s_HJ ~ exponential( 2 );
+    s_HJ ~ exponential( l );
+    l ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -757,15 +764,18 @@ parameters{
     real m_j;             // mean of judges' random effects
     real<lower=0> s_j;    // sd of judges's random effects
     vector[J] z_j;        // (standardized) random intercepts (per judge)
-    real<lower=0> s_HJ[I];// variability of measurement (per child)
+    real<lower=0> l;      // rate for s_HJ (to learn from data)
+    real<lower=0> z_HJ[I];// (standardized) variability of measurement (per child)
 }
 transformed parameters{
     vector[I] re_i;       // random intercepts (per child)
     vector[J] re_j;       // random intercepts (per judge)
+    real<lower=0> s_HJ[I];// variability of measurement (per child)
     vector[I] SI;         // true SI index (per child)
 
     re_i = m_i + s_i*z_i;
     re_j = m_j + s_j*z_j;
+    s_HJ = l*z_HJ;
     
     // linear predictor
     for(i in 1:I){
@@ -790,7 +800,8 @@ model{
     s_j ~ exponential( 1 );
     
     // priors
-    s_HJ ~ exponential( 2 );
+    z_HJ ~ exponential( 1 );
+    l ~ exponential( 2 );
     a ~ normal( 0 , 0.5 );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );

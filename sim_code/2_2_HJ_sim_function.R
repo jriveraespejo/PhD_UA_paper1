@@ -175,7 +175,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   
   
   
-  # 3. reduced data
+  # 3. reduced data ####
   dR = dO %>%
     group_by(child_id, utt_id) %>%
     summarise(m_sSIo=mean( SIo/100 ), s_sSIo=sd( SIo/100 ) )

@@ -36,32 +36,10 @@ load( model_data )
 
 
 ## plotting data ####
-Amin = min(mom$dS$dT$A)
-mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
-                                   E=E[cid], sPTA=sPTA[cid], H=H) )
-
-par(mfrow=c(2,2))
-with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-par(mfrow=c(2,2))
-with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:3, labels = T)
-
-with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:4, labels = T)
-
+data_plots(d=mom, xdata='A', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='HS', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='E', ydata='H', alpha=0.15, os=F)
 
 
 ## parameters ####
@@ -105,10 +83,11 @@ tri_plot(stan_object=res_C, pars=c('a'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
+# good convergence, not so good mixing or autocorrelation
 
 
 # distributional plots
-dist_plot( stan_object=res_C, true_data=data_true, 
+distH_plot( stan_object=res_C, true_data=data_true, 
            par_object=par_recovery_C, M=10)
 
 
@@ -152,7 +131,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_NC, true_data=data_true, 
+distH_plot( stan_object=res_NC, true_data=data_true, 
            par_object=par_recovery_NC, M=10)
 
 
@@ -205,31 +184,11 @@ load( model_data )
 
 
 ## plotting data ####
-Amin = min(mom$dS$dT$A)
-mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
-                                   E=E[cid], sPTA=sPTA[cid], H=H) )
+data_plots(d=mom, xdata='A', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='HS', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='E', ydata='H', alpha=0.15, os=F)
 
-par(mfrow=c(2,2))
-with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-par(mfrow=c(2,2))
-with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:3, labels = T)
-
-with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:4, labels = T)
 
 
 
@@ -337,7 +296,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_C, true_data=data_true, 
+distH_plot( stan_object=res_C, true_data=data_true, 
            par_object=par_recovery_C, M=10)
 
 
@@ -394,7 +353,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_NC, true_data=data_true, 
+distH_plot( stan_object=res_NC, true_data=data_true, 
            par_object=par_recovery_NC, M=10)
 
 
@@ -446,31 +405,11 @@ load( model_data )
 
 
 ## plotting data ####
-Amin = min(mom$dS$dT$A)
-mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
-                                   E=E[cid], sPTA=sPTA[cid], H=H) )
+data_plots(d=mom, xdata='A', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='HS', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='E', ydata='H', alpha=0.15, os=F)
 
-par(mfrow=c(2,2))
-with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-par(mfrow=c(2,2))
-with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:3, labels = T)
-
-with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:4, labels = T)
 
 
 ## parameters ####
@@ -541,7 +480,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_C, true_data=data_true, 
+distH_plot( stan_object=res_C, true_data=data_true, 
            par_object=par_recovery_C, M=NULL)
 
 
@@ -600,7 +539,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_NC, true_data=data_true, 
+distH_plot( stan_object=res_NC, true_data=data_true, 
            par_object=par_recovery_NC, M=NULL)
 
 
@@ -670,7 +609,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_C, true_data=data_true, 
+distH_plot( stan_object=res_C, true_data=data_true, 
            par_object=par_recovery_C, M=NULL)
 
 
@@ -706,7 +645,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_NC, true_data=data_true, 
+distH_plot( stan_object=res_NC, true_data=data_true, 
            par_object=par_recovery_NC, M=NULL)
 
 
@@ -760,31 +699,11 @@ load( model_data )
 
 
 ## plotting data ####
-Amin = min(mom$dS$dT$A)
-mom_plot = with(mom$dL, data.frame(cid=cid, HS=HS[cid], A=Am[cid]+Amin, 
-                                   E=E[cid], sPTA=sPTA[cid], H=H) )
+data_plots(d=mom, xdata='A', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='HS', ydata='H', alpha=0.15, os=F)
+data_plots(d=mom, xdata='E', ydata='H', alpha=0.15, os=F)
 
-par(mfrow=c(2,2))
-with(mom_plot, plot(A, H, pch=19, col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(A, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(A, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(A, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-par(mfrow=c(2,2))
-with(mom_plot, plot(sPTA, H, pch=19, main='', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==1,], plot(sPTA, H, pch=19, main='HS==1', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==2,], plot(sPTA, H, pch=19, main='HS==2', col=col.alpha('black', 0.15)) )
-with(mom_plot[mom_plot$HS==3,], plot(sPTA, H, pch=19, main='HS==3', col=col.alpha('black', 0.15)) )
-par(mfrow=c(1,1))
-
-
-with(mom_plot, plot(HS, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:3, labels = T)
-
-with(mom_plot, plot(E, H, pch=19, xaxt="n", col=col.alpha('black', 0.15)) )
-axis(side=1, at=1:4, labels = T)
 
 
 
@@ -858,7 +777,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_C, true_data=data_true, 
+distH_plot( stan_object=res_C, true_data=data_true, 
            par_object=par_recovery_C, M=NULL)
 
 
@@ -919,7 +838,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-dist_plot( stan_object=res_NC, true_data=data_true, 
+distH_plot( stan_object=res_NC, true_data=data_true, 
            par_object=par_recovery_NC, M=NULL)
 
 
