@@ -55,23 +55,23 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
                  I=32, K=10, D=20, J=80, seed=12345,
                  p=c(0.38, 0.31, 0.31), # children prop. on each group
                  par=list( m_i=0, s_i=0.5, # children's random effects
-                           l=NULL, # variability in children's observed SIs
                            m_j=0, s_j=0.5, # judges' random effects
+                           s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
                            a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
   
-  # # test
-  # I = 32 # experimental units (children)
-  # K = 10 # replicates (utterances)
-  # D = 20 # duplicates (comparisons/assessments per I and K)
-  # J = 80 # number of judges
-  # seed=12345
-  # p=c(0.38, 0.31, 0.31)
-  # par=list( m_i=0, s_i=0.5, # children's random effects
-  #           l=NULL, # variability in children's observed SIs
-  #           m_j=0, s_j=0.5, # judges' random effects
-  #           a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 )
-  # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15
-  
+  # test
+  I = 32 # experimental units (children)
+  K = 10 # replicates (utterances)
+  D = 20 # duplicates (comparisons/assessments per I and K)
+  J = 80 # number of judges
+  seed=12345
+  p=c(0.38, 0.31, 0.31)
+  par=list( m_i=0, s_i=0.5, # children's random effects
+            m_j=0, s_j=0.5, # judges' random effects
+            s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
+            a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 )
+  #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15
+
   
   # 1. true data ####
   dT = data.frame(matrix(NA, nrow=I, ncol=8+K))
@@ -108,14 +108,9 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
                    par$bP * c( standardize(PTA) ) )
   
   # variability of SI
-  set.seed(seed-1)
-  if( !is.numeric(par$l) ){ 
-    dT$s_SI = 0.1 # same and low variability for measurement
-  } else{
-    dT$s_SI = rexp(n=I, rate=par$l)
-  }  
-  
+  dT$s_SI = par$s_SI # vector[I] or constant
 
+  
   # generating utterance values
   start = min(which(str_detect(names(dT), 'u[:digit:]{1,2}[:punct:]')))-1
   set.seed(seed+2)
@@ -132,7 +127,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   # 2. observed data ####
   N = I*K*D
   dO = data.frame(matrix(NA, nrow=N, ncol=7))
-  names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','SI','SIo')
+  names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','m_HJ','HJo')
   dO$child_id = rep(1:I, each=K*D)
   dO$utt_id = rep(1:K, I*D)
   dO = dO[with(dO, order(child_id, utt_id) ),]
@@ -166,11 +161,11 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
     k = dO$utt_id[n]
     
     # linear predictor
-    dO$SI[n] = dT[i, start+k] + dO$re_j[n]
+    dO$m_HJ[n] = dT[i, start+k] + dO$re_j[n]
   }
   
   # observed score
-  dO$SIo = round( inv_logit(dO$SI)*100 )
+  dO$HJo = round( inv_logit(dO$m_HJ)*100 )
   # table(dO$score)
   
   
@@ -178,7 +173,7 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   # 3. reduced data ####
   dR = dO %>%
     group_by(child_id, utt_id) %>%
-    summarise(m_sSIo=mean( SIo/100 ), s_sSIo=sd( SIo/100 ) )
+    summarise(m_HJr=mean( HJo/100 ), s_HJr=sd( HJo/100 ) )
   
   
   
@@ -204,14 +199,14 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
     
     # full observed data
     # HJ = with(dO, ifelse(SIo==0, 0.001, ifelse(SIo==100, 0.999, SIo/100)) ), # bounded
-    HJ = with(dO, c( scale(SIo) ) ), # standardized
+    HJ = with(dO, c( scale(HJo) ) ), # standardized
     cid = dO$child_id,
     uid = dO$utt_id,
     jid = dO$judge_id,
     
     # reduced data
-    m_HJ = dR$m_sSIo,
-    s_HJ = dR$s_sSIo,
+    m_HJ = dR$m_HJr,
+    s_HJ = dR$s_HJr,
     rcid = dR$child_id,
     ruid = dR$utt_id
   )
