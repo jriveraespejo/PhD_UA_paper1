@@ -124,55 +124,91 @@ CJDsim = function(file_save, file_name, # file_save need to include getwd()
   dT[,6:ncol(dT)] = round( dT[,6:ncol(dT)], 5)
   
   
+  
   # 3. full data ####
-  N = I*K*J
-  dO = data.frame(matrix(NA, nrow=N, ncol=7))
-  names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','SI','SIo')
-  dO$child_id = rep(1:I, each=K*D)
-  dO$utt_id = rep(1:K, I*D)
-  dO = dO[with(dO, order(child_id, utt_id) ),]
   
-  set.seed(seed-2)
-  idx = sample(1:N) # data permutation
-  dO$judge_id[idx] = 1:J
-  dO = dO[with(dO, order(child_id, utt_id, judge_id) ),]
-  # mom = table(dO[,c('judge_id', 'utt_id')])
-  # colSums(mom)
-  # mom = table(dO[,c('judge_id', 'child_id')])
-  # colSums(mom)
+  # comparisons
+  comp = expand.grid(child_id1=1:I, child_id2=1:I)
+  idx = with(comp, child_id1==child_id2)
+  comp = comp[!idx,]
+  comp = comp[with(comp, order(child_id1, child_id2)),]
+  comp$eq = with(comp, ifelse( child_id1<child_id2, 
+                               paste(child_id1, child_id2),
+                               paste(child_id2, child_id1) ) )
+  comp = comp[!duplicated(comp$eq),]
+  comp = comp[,-3]
+  Dt = nrow(comp)
   
-  dO$dup_id = rep(1:D, I*K)
-  # mom = table(dO[,c('judge_id', 'dup_id')])
-  # rowSums(mom)
-  
-  
+  # storage
+  N = Dt*K*J
+  dF = data.frame(matrix(NA, nrow=N, ncol=10))
+  names(dF) = c('child_id1','child_id2','utt_id','judge_id','re_j','SI1','SI2','m_CJD','p_CJD','CJD')
+  dF[,c('child_id1','child_id2')] = comp[rep(1:nrow(comp), each=K*J),]
+  dF$utt_id = rep(1:K, Dt*J)
+  dF = dF[with(dF, order(child_id1, child_id2, utt_id) ),]
+  dF$judge_id = 1:J
+
   # judges' random effects
-  set.seed(seed+3)
-  re_j = rnorm(J, mean=par$m_j, sd=par$s_j)
-  dO$re_j = re_j[dO$judge_id]
+  set.seed(seed-2)
+  re_j = round( rnorm(J, mean=par$m_j, sd=par$s_j), 5)
+  dF$re_j = re_j[dF$judge_id]
   
+  # pasting SI
+  mom1 = dT[dF$child_id1, 9:ncol(dT)]
+  mom2 = dT[dF$child_id2, 9:ncol(dT)]
   
-  # generating observed SI score
-  # n=1
-  for(n in 1:N){
-    
-    # identify data
-    i = which( dT$child_id == dO$child_id[n] )
-    k = dO$utt_id[n]
-    
-    # linear predictor
-    dO$SI[n] = dT[i, start+k] + dO$re_j[n]
+  # k=1
+  for(k in 1:K){
+    idx = dF$utt_id==k
+    dF$SI1[idx] = mom1[idx, k]
+    dF$SI2[idx] = mom2[idx, k]
   }
   
-  # observed score
-  dO$SIo = round( inv_logit(dO$SI) )
-  # table(dO$score)
+  # CJD linear predictor
+  dF$m_CJD = with(dF, (SI1 - SI2) + re_j)
+  
+  # CJD prob
+  dF$p_CJD = with(dF, inv_logit(dF$m_CJD))
+  
+  # observed CJD
+  set.seed(seed+3)
+  dF$CJD = rbinom(N, size=1, prob=dF$p_CJD)
   
   
+  # selection probability
+  # to do
+  nam = with(dF, paste(child_id1, child_id2))
+  nam_count = table(nam) 
+
   
-  # 4. full data ####
+  # 4. sampled data ####
+  # only D comparisons per judge
+  # j=1; k=3
+  for(j in 1:J){
+    for(k in 1:k){
+      
+      # identify judge
+      idx = with(dF, which(judge_id==j & utt_id==k) )
+      
+      # sample D comparisons from judge j
+      idx = sample(idx, size=D/2, replace=F)
+      
+      if(j==1 & k==1){
+        dO = dF[idx,]
+      } else{
+        dO = rbind(dO, dF[idx,])
+      }
+      
+    }
+    
+  }
   
-  
+  dO = dO[with(dO, order(child_id1, child_id2, utt_id, judge_id) ),]
+  # table(dO$judge_id)
+  # table(dO$child_id1)
+  # table(dO$child_id2)
+  # table(dO$utt_id)
+
   
   # 5. reduced data ####
   dR = dO %>%
