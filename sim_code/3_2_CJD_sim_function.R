@@ -55,8 +55,9 @@ CJDsim = function(file_save, file_name, # file_save need to include getwd()
                   I=32, K=10, D=20, J=80, seed=12345,
                   p=c(0.38, 0.31, 0.31), # children prop. on each group
                   par=list( m_i=0, s_i=0.5, # children's random effects
-                            l=NULL, # variability in children's observed SIs
                             m_j=0, s_j=0.5, # judges' random effects
+                            s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
+                            s_HJ=0.1, # var. in observed HJo (constant)
                             a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
   
   # test
@@ -65,13 +66,13 @@ CJDsim = function(file_save, file_name, # file_save need to include getwd()
   D = 20 # duplicates (comparisons/assessments per I and K)
   J = 80 # number of judges
   seed=12345
-  l=NULL
   p=c(0.38, 0.31, 0.31)
   par=list( m_i=0, s_i=0.5, # children's random effects
-            l=NULL, # variability in children's observed SIs
             m_j=0, s_j=0.5, # judges' random effects
+            s_SI=0.1, # var. in children's observed SIs (vector[I] or constant)
+            s_HJ=0.1, # var. in observed HJo (constant)
             a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 )
-  #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05
+  #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15
   
   
   # 1. true data ####
@@ -109,12 +110,7 @@ CJDsim = function(file_save, file_name, # file_save need to include getwd()
                    par$bP * c( standardize(PTA) ) )
   
   # variability of SI
-  set.seed(seed-1)
-  if( !is.numeric(par$l) ){ 
-    dT$s_SI = 0.1 # same and low variability for measurement
-  } else{
-    dT$s_SI = rexp(n=I, rate=par$l)
-  }  
+  dT$s_SI = par$s_SI # vector[I] or constant
   
   
   # generating utterance values
@@ -128,10 +124,8 @@ CJDsim = function(file_save, file_name, # file_save need to include getwd()
   dT[,6:ncol(dT)] = round( dT[,6:ncol(dT)], 5)
   
   
-  
-  
-  # 2. observed data ####
-  N = I*K*D
+  # 3. full data ####
+  N = I*K*J
   dO = data.frame(matrix(NA, nrow=N, ncol=7))
   names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','SI','SIo')
   dO$child_id = rep(1:I, each=K*D)
@@ -176,14 +170,18 @@ CJDsim = function(file_save, file_name, # file_save need to include getwd()
   
   
   
-  # 3. reduced data ####
+  # 4. full data ####
+  
+  
+  
+  # 5. reduced data ####
   dR = dO %>%
     group_by(child_id, utt_id) %>%
     summarise(m_sSIo=mean( SIo/100 ), s_sSIo=sd( SIo/100 ) )
   
   
   
-  # 4. list data ####
+  # 6. list data ####
   dL = list(
     # dimensions
     N = nrow(dO), # observations
@@ -218,7 +216,7 @@ CJDsim = function(file_save, file_name, # file_save need to include getwd()
   )
   
   
-  # 5. save data ####
+  # 7. save data ####
   mom = list(dS=list( dT=dT, dO=dO, dR=dR, par=par), dL=dL)
   save(mom, file=file.path(file_save, file_name) )
   

@@ -29,27 +29,16 @@ parameters{
     real m_j;             // mean of judges' random effects
     real<lower=0> s_j;    // sd of judges's random effects
     vector[J] re_j;       // random intercepts (per judge)
-    real<lower=0> l;      // rate for s_HJ (to learn from data)
-    real<lower=0> s_HJ[I];// variability of measurement (per child)
-}
-transformed parameters{
+    real<lower=0> r;      // rate for s_HJ (to learn from data)
+    real<lower=0> s_SI[I];// var. SI index (per child)
     vector[I] SI;         // true SI index (per child)
-
-    // linear predictor
-    for(i in 1:I){
-      SI[i] = re_i[i] + a + aHS[HS[i]] + + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS, interaction
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS, interaction
-      
-      //SI[i] = re_i[i] + a+ aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS, no interaction
-    }
+    real<lower=0> s_HJ;   // variability of measurement
 }
 model{
     // parameter to not follow
-    real mu;              // linear predictor
+    vector[I] m_SI;       // SI linear predictor
+    vector[N] m_HJ;       // HJ linear predictor
+
     
     // hyperpriors
     m_i ~ normal( 0 , 0.5 );
@@ -58,8 +47,9 @@ model{
     s_j ~ exponential( 1 );
     
     // priors
-    s_HJ ~ exponential( l );
-    l ~ exponential( 2 );
+    r ~ exponential( 0.5 );
+    s_SI ~ exponential( r );
+    s_HJ ~ exponential( 4 );
     a ~ normal( 0 , 0.5 );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -69,21 +59,37 @@ model{
     re_i ~ normal( m_i , s_i );
     re_j ~ normal( m_j , s_j );
     
-    // likelihood
-    for(n in 1:N){
-      mu = SI[cid[n]] + re_j[jid[n]];
+    
+    // SI likelihood
+    for(i in 1:I){
+      //m_SI[i] = re_i[i] + a+ aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS, no interaction
+
+      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // multicollinearity between E and HS, no interaction
+
+      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS, interaction
+
+      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // multicollinearity between E and HS, interaction
+    }  
+    SI ~ normal(m_SI, s_SI);
+    
+    
+    // HJ likelihood 
+    m_HJ = SI[cid] + re_j[jid];
+    
+    HJ ~ normal(m_HJ , s_HJ); 
+    // assuming a [-oo,+oo] measure (standardized)
+    // no issues with the max_tree_length, and good speed
+    
+    //logit(HJ) ~ normal( m_HJ , s_HJ );
+    // assuming a [0,1] measure
+    // it has issues with the max_tree_length, and samples way to slow
       
-      //logit(HJ[n]) ~ normal( mu , s_HJ );
-      // assuming a [0,1] measure
-      // it has issues with the max_tree_length, and samples way to slow
-      
-      //HJ[n] ~ normal( inv_logit(mu) , s_HJ );
-      // assuming a [0,1] measure
-      // no issues with the max_tree_length, and samples way to slow
-      
-      HJ[n] ~ normal( mu , s_HJ[cid[n]] );
-      // assuming a [-oo,+oo] measure (standardized)
-      // no issues with the max_tree_length, and good speed
-    }
+    //HJ ~ normal( inv_logit(m_HJ) , s_HJ );
+    // assuming a [0,1] measure
+    // no issues with the max_tree_length, and samples way to slow
 }
 

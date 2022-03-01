@@ -12,8 +12,8 @@ data{
     int Am[I];            // hearing age (centered at minimum)
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
-    real m_HJ[R];         // reduced replicated (not)bounded absolute holistic judgements
-    real<lower=0> s_HJ[R];// reduced replicated (not)bounded absolute holistic judgements
+    real m_HJ[R];         // mean replicated unbounded HJ (reduced data)
+    real<lower=0> s_HJ[R];// var. measurement + judges (reduced data)
     int rcid[R];          // child's id
     int ruid[R];          // utterance's id
 }
@@ -27,33 +27,21 @@ parameters{
     real m_i;             // mean of child's random effects
     real<lower=0> s_i;    // sd of child's random effects
     vector[I] re_i;       // random intercepts (per child)
-    vector[I] SI;         // SI index (per child)
     real<lower=0> s_SI;   // sd of SI
-}
-transformed parameters{
-    vector[I] m_SI;       // true SI index (per child)
-
-    // linear predictor
-    for(i in 1:I){
-      //m_SI[i] = re_i[i] + a;
-      // simple model
-      
-      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS, interaction
-
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS, interaction
-
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS, no interaction
-    }
+    vector[I] SI;         // SI index (per child)
 }
 model{
+    // parameter to not follow
+    vector[I] m_SI;       // SI linear predictor
+    vector[R] mu;
+
+
     // hyperpriors
     m_i ~ normal( 0 , 0.5 );
     s_i ~ exponential( 1 );
 
     // priors
+    s_SI ~ exponential( 4 );
     a ~ normal( 0 , 0.5 );
     //aE ~ normal( 0 , 0.5 );
     aHS ~ normal( 0 , 0.5 );
@@ -61,12 +49,34 @@ model{
     bA ~ normal( 0 , 0.3 );
     //bAHS ~ normal( 0 , 0.3 );
     re_i ~ normal( m_i , s_i );
-    s_SI ~ exponential( 1 );
 
-    // likelihood
-    SI ~ normal( m_SI, s_SI);
-    for(r in 1:R){
-      m_HJ[r] ~ normal( inv_logit( SI[rcid[r]] ), s_HJ[r]);
+
+    // SI likelihood
+    for(i in 1:I){
+      //m_SI[i] = re_i[i] + a;
+      // simple model
+
+      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS, no interaction
+      
+      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am + bP*sPTA[i];
+      // no multicollinearity between E and HS, interaction
+
+      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // multicollinearity between E and HS, no interaction
+
+      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am + bP*sPTA[i];
+      // multicollinearity between E and HS, interaction
     }
+    SI ~ normal( m_SI, s_SI);
+    
+    
+    // reduced HJ likelihood
+    mu = inv_logit(SI[rcid]);
+    m_HJ ~ normal( mu , s_HJ);
+    // transform MEAN from [-oo,+oo] to [0,1] range
+    
+    //logit( m_HJ ) ~ normal( SI[rcid] , s_HJ);
+    // transform DATA from [0,1] to [-oo,+oo] range
 }
 

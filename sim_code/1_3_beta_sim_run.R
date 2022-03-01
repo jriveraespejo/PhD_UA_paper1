@@ -54,6 +54,8 @@ model_nam = "Hbeta_C_sim1.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -66,6 +68,8 @@ model_nam = "Hbeta_NC_sim1.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -126,6 +130,8 @@ model_nam = "Hbeta_C_sim2.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -138,6 +144,8 @@ model_nam = "Hbeta_NC_sim2.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -198,6 +206,8 @@ model_nam = "Hbeta_C_sim3.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -210,6 +220,8 @@ model_nam = "Hbeta_NC_sim3.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -243,6 +255,8 @@ model_nam = "Hbeta_C_sim4.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -255,6 +269,8 @@ model_nam = "Hbeta_NC_sim4.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -316,6 +332,8 @@ model_nam = "Hbeta_C_sim5_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -328,6 +346,8 @@ model_nam = "Hbeta_NC_sim5_nocor.stan"
 model_in = file.path(getwd(), 'sim_models')
 model_out = file.path(getwd(), 'sim_chain')
 mod = cmdstan_model( file.path(model_in, model_nam) )
+
+print(model_nam)
 mod$sample( data=mom$dL, 
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
@@ -340,6 +360,8 @@ mod$sample( data=mom$dL,
 # model_in = file.path(getwd(), 'sim_models')
 # model_out = file.path(getwd(), 'sim_chain')
 # mod = cmdstan_model( file.path(model_in, model_nam) )
+# 
+# print(model_nam)
 # mod$sample( data=mom$dL, 
 #             output_dir=model_out, 
 #             output_basename = str_replace(model_nam, '.stan', ''),
@@ -352,6 +374,8 @@ mod$sample( data=mom$dL,
 # model_in = file.path(getwd(), 'sim_models')
 # model_out = file.path(getwd(), 'sim_chain')
 # mod = cmdstan_model( file.path(model_in, model_nam) )
+# 
+# print(model_nam)
 # mod$sample( data=mom$dL, 
 #             output_dir=model_out, 
 #             output_basename = str_replace(model_nam, '.stan', ''),

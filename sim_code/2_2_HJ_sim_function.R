@@ -57,20 +57,22 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
                  par=list( m_i=0, s_i=0.5, # children's random effects
                            m_j=0, s_j=0.5, # judges' random effects
                            s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
+                           s_HJ=0.1, # var. in observed HJo (constant)
                            a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
   
-  # test
-  I = 32 # experimental units (children)
-  K = 10 # replicates (utterances)
-  D = 20 # duplicates (comparisons/assessments per I and K)
-  J = 80 # number of judges
-  seed=12345
-  p=c(0.38, 0.31, 0.31)
-  par=list( m_i=0, s_i=0.5, # children's random effects
-            m_j=0, s_j=0.5, # judges' random effects
-            s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
-            a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 )
-  #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15
+  # # test
+  # I = 32 # experimental units (children)
+  # K = 10 # replicates (utterances)
+  # D = 20 # duplicates (comparisons/assessments per I and K)
+  # J = 80 # number of judges
+  # seed=12345
+  # p=c(0.38, 0.31, 0.31)
+  # par=list( m_i=0, s_i=0.5, # children's random effects
+  #           m_j=0, s_j=0.5, # judges' random effects
+  #           s_SI=0.1, # var. in children's observed SIs (vector[I] or constant)
+  #           s_HJ=0.1, # var. in observed HJo (constant)
+  #           a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 )
+  # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15
 
   
   # 1. true data ####
@@ -126,8 +128,8 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
   
   # 2. observed data ####
   N = I*K*D
-  dO = data.frame(matrix(NA, nrow=N, ncol=7))
-  names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','m_HJ','HJo')
+  dO = data.frame(matrix(NA, nrow=N, ncol=8))
+  names(dO) = c('child_id','utt_id','judge_id','dup_id','re_j','m_HJ','HJ','HJo')
   dO$child_id = rep(1:I, each=K*D)
   dO$utt_id = rep(1:K, I*D)
   dO = dO[with(dO, order(child_id, utt_id) ),]
@@ -164,8 +166,14 @@ HJsim = function(file_save, file_name, # file_save need to include getwd()
     dO$m_HJ[n] = dT[i, start+k] + dO$re_j[n]
   }
   
+  
+  # observed HJ
+  set.seed(seed-4)
+  dO$HJ = rnorm(N, mean=dO$m_HJ, sd=par$s_HJ)
+  
+  
   # observed score
-  dO$HJo = round( inv_logit(dO$m_HJ)*100 )
+  dO$HJo = round( inv_logit(dO$HJ)*100 )
   # table(dO$score)
   
   

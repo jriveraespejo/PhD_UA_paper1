@@ -23,15 +23,15 @@ Hfun = function(p, N){
 file_id = function(chains_path, model_int){
   
   # # test
-  # chains_path = file.path(getwd(), 'chains_post')
-  # model_int = c('FOLV_CE_mod','FOLV_CE','FOLV_NC_mod','FOLV_NC','SOLV_CE','SOLV_NC')
-  # 
+  # chains_path = model_out
+  # model_int = model_nam
+
   # list all files
   chains_list = list.files( chains_path )
   
   # identify files of interest
   idx1 = str_detect(chains_list, '.csv')
-  idx2 = str_detect(chains_list, model_int)
+  idx2 = str_detect(chains_list, paste0(model_int, '-[:digit:]', '.csv') )
   chains_list = chains_list[idx1 & idx2]
   
   return(chains_list)
@@ -58,7 +58,7 @@ number_detect_par = function(precis_object, est_par){
   for(j in 1:length(est_par)){
     
     # identify parameters of interest
-    if(est_par[j] %in% c('a','bA') ){
+    if(est_par[j] %in% c('a','bA','r') ){
       idx_mom = row.names(precis_object) == est_par[j]
     } else{
       idx_mom = str_detect( row.names(precis_object), paste0('^',est_par[j]) )
@@ -97,7 +97,7 @@ index_detect_par = function(precis_object, est_par){
   for(j in 1:length(est_par)){
     
     # identify parameters of interest
-    if(est_par[j] %in% c('a','bA') ){
+    if(est_par[j] %in% c('a','bA','r') ){
       idx_mom = row.names(precis_object) == est_par[j]
     } else{
       idx_mom = str_detect( row.names(precis_object), paste0('^',est_par[j]) )
@@ -343,10 +343,10 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
   
   # # test
   # d=mom
-  # xdata='Am'
+  # xdata='A'
   # ydata='HJ'
   # alpha=0.01
-  # os=F
+  # os=T
   # reduce=T
   
   # working data
@@ -357,18 +357,18 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
                                   A=dS$dT$A[dL$cid],
                                   PTA=dS$dT$PTA[dL$cid],
                                   sPTA=dL$sPTA[dL$cid] ) )
-  if( ydata=='H' ){
+  if( ydata=='H'){
     mom_plot[,ydata] = mom$dL[ydata]
   } else if( ydata=='HJ' & !reduce ){
     mom_plot[,ydata] = mom$dL[ydata]
-    mom_plot$SIo = mom$dS$dO$SIo
+    mom_plot$HJo = mom$dS$dO$HJo
   } else if( ydata=='HJ' & reduce ){
     mom_plot$m_HJ = mom$dL$m_HJ
     mom_plot$s_HJ = mom$dL$s_HJ
   }
   
   if( ydata=='HJ' & os){
-    ydata='SIo'
+    ydata='HJo'
   } else if ( ydata=='HJ' & reduce ){
     ydata='m_HJ'
   }
@@ -412,14 +412,15 @@ recovery_plots = function(par_object, cont_object=NULL){
   opar = par()
   
   # parameters of interest
-  par_int = list( p1 = c('m_i','s_i','m_M','s_M','m_j','s_j','s_HJ','s_SI'), 
-                  p2 = c('a','aHS','aE','bP','bA','bAHS'),
-                  p3 = 'Rho',
-                  p4 = 're_i',
-                  p5 = 're_j',
-                  p6 = 'M',
-                  p7 = 'SI',
-                  p8 = 'Ht')
+  par_int = list( p1 = c('m_i','s_i','m_M','s_M','m_j','s_j','m_k'),
+                  p1 = c('r','s_SI','s_HJ'),
+                  p3 = c('a','aHS','aE','bP','bA','bAHS'),
+                  p4 = 'Rho',
+                  p5 = 're_i',
+                  p6 = 're_j',
+                  p7 = 'M',
+                  p8 = c('SI','m_SI'),
+                  p9 = 'Ht')
   
   par_mom = list()
   par_row = c()

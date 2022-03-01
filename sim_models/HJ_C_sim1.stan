@@ -11,7 +11,7 @@ data{
     int Am[I];            // hearing age (centered at minimum)
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
-    real HJ[N];          // replicated (bounded) absolute holistic judgements
+    real HJ[N];           // replicated (bounded) absolute holistic judgements
     int cid[N];           // child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
@@ -24,15 +24,15 @@ parameters{
     real m_j;             // mean of judges' random effects
     real<lower=0> s_j;    // sd of judges's random effects
     vector[J] re_j;       // random intercepts (per judge)
-    real<lower=0> s_HJ;  // variability of measurement
-}
-transformed parameters{
+    real<lower=0> s_SI;   // var. SI index 
     vector[I] SI;         // true SI index (per child)
-    SI = re_i + a;        
+    real<lower=0> s_HJ;   // variability of measurement
 }
 model{
     // parameter to not follow
-    real mu;              // linear predictor
+    vector[I] m_SI;       // SI linear predictor
+    vector[N] m_HJ;       // HJ linear predictor
+    
     
     // hyperpriors
     m_i ~ normal( 0 , 0.5 );
@@ -41,26 +41,33 @@ model{
     s_j ~ exponential( 1 );
     
     // priors
-    s_HJ ~ exponential( 2 );
+    s_SI ~ exponential( 4 );
+    s_HJ ~ exponential( 4 );
     a ~ normal( 0 , 0.5 );
     re_i ~ normal( m_i , s_i );
     re_j ~ normal( m_j , s_j );
     
-    // likelihood
-    for(n in 1:N){
-      mu = SI[cid[n]] + re_j[jid[n]];
-      
-      //logit(HJ[n]) ~ normal( mu , s_HJ );
-      // assuming a [0,1] measure
-      // it has issues with the max_tree_length, and samples way to slow
-      
-      //HJ[n] ~ normal( inv_logit(mu) , s_HJ );
-      // assuming a [0,1] measure
-      // no issues with the max_tree_length, and samples way to slow
-      
-      HJ[n] ~ normal( mu , s_HJ );
-      // assuming a [-oo,+oo] measure (standardized)
-      // no issues with the max_tree_length, and good speed
+    
+    // SI likelihood
+    for(i in 1:I){
+      m_SI[i] = re_i[i] + a;
     }
+    SI ~ normal(m_SI, s_SI);
+    
+    // HJ likelihood 
+    m_HJ = SI[cid] + re_j[jid];
+    
+    HJ ~ normal(m_HJ , s_HJ); 
+    // assuming a [-oo,+oo] measure (standardized)
+    // no issues with the max_tree_length, and good speed
+    
+    //logit(HJ) ~ normal( m_HJ , s_HJ );
+    // assuming a [0,1] measure
+    // it has issues with the max_tree_length, and samples way to slow
+      
+    //HJ ~ normal( inv_logit(m_HJ) , s_HJ );
+    // assuming a [0,1] measure
+    // no issues with the max_tree_length, and samples way to slow
+
 }
 
