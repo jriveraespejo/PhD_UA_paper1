@@ -39,6 +39,65 @@ file_id = function(chains_path, model_int){
 
 
 # function:
+#     data_detect_par
+# description:  
+#     it detects the names of the parameters in an a simulated data
+#     with specific structure.
+#     It outputs a integer location vector for the parameters. 
+# arguments:
+#     d = simulated data
+#     par_int = character vector with the names of parameters of interest
+#
+data_detect_par = function(d, par_int){
+  
+  # # test
+  # d=mom
+  # par_int=c('aE','aHS','bA','bP','m_i','s_i','re_i','M','SI','Ht')
+  
+  
+  # storage parameters
+  par_true = c()
+  
+  # true parameters
+  par_ext = which( par_int %in% c('aE','aHS','bAHS') )
+  if( length(par_ext)!=0 ){
+    for( m in par_ext ){
+      if(par_int[m]=='aHS'){
+        par_true = c(par_true, with(mom$dS, par$aHS * unique(dT$HS)) )
+      } else if(par_int[m]=='aE'){
+        par_true = c(par_true, with(mom$dS, par$aE * unique(dT$E)) )
+      } else if(par_int[m]=='bAHS'){
+        par_true = c(par_true, with(mom$dS, par$bA + par$bAHS*unique(dT$HS)) ) 
+      }
+    }
+  }
+  
+  if(length(par_ext)!=0){
+    par_int = par_int[-par_ext]
+  }
+  
+  for(m in 1:length(par_int)){
+    idx_par = which( names(mom$dS$par) %in% par_int[m] )
+    par_true = c(par_true, unlist( mom$dS$par[idx_par] ))
+  }
+  
+  par_ext = which( par_int %in% c('SI','Ht') )
+  if( length(par_ext)!=0 ){
+    for( m in par_ext ){
+      if(par_int[m]=='SI'){
+        idx_par = which( names(mom$dS$dT) %in% 'm_SI')
+      } else if(par_int[m]=='Ht'){
+        idx_par = which( names(mom$dS$dT) %in% 'm_H')
+      }
+      par_true = c(par_true, mom$dS$dT[,idx_par] )
+    }
+  }
+  
+  return(par_true)
+}
+
+
+# function:
 #     number_detect_par
 # description:
 #     it detects the names of the parameters in an object generated with
@@ -113,7 +172,6 @@ index_detect_par = function(precis_object, est_par){
   
   return(idx)
 }
-
 
 
 # function:
@@ -201,8 +259,8 @@ parameter_recovery = function(stan_object, est_par, true_par,
                               diff=F, prec=3, seed=1){
   
   # # test
-  # stan_object=res_C
-  # est_par=par_est
+  # stan_object=res
+  # est_par=par_int
   # true_par=par_true
   # prec=3
   # seed=1
@@ -223,6 +281,9 @@ parameter_recovery = function(stan_object, est_par, true_par,
   
   # identify if parameters are inside compatibility interval
   res_stan$in_CI = with(res_stan, as.integer(true>=`5.5%` & true<=`94.5%`) )
+  res_stan$diff_0 = with(res_stan, 
+                         ifelse(true<0, `94.5%`< 0,
+                                ifelse(true>0, `5.5%`>0, in_CI) ) )
   
   # rmse
   res_stan$RMSE = round( rmse_pars(stan_object, est_par, true_par, seed=seed), prec)  
@@ -308,6 +369,9 @@ contrast_recovery = function(stan_object, est_diff, true_diff, prec=3, seed=1){
   
   # identify if parameters are inside compatibility interval
   res_diff$in_CI = with(res_diff, as.integer(true>=`5.5%` & true<=`94.5%`) )
+  res_diff$diff_0 = with(res_diff, 
+                         ifelse(true<0, `94.5%`< 0,
+                                ifelse(true>0, `5.5%`>0, in_CI) ) )
   
   # rmse
   dimen = dim(diff)

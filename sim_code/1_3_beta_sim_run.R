@@ -34,11 +34,13 @@ source( file.path( getwd(), 'sim_code', '1_2_beta_sim_function.R') )
 # Covariates: None
 #
 # simulating and saving data
-Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
-     file_name='Hbeta_sim1.RData', # file_name need to include '.RData'
-     I=32, K=10, seed=12345,
+Esim(sim_name='Hbeta_sim1.RData', # file_name need to include '.RData'
+     sim_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     seed=12345, # seed
+     I=32, # experimental units (children)
+     K=10, # replicates (utterances)
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_i=0, s_i=1, # children's random effects
+     par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                m_M=10, s_M=NULL, # generation of df (M)
                a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 ) )
 
@@ -110,11 +112,13 @@ mod$sample( data=mom$dL,
 #   PTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
-     file_name='Hbeta_sim2.RData', # file_name need to include '.RData'
-     I=32, K=10, seed=12345,
+Esim(sim_name='Hbeta_sim2.RData', # file_name need to include '.RData'
+     sim_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     seed=12345, # seed
+     I=32, # experimental units (children)
+     K=10, # replicates (utterances)
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_i=0, s_i=0.5, # children's random effects
+     par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                m_M=10, s_M=NULL, # generation of df (M)
                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
 
@@ -186,11 +190,13 @@ mod$sample( data=mom$dL,
 #   PTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
-     file_name='Hbeta_sim3.RData', # file_name need to include '.RData'
-     I=32, K=10, seed=12345,
+Esim(sim_name='Hbeta_sim3.RData', # file_name need to include '.RData'
+     sim_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     seed=12345, # seed
+     I=32, # experimental units (children)
+     K=10, # replicates (utterances)
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_i=0, s_i=0.5, # children's random effects
+     par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                m_M=1.5, s_M=0.5, # generation of df (M)
                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
 
@@ -240,9 +246,13 @@ mod$sample( data=mom$dL,
 # Covariates: not modeled
 #
 # simulating 
-Esim2(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
-      file_name='Hbeta_sim4.RData', # file_name need to include '.RData'
-      children=32, words=10, judges=100, max_occ=50)
+Esim2(sim_name='Hbeta_sim4.RData', # file_name need to include '.RData'
+      sim_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+      seed=12345, # seed
+      I=32, # experimental units (children)
+      K=10, # replicates (utterances)
+      J=100, # duplicates (judges)
+      max_occ=50 )
 
 # loading data
 data_nam = 'Hbeta_sim4.RData'
@@ -313,13 +323,16 @@ mod$sample( data=mom$dL,
 #   PTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-Esim(file_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
-     file_name='Hbeta_sim5.RData', # file_name need to include '.RData'
-     I=32, K=10, seed=12345,
+Esim(sim_name='Hbeta_sim5.RData', # file_name need to include '.RData'
+     sim_save=file.path(getwd(), 'sim_data'), # file_save need to include getwd()
+     seed=12345, # seed
+     I=32, # experimental units (children)
+     K=10, # replicates (utterances)
      p=c(0.38, 0.31, 0.31), # children prop. on each group
-     par=list( m_i=0, s_i=0.5, # children's random effects
+     par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                m_M=1.5, s_M=0.5, # generation of df (M)
                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
+
 
 # loading data
 data_nam = 'Hbeta_sim5.RData'

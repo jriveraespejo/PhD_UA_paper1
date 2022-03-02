@@ -21,6 +21,7 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercepts (per child) non-centered
+    real<lower=0> m_M;    // df beta
 }
 transformed parameters{
     vector[I] re_i;       // random intercept (per child)
@@ -53,10 +54,11 @@ model{
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
+    m_M ~ lognormal( 1.5 , 0.5 );
     
     // likelihood
     for(n in 1:N){
-      H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
+      H[n] ~ beta_proportion( Ht[cid[n]] , m_M );
     }
 }
 

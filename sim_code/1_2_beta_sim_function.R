@@ -53,22 +53,26 @@ source( file.path( getwd(), 'sim_code', '0_sim_extra.R') )
 #   PTA range, L=low, M1<M2=mid, H=high
 #
 # function
-Esim = function(file_save, # file_save need to include getwd()
-                file_name, # file_name need to include '.RData'
-                I=32, K=10, seed=12345,
+Esim = function(sim_name=NULL, # file_name need to include '.RData'
+                sim_save=NULL, # file_save need to include getwd()
+                seed=NULL, # seed
+                I=32, # experimental units (children)
+                K=10, # replicates (utterances)
                 p=c(0.38, 0.31, 0.31), # children prop. on each group
-                par=list( m_i=0, s_i=0.5, # children's random effects
-                          m_M=1.5, s_M=0.5, # generation of df (M)
+                par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
+                          m_M=10, s_M=NULL, # generation of df (M)
                           a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
   
   # # test
+  # sim_name=NULL # file_name need to include '.RData'
+  # sim_save=NULL # file_save need to include getwd()
+  # seed=12345 # seed
   # I = 32 # experimental units (children)
   # K = 10 # replicates (utterances)
-  # seed=12345
-  # p=c(0.38, 0.31, 0.31)
-  # par=list( m_c=0, s_c=0.5, # children's random effects
-  #           m_M=10, s_M=NULL, # generation of df (M)
-  #           a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 )
+  # p=c(0.38, 0.31, 0.31) # children prop. on each group
+  # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
+  #           m_M=10, s_M=NULL, # hyperprior generation of df (M)
+  #           a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 )
   # #         m_M=1.5, s_M=0.5
   # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
 
@@ -81,7 +85,9 @@ Esim = function(file_save, # file_save need to include getwd()
   
   
   # generating covariates
-  set.seed(seed)
+  if(!is.null(seed)){
+    set.seed(seed+1)  
+  }
   n = round( p*I )
   dT$HS = c( rep(1, n[1]), rep(2, n[2]), rep(3, n[3])) 
   dT$A = round( rnorm( sum(n), 5, 1) )
@@ -97,9 +103,11 @@ Esim = function(file_save, # file_save need to include getwd()
   
   
   # children's random effects
-  set.seed(seed+1)
-  re_i = rnorm(I, par$m_i, par$s_i)
-  dT$re_i = re_i 
+  if(!is.null(seed)){
+    set.seed(seed-1)  
+  }
+  par$re_i = rnorm(I, par$m_i, par$s_i)
+  dT$re_i = par$re_i # children's random effects
   
   
   # linear predictor / SI index
@@ -111,13 +119,16 @@ Esim = function(file_save, # file_save need to include getwd()
   
 
   # variability of H
-  set.seed(seed-1)
-  if( is.numeric(par$m_M) & !is.numeric(par$s_M) ){ 
-    dT$M = par$m_M # same df for all children (not same shape!!) 
-  } else{
-    dT$M = rlnorm(I, meanlog=par$m_M, sdlog= par$s_M) # dfs
-    dT$M = round( dT$M )
+  if(!is.null(seed)){
+    set.seed(seed+2)  
   }
+  if( is.numeric(par$m_M) & !is.numeric(par$s_M) ){ 
+    par$M = rep(par$m_M, I)
+  } else{
+    par$M = round( rlnorm(I, meanlog=par$m_M, sdlog= par$s_M) ) # dfs
+  }
+  dT$M = par$M # same df for all children (not same shape!!)
+
   
   # rounding
   dT[,6:ncol(dT)] = round( dT[,6:ncol(dT)], 5)
@@ -133,7 +144,9 @@ Esim = function(file_save, # file_save need to include getwd()
   
   # generating observed H
   # i=1
-  set.seed(seed+2)
+  if(!is.null(seed)){
+    set.seed(seed-2)  
+  }
   for(i in 1:I){
     
     # identify data
@@ -173,8 +186,12 @@ Esim = function(file_save, # file_save need to include getwd()
   
   # 4. save data ####
   mom = list(dS=list( dT=dT, dO=dO, par=par), dL=dL)
-  save(mom, file=file.path(file_save, file_name) )
   
+  if( is.null(sim_save) | is.null(sim_name) ){
+    return(mom)
+  } else{
+    save(mom, file=file.path(sim_save, sim_name) )
+  }  
 }  
 
 
@@ -188,48 +205,55 @@ Esim = function(file_save, # file_save need to include getwd()
 # Covariates: not modeled
 #
 # simulation function
-Esim2 = function( file_save, # file_save need to include getwd()
-                  file_name, # file_name need to include '.RData'
-                  children=32, words=10, judges=100, max_occ=50 ){
+Esim2 = function( sim_name, # file_name need to include '.RData'
+                  sim_save, # file_save need to include getwd()
+                  seed=12345, # seed
+                  I=32, # experimental units (children)
+                  K=10, # replicates (utterances)
+                  J=100, # duplicates (judges)
+                  max_occ=50 ){ # maximum number of word occurrences
   
   # # data
-  # children = 32
-  # words = 10 # utterances
-  # judges = 100
+  # I = 32
+  # K = 10 # utterances
+  # J = 100
   # max_occ=50
   
   # 1. full transcriptions ####
-  # (diff. numbers count as diff. words)
-  dF = data.frame(matrix(NA, nrow=children*judges, ncol=words+2))
-  names(dF) = c('child', 'judge', paste0('u_', 1:words))
-  dF$child = rep(1:children, each=judges)
-  dF$judge = rep(1:judges, children)
+  # (diff. numbers count as diff. K)
+  dF = data.frame(matrix(NA, nrow=I*J, ncol=K+2))
+  names(dF) = c('child', 'judge', paste0('u_', 1:K))
+  dF$child = rep(1:I, each=J)
+  dF$judge = rep(1:J, I)
   # dim(dF)
   # View(dF)
   
   # c=1; w=10
-  for(c in 1:children){
-    for(w in 1:words){
-      index = with(dF, child==c) # identify child 
+  if(!is.null(seed)){
+    set.seed(seed+1)  
+  }
+  for(i in 1:I){
+    for(k in 1:K){
+      index = with(dF, child==i) # identify child 
       word_occ = sample(size=1, x=1:max_occ, replace=T) # simulate word occurence
-      dF[index, w+2] = round( runif(judges, min=1, max=word_occ) )
+      dF[index, k+2] = round( runif(J, min=1, max=word_occ) )
     }
   }
   
   
   # 2. data event ####
-  dE = data.frame(matrix(NA, nrow=children*max_occ, ncol=words+2))
-  names(dE) = c('child', 'w_occ', paste0('u_', 1:words))
-  dE$child = rep(1:children, each=max_occ)
-  dE$w_occ = rep(1:max_occ, children)
+  dE = data.frame(matrix(NA, nrow=I*max_occ, ncol=K+2))
+  names(dE) = c('child', 'w_occ', paste0('u_', 1:K))
+  dE$child = rep(1:I, each=max_occ)
+  dE$w_occ = rep(1:max_occ, I)
   # dim(dE)
   # View(dE)
   
   # c=1; m=1
-  for(c in 1:children){
+  for(i in 1:I){
     for(m in 1:max_occ){
-      index1 = with(dF, child==c) # identify child in dF
-      index2 = with(dE, child==c & w_occ==m) # identify child and event
+      index1 = with(dF, child==i) # identify child in dF
+      index2 = with(dE, child==i & w_occ==m) # identify child and event
       dE[index2, -c(1:2)] = colSums( dF[index1, -c(1:2)] == m )
     }
   }
@@ -238,22 +262,22 @@ Esim2 = function( file_save, # file_save need to include getwd()
   
   # 3. data probability ####
   dP = dE
-  dP[,-c(1:2)] = dP[,-c(1:2)]/judges
+  dP[,-c(1:2)] = dP[,-c(1:2)]/J
   # dim(dP)
   # View(dP)
   
   
   
   # 4. data entropy ####
-  dH = data.frame(matrix(NA, nrow=children, ncol=words+1))
-  names(dH) = c('child', paste0('u_', 1:words))
-  dH$child = 1:children
+  dH = data.frame(matrix(NA, nrow=I, ncol=K+1))
+  names(dH) = c('child', paste0('u_', 1:K))
+  dH$child = 1:I
   
   # c=1; w=8
-  for(c in 1:children){
-    index1 = with(dP, child==c)
-    index2 = with(dH, child==c)
-    dH[index2, -1] = apply( dP[index1, -c(1:2)], 2, Hfun, N=judges)
+  for(i in 1:I){
+    index1 = with(dP, child==i)
+    index2 = with(dH, child==i)
+    dH[index2, -1] = apply( dP[index1, -c(1:2)], 2, Hfun, N=J)
   }
   
   
@@ -273,6 +297,202 @@ Esim2 = function( file_save, # file_save need to include getwd()
   
   # 6. save data ####
   mom = list(dS=list(dF=dF, dE=dE, dP=dP, dH=dH), dL=dL )
-  save(mom, file=file.path(file_save, file_name) )
+  
+  if( is.null(sim_save) | is.null(sim_name)){
+    return(mom)
+  } else{
+    save(mom, file=file.path(sim_save, sim_name) )
+  }
+  
+}
+
+
+
+
+
+
+# power: ####
+# you need a correspondence between:
+#   1. selected model,
+#   2. parameters of interest
+#   3. contrast of interest
+#
+Epower = function(power_save=NULL, # file_save need to include getwd()
+                  sim_name=NULL, # file_name need to include '.RData'
+                  sim_save=NULL, # file_save need to include getwd()
+                  model_name, # model for which we want to calculate power
+                  model_in = file.path(getwd(), 'sim_models'), # location load models
+                  model_out = file.path(getwd(), 'sim_chain'), # location to save results
+                  seed=NULL, # seed
+                  Nsim=1000, # number of simulation for power
+                  I_grid, # experimental units (children) 
+                  K_grid, # replicates (utterances)
+                  par_int, # parameter to analyze power
+                  p=c(0.38, 0.31, 0.31), # children prop. on each group
+                  par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
+                            m_M=10, s_M=NULL, # hyperprior generation of df (M)
+                            a=0, # test only intercept model
+                            aE=0, # test par with 4 levels, and 6 contrasts 
+                            aHS=0, # test par with 3 levels, and 3 contrasts 
+                            bP=0, # continuous (standardized) variable
+                            bA=0, # continuous (integer) variable
+                            bAHS=0) ){ # continuous interaction (goes together with bA)
+                            
+  
+  # # test
+  # power_save=file.path(getwd(), 'sim_chain') # power result dir need to include getwd()
+  # sim_name=NULL # file_save need to include getwd()
+  # sim_save=NULL # file_name need to include '.RData'
+  # model_name='Hbeta_NC_sim2' # model for which we want to calculate power
+  # model_in=file.path(getwd(), 'sim_models') # location load models
+  # model_out=file.path(getwd(), 'sim_chain') # location to save results
+  # seed=NULL # seed
+  # Nsim=10 # number of simulation for power
+  # par_int=c('aHS','bP','bA','m_i','s_i','m_M','SI') # parameter to analyze power
+  # I_grid = c(32, 40, 50) # experimental units (children)
+  # K_grid = c(10, 15, 20) # replicates (utterances)
+  # p=c(0.38, 0.31, 0.31) # children prop. on each group
+  # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
+  #           m_M=10, s_M=NULL, # hyperprior generation of df (M)
+  #           a=0, # test only intercept model
+  #           aE=0, # test par with 4 levels, and 6 contrasts 
+  #           aHS=-0.5, # test par with 3 levels, and 3 contrasts 
+  #           bP=-0.3, # continuous (standardized) variable
+  #           bA=0.15, # continuous (integer) variable
+  #           bAHS=0) # continuous interaction (goes together with bA)
+  # #         m_M=1.5, s_M=0.5
+  # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
+  
+  
+  # 1. model compilation ####
+  mod = cmdstan_model( file.path(model_in, paste0(model_name, '.stan') ) )
+  
+  # i=1;k=1
+  for(i in 1:length(I_grid) ){
+    for(k in 1:length(K_grid) ){
+      
+      nsim = 1
+      while(nsim <= Nsim){
+        
+        # 2. data simulation ####
+        mom = Esim(sim_name=sim_name,
+                   sim_save=sim_save,
+                   seed=seed, 
+                   I=I_grid[i], K=K_grid[k], 
+                   p=p, par=par )
+        
+        # 3. model running ####
+        mod$sample( data=mom$dL, 
+                    output_dir=model_out, 
+                    output_basename = str_replace(model_name, '.stan', ''),
+                    chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
+        
+        # load model results
+        model_fit = file_id(model_out, model_name)
+        res = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+        
+        
+        # 4. true parameter comparison ####
+        # extract par_true
+        par_true = data_detect_par(d, par_int=par_int)
+        # length(par_true)
+        
+        # parameter recovery
+        par_recovery = parameter_recovery( stan_object = res,
+                                           est_par = par_int,
+                                           true_par = par_true )
+        
+        # named par_true
+        names(par_true) = row.names(par_recovery)
+        
+        
+        # 5. contrast comparison ####
+        
+        # true contrasts
+        par_extra = which( par_int %in% c('aHS','aE','bAHS') )
+        diff_true = c()
+        if( length(par_extra)!=0 ){
+          # m=1
+          for( m in par_extra ){
+
+            # select parameters
+            idx = which( str_detect(names(par_true), paste0('^',par_int[m])) )
+            
+            # compare
+            par_cont = expand.grid( idx, idx)
+            par_cont = par_cont[with(par_cont, order(Var1,Var2)),]
+            if(length(idx)==3){
+              idx_not = c(1,4:5,7:9)
+            } else{
+              idx_not = c(1,5:6,9:11,13:16)
+            }
+            par_cont = par_cont[-idx_not,]
+            par_cont$Var1 = par_true[par_cont$Var1]
+            par_cont$Var2 = par_true[par_cont$Var2]
+            
+            diff_true = c(diff_true, with(par_cont, Var2-Var1))
+          }
+        }
+        
+        # contrast recovery
+        cont_recovery = contrast_recovery(stan_object = res,
+                                          est_diff = par_int[par_extra],
+                                          true_diff = diff_true)
+        
+        
+        # 6. storage simulations ####
+        par_mom = par_recovery[,c('mean','true','in_CI','diff_0','RMSE')]
+        par_mom = rbind(par_mom,
+                        cont_recovery[,c('mean','true','in_CI','diff_0','RMSE')])
+        if(nsim==1){
+          par_comparison = data.frame(n=nsim, 
+                                      par_names=rownames(par_mom),
+                                      par_mom)
+        } else{
+          par_comparison = rbind(par_comparison, 
+                                 data.frame(n=nsim, 
+                                            par_names=rownames(par_mom),
+                                            par_mom) )
+        }
+        
+        # printing stuff
+        if( (nsim %% Nsim/10) == 0 ){
+          print( paste0('model: ', model_nam, 
+                        ', I = ', I_grid[i], 
+                        ', K = ', K_grid[i],
+                        ', n = ', nsim) )
+        }
+        
+        # counting
+        nsim=nsim+1
+      }
+      
+      
+      # storage results
+      row.names(par_comparison) = NULL
+      par_mom = par_comparison %>%
+        group_by(par_names) %>%
+        summarize(sim_mean=mean(mean), sim_sd=sd(mean), 
+                  pCI=mean(in_CI), pdiff0=mean(diff_0), 
+                  mRMSE=mean(RMSE), sRMSE=sd(RMSE)) %>%
+        data.frame()
+      
+      
+      if(all(i==1, k==1)){
+        par_res = data.frame(I=I_grid[i], K=K_grid[i], par_mom)
+      } else{
+        par_res = rbind(par_res,
+                        data.frame(I=I_grid[i], K=K_grid[i], par_mom) )
+      }
+      
+    }
+  }
+  
+  # return object
+  if( is.null(power_save) | is.null(model_name)){
+    return(par_res)
+  } else{
+    save(par_res, file=file.path(power_save, paste0(model_name, '_power.Rdata')) )
+  }
   
 }
