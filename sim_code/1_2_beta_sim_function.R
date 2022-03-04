@@ -67,7 +67,7 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
   # sim_name=NULL # file_name need to include '.RData'
   # sim_save=NULL # file_save need to include getwd()
   # seed=12345 # seed
-  # I = 32 # experimental units (children)
+  # I = 50 # experimental units (children)
   # K = 10 # replicates (utterances)
   # p=c(0.38, 0.31, 0.31) # children prop. on each group
   # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
@@ -84,11 +84,21 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
   dT$child_id = 1:I
   
   
+  # assigning children to groups
+  n = round( p*I )
+  if( sum(n) != I ){
+    if( I - sum(n[c(1,3)]) > n[2] ){
+      n[2] = I - sum(n[c(1,3)]) # to sum the right amount
+    } else {
+      n[3] = I - sum(n[c(1,3)]) # to sum the right amount
+    }
+  }  
+  
+  
   # generating covariates
   if(!is.null(seed)){
     set.seed(seed+1)  
   }
-  n = round( p*I )
   dT$HS = c( rep(1, n[1]), rep(2, n[2]), rep(3, n[3])) 
   dT$A = round( rnorm( sum(n), 5, 1) )
   dT$A = with(dT, ifelse(A>7, 7, A) )
@@ -324,7 +334,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                   model_in = file.path(getwd(), 'sim_models'), # location load models
                   model_out = file.path(getwd(), 'sim_chain'), # location to save results
                   seed=NULL, # seed
-                  Nsim=1000, # number of simulation for power
+                  Nsim=100, # number of simulation for power
                   I_grid, # experimental units (children) 
                   K_grid, # replicates (utterances)
                   par_int, # parameter to analyze power
@@ -341,22 +351,22 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
   
   # # test
   # power_save=file.path(getwd(), 'sim_chain') # power result dir need to include getwd()
-  # sim_name=NULL # file_save need to include getwd()
-  # sim_save=NULL # file_name need to include '.RData'
+  # sim_name='Hbeta_sim2_power.RData' # file_save need to include getwd()
+  # sim_save=file.path(getwd(), 'sim_data') # file_name need to include '.RData'
   # model_name='Hbeta_NC_sim2' # model for which we want to calculate power
   # model_in=file.path(getwd(), 'sim_models') # location load models
   # model_out=file.path(getwd(), 'sim_chain') # location to save results
   # seed=NULL # seed
   # Nsim=10 # number of simulation for power
   # par_int=c('aHS','bP','bA','m_i','s_i','m_M','SI') # parameter to analyze power
-  # I_grid = c(32, 40, 50) # experimental units (children)
+  # I_grid = c(40, 50) # experimental units (children)
   # K_grid = c(10, 15, 20) # replicates (utterances)
   # p=c(0.38, 0.31, 0.31) # children prop. on each group
   # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
   #           m_M=10, s_M=NULL, # hyperprior generation of df (M)
   #           a=0, # test only intercept model
-  #           aE=0, # test par with 4 levels, and 6 contrasts 
-  #           aHS=-0.5, # test par with 3 levels, and 3 contrasts 
+  #           aE=0, # test par with 4 levels, and 6 contrasts
+  #           aHS=-0.5, # test par with 3 levels, and 3 contrasts
   #           bP=-0.3, # continuous (standardized) variable
   #           bA=0.15, # continuous (integer) variable
   #           bAHS=0) # continuous interaction (goes together with bA)
@@ -364,135 +374,212 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
   # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
   
   
-  # 1. model compilation ####
-  mod = cmdstan_model( file.path(model_in, paste0(model_name, '.stan') ) )
+  # expand grid
+  par_grid = expand.grid(I_grid=I_grid, K_grid=K_grid)
+  par_grid = par_grid[with(par_grid, order(I_grid, K_grid)),]
   
-  # i=1;k=1
-  for(i in 1:length(I_grid) ){
-    for(k in 1:length(K_grid) ){
+  # l=1
+  for(l in 1:nrow(par_grid) ){
+    
+    # printing stuff
+    writeLines( c( paste( rep('#', 50), collapse='' ),
+                   paste( rep('#', 50), collapse='' ),
+                   paste( rep('\n', 1), collapse='' ),
+                   paste0('model: ', model_name, 
+                          ', I = ', par_grid[l,1], 
+                          ', K = ', par_grid[l,2]), 
+                   paste( rep('\n', 1), collapse='' ),
+                   paste( rep('#', 50), collapse='' ),
+                   paste( rep('#', 50), collapse='' ) ) )
+    
+    
+    
+    # 1. model compilation ####
+    mod = cmdstan_model( file.path(model_in, paste0(model_name, '.stan') ) )
+    
+    nsim = 1
+    while(nsim <= Nsim){
       
-      nsim = 1
-      while(nsim <= Nsim){
-        
-        # 2. data simulation ####
-        mom = Esim(sim_name=sim_name,
-                   sim_save=sim_save,
-                   seed=seed, 
-                   I=I_grid[i], K=K_grid[k], 
-                   p=p, par=par )
-        
-        # 3. model running ####
-        mod$sample( data=mom$dL, 
-                    output_dir=model_out, 
-                    output_basename = str_replace(model_name, '.stan', ''),
-                    chains=4, parallel_chains=4 ) #,init=0, adapt_delta=0.95
-        
-        # load model results
-        model_fit = file_id(model_out, model_name)
-        res = rstan::read_stan_csv( file.path( model_out, model_fit ) )
-        
-        
-        # 4. true parameter comparison ####
-        # extract par_true
-        par_true = data_detect_par(d, par_int=par_int)
-        # length(par_true)
-        
-        # parameter recovery
-        par_recovery = parameter_recovery( stan_object = res,
-                                           est_par = par_int,
-                                           true_par = par_true )
-        
-        # named par_true
-        names(par_true) = row.names(par_recovery)
-        
-        
-        # 5. contrast comparison ####
-        
-        # true contrasts
-        par_extra = which( par_int %in% c('aHS','aE','bAHS') )
-        diff_true = c()
-        if( length(par_extra)!=0 ){
-          # m=1
-          for( m in par_extra ){
-
-            # select parameters
-            idx = which( str_detect(names(par_true), paste0('^',par_int[m])) )
-            
-            # compare
-            par_cont = expand.grid( idx, idx)
-            par_cont = par_cont[with(par_cont, order(Var1,Var2)),]
-            if(length(idx)==3){
-              idx_not = c(1,4:5,7:9)
-            } else{
-              idx_not = c(1,5:6,9:11,13:16)
-            }
-            par_cont = par_cont[-idx_not,]
-            par_cont$Var1 = par_true[par_cont$Var1]
-            par_cont$Var2 = par_true[par_cont$Var2]
-            
-            diff_true = c(diff_true, with(par_cont, Var2-Var1))
-          }
-        }
-        
-        # contrast recovery
-        cont_recovery = contrast_recovery(stan_object = res,
-                                          est_diff = par_int[par_extra],
-                                          true_diff = diff_true)
-        
-        
-        # 6. storage simulations ####
-        par_mom = par_recovery[,c('mean','true','in_CI','diff_0','RMSE')]
-        par_mom = rbind(par_mom,
-                        cont_recovery[,c('mean','true','in_CI','diff_0','RMSE')])
-        if(nsim==1){
-          par_comparison = data.frame(n=nsim, 
-                                      par_names=rownames(par_mom),
-                                      par_mom)
-        } else{
-          par_comparison = rbind(par_comparison, 
-                                 data.frame(n=nsim, 
-                                            par_names=rownames(par_mom),
-                                            par_mom) )
-        }
-        
-        # printing stuff
-        if( (nsim %% Nsim/10) == 0 ){
-          print( paste0('model: ', model_nam, 
-                        ', I = ', I_grid[i], 
-                        ', K = ', K_grid[i],
-                        ', n = ', nsim) )
-        }
-        
-        # counting
-        nsim=nsim+1
+      # 2. data simulation ####
+      if( is.null(seed) ){
+        seed1 = sample(1:500, 1)
+        seed1 = seed1 + nsim*sample(1:100, 1)
       }
-      
-      
-      # storage results
-      row.names(par_comparison) = NULL
-      par_mom = par_comparison %>%
-        group_by(par_names) %>%
-        summarize(sim_mean=mean(mean), sim_sd=sd(mean), 
-                  pCI=mean(in_CI), pdiff0=mean(diff_0), 
-                  mRMSE=mean(RMSE), sRMSE=sd(RMSE)) %>%
-        data.frame()
-      
-      
-      if(all(i==1, k==1)){
-        par_res = data.frame(I=I_grid[i], K=K_grid[i], par_mom)
+      if( is.null(sim_name)| is.null(sim_save) ){
+        mom = Esim(sim_name=sim_name, sim_save=sim_save, seed=seed1, 
+                  I=par_grid[l,1], K=par_grid[l,2], p=p, par=par )  
       } else{
-        par_res = rbind(par_res,
-                        data.frame(I=I_grid[i], K=K_grid[i], par_mom) )
+        Esim(sim_name=sim_name, sim_save=sim_save, seed=seed1, 
+             I=par_grid[l,1], K=par_grid[l,2], p=p, par=par )
+        load( file.path(sim_save, sim_name) )
       }
       
+      
+      # 3. model running ####
+      mod$sample( data=mom$dL, 
+                  output_dir=model_out, 
+                  output_basename = str_replace(model_name, '.stan', ''),
+                  chains=4, parallel_chains=4,
+                  show_messages=F)
+      #init=0, 
+      # adapt_delta=0.95) 
+      
+      # load model results
+      model_fit = file_id(model_out, model_name)
+      res = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+      
+      
+      # 4. true parameter comparison ####
+      # extract par_true
+      par_true = data_detect_par(d=mom, par_int=par_int)
+      # length(par_true)
+      
+      # parameter recovery
+      par_recovery = parameter_recovery( stan_object = res,
+                                         est_par = par_int,
+                                         true_par = par_true )
+      
+      # named par_true
+      names(par_true) = row.names(par_recovery)
+      
+      
+      # 5. contrast comparison ####
+      
+      # true contrasts
+      par_extra = which( par_int %in% c('aHS','aE','bAHS') )
+      diff_true = c()
+      if( length(par_extra)!=0 ){
+        # m=1
+        for( m in par_extra ){
+          
+          # select parameters
+          idx = which( str_detect(names(par_true), paste0('^',par_int[m])) )
+          
+          # compare
+          par_cont = expand.grid( idx, idx)
+          par_cont = par_cont[with(par_cont, order(Var1,Var2)),]
+          if(length(idx)==3){
+            idx_not = c(1,4:5,7:9)
+          } else{
+            idx_not = c(1,5:6,9:11,13:16)
+          }
+          par_cont = par_cont[-idx_not,]
+          par_cont$Var1 = par_true[par_cont$Var1]
+          par_cont$Var2 = par_true[par_cont$Var2]
+          
+          diff_true = c(diff_true, with(par_cont, Var2-Var1))
+        }
+      }
+      
+      # contrast recovery
+      cont_recovery = contrast_recovery(stan_object = res,
+                                        est_diff = par_int[par_extra],
+                                        true_diff = diff_true)
+      
+      
+      # 6. storage simulations ####
+      par_mom = par_recovery[,c('true','mean','in_CI','diff_0','RMSE')]
+      par_mom = rbind(par_mom,
+                      cont_recovery[,c('true','mean','in_CI','diff_0','RMSE')])
+      if(nsim==1){
+        par_comparison = data.frame(n=nsim, 
+                                    par_names=rownames(par_mom),
+                                    par_mom)
+      } else{
+        par_comparison = rbind(par_comparison, 
+                               data.frame(n=nsim, 
+                                          par_names=rownames(par_mom),
+                                          par_mom) )
+      }
+      
+      # counting
+      nsim=nsim+1
     }
+    
+    
+    # storage results
+    row.names(par_comparison) = NULL
+    par_mom = par_comparison %>%
+      group_by(par_names) %>%
+      summarize(true_mean=mean(true), 
+                sim_mean=mean(mean), sim_sd=sd(mean), 
+                pCI=mean(in_CI), pdiff0=mean(diff_0), 
+                mRMSE=mean(RMSE), sRMSE=sd(RMSE))
+    
+    if(l==1){
+      par_res = data.frame(I=par_grid[l,1], K=par_grid[l,2], par_mom)
+    } else{
+      par_res = rbind(par_res,
+                      data.frame(I=par_grid[l,1], K=par_grid[l,2], par_mom) )
+    }
+
+    
+    # return object
+    if( is.null(power_save) | is.null(model_name)){
+      return(par_res)
+    } else{
+      save(par_res, file=file.path(power_save, paste0(model_name, '_power.Rdata')) )
+    }
+    
   }
   
-  # return object
-  if( is.null(power_save) | is.null(model_name)){
-    return(par_res)
-  } else{
-    save(par_res, file=file.path(power_save, paste0(model_name, '_power.Rdata')) )
+}
+
+
+
+
+# power plot ####
+plot_power = function(d=par_res, # object from Epower() function
+                      exclude='SI'){ # variable to exclude from plot
+  
+  # # test
+  # d=par_res # object from Epower() function
+  # exclude='SI' # variable to exclude from plot
+
+  # indentify unique parameters
+  par_plot = unique( d$par_names )
+  idx_plot = str_detect( par_plot, paste0('^', exclude) )
+  par_plot = par_plot[!idx_plot]
+  par_plot = par_plot[order(par_plot)]
+  # length(par_plot)
+  
+  
+  nrows = ceiling( length(par_plot)/4 )
+  par(mfrow=c( nrows, 4))
+  
+  # i=6
+  for(i in 1:length(par_plot)){
+    
+    # main plot
+    plot( NULL, ylim=c(0,1), xlim=range( d$I ), 
+          xaxt='n', main=par_plot[i],
+          xlab='Experimental units (children)', 
+          ylab= 'Probability (100 simulations) ' )
+    axis(side=1, at = unique( d$I ) )
+    abline(h=0, col='red', lty=2)
+    abline(h=0.8, col='red', lty=2)
+    legend('bottomleft', legend = c('In CI', 'Power'), bty='n', 
+           box.lwd='n', lty=rep(1,2), lwd=rep(2,2),
+           col=c( col.alpha('black', 0.5), col.alpha('blue', 0.8) ) )
+    
+    idx_par = d$par_names == par_plot[i]
+    # d[ idx_par, c('I','K','pCI')]
+    
+    K = unique( d$K )
+    
+    # k=20
+    for(k in K){
+      idx = idx_par & d$K==k
+      # d[ idx, c('I','K','pCI')]
+      
+      lines( d[ idx, c('I','pCI')], lwd=1.5, 
+             col=col.alpha('black', 0.3 * k/20))
+      lines( d[ idx, c('I','pdiff0')], lwd=1.5, 
+             col=col.alpha('blue', 0.5 * k/20))
+    }
+    
   }
+  
+  par(mfrow=c(1,1))
   
 }

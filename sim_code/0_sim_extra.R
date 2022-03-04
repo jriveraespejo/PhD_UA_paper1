@@ -63,11 +63,11 @@ data_detect_par = function(d, par_int){
   if( length(par_ext)!=0 ){
     for( m in par_ext ){
       if(par_int[m]=='aHS'){
-        par_true = c(par_true, with(mom$dS, par$aHS * unique(dT$HS)) )
+        par_true = c(par_true, with(d$dS, par$aHS * unique(dT$HS)) )
       } else if(par_int[m]=='aE'){
-        par_true = c(par_true, with(mom$dS, par$aE * unique(dT$E)) )
+        par_true = c(par_true, with(d$dS, par$aE * unique(dT$E)) )
       } else if(par_int[m]=='bAHS'){
-        par_true = c(par_true, with(mom$dS, par$bA + par$bAHS*unique(dT$HS)) ) 
+        par_true = c(par_true, with(d$dS, par$bA + par$bAHS*unique(dT$HS)) ) 
       }
     }
   }
@@ -77,19 +77,19 @@ data_detect_par = function(d, par_int){
   }
   
   for(m in 1:length(par_int)){
-    idx_par = which( names(mom$dS$par) %in% par_int[m] )
-    par_true = c(par_true, unlist( mom$dS$par[idx_par] ))
+    idx_par = which( names(d$dS$par) %in% par_int[m] )
+    par_true = c(par_true, unlist( d$dS$par[idx_par] ))
   }
   
   par_ext = which( par_int %in% c('SI','Ht') )
   if( length(par_ext)!=0 ){
     for( m in par_ext ){
       if(par_int[m]=='SI'){
-        idx_par = which( names(mom$dS$dT) %in% 'm_SI')
+        idx_par = which( names(d$dS$dT) %in% 'm_SI')
       } else if(par_int[m]=='Ht'){
-        idx_par = which( names(mom$dS$dT) %in% 'm_H')
+        idx_par = which( names(d$dS$dT) %in% 'm_H')
       }
-      par_true = c(par_true, mom$dS$dT[,idx_par] )
+      par_true = c(par_true, d$dS$dT[,idx_par] )
     }
   }
   
