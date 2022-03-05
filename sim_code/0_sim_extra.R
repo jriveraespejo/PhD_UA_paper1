@@ -81,10 +81,10 @@ data_detect_par = function(d, par_int){
     par_true = c(par_true, unlist( d$dS$par[idx_par] ))
   }
   
-  par_ext = which( par_int %in% c('SI','Ht') )
+  par_ext = which( par_int %in% c('m_SI','SI','Ht') )
   if( length(par_ext)!=0 ){
     for( m in par_ext ){
-      if(par_int[m]=='SI'){
+      if(par_int[m] %in% c('m_SI','SI') ){
         idx_par = which( names(d$dS$dT) %in% 'm_SI')
       } else if(par_int[m]=='Ht'){
         idx_par = which( names(d$dS$dT) %in% 'm_H')
@@ -259,8 +259,8 @@ parameter_recovery = function(stan_object, est_par, true_par,
                               diff=F, prec=3, seed=1){
   
   # # test
-  # stan_object=res
-  # est_par=par_int
+  # stan_object=res_C
+  # est_par=par_est
   # true_par=par_true
   # prec=3
   # seed=1

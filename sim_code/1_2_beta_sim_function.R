@@ -69,13 +69,13 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
   # seed=12345 # seed
   # I = 50 # experimental units (children)
   # K = 10 # replicates (utterances)
-  # p=c(0.38, 0.31, 0.31) # children prop. on each group
+  # p=c(0.36, 0.32, 0.32) # children prop. on each group
   # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
   #           m_M=10, s_M=NULL, # hyperprior generation of df (M)
   #           a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 )
   # #         m_M=1.5, s_M=0.5
   # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
-
+  
   
   
   # 1. true data ####
@@ -127,7 +127,7 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
                    par$bP * c( standardize(PTA) ) )
   dT$m_H = inv_logit(-dT$m_SI) # true entropy (SI -> Ht: negative)
   
-
+  
   # variability of H
   if(!is.null(seed)){
     set.seed(seed+2)  
@@ -138,7 +138,7 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
     par$M = round( rlnorm(I, meanlog=par$m_M, sdlog= par$s_M) ) # dfs
   }
   dT$M = par$M # same df for all children (not same shape!!)
-
+  
   
   # rounding
   dT[,6:ncol(dT)] = round( dT[,6:ncol(dT)], 5)
@@ -161,7 +161,7 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
     
     # identify data
     idx = dO$child_id == i
-
+    
     # linear predictor
     dO$H[idx] = rbeta2(n=K, prob=dT$m_H[i], theta=dT$M[i])
   }
@@ -321,7 +321,7 @@ Esim2 = function( sim_name, # file_name need to include '.RData'
 
 
 
-# power: ####
+# Entropy power: ####
 # you need a correspondence between:
 #   1. selected model,
 #   2. parameters of interest
@@ -338,7 +338,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                   I_grid, # experimental units (children) 
                   K_grid, # replicates (utterances)
                   par_int, # parameter to analyze power
-                  p=c(0.38, 0.31, 0.31), # children prop. on each group
+                  p=c(0.36, 0.32, 0.32), # children prop. on each group
                   par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                             m_M=10, s_M=NULL, # hyperprior generation of df (M)
                             a=0, # test only intercept model
@@ -347,7 +347,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                             bP=0, # continuous (standardized) variable
                             bA=0, # continuous (integer) variable
                             bAHS=0) ){ # continuous interaction (goes together with bA)
-                            
+  
   
   # # test
   # power_save=file.path(getwd(), 'sim_chain') # power result dir need to include getwd()
@@ -406,11 +406,19 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
         seed1 = seed1 + nsim*sample(1:100, 1)
       }
       if( is.null(sim_name)| is.null(sim_save) ){
-        mom = Esim(sim_name=sim_name, sim_save=sim_save, seed=seed1, 
-                  I=par_grid[l,1], K=par_grid[l,2], p=p, par=par )  
+        mom = Esim(sim_name=sim_name, 
+                   sim_save=sim_save, 
+                   seed=seed1, 
+                   I=par_grid[l,1], 
+                   K=par_grid[l,2], 
+                   p=p, par=par )  
       } else{
-        Esim(sim_name=sim_name, sim_save=sim_save, seed=seed1, 
-             I=par_grid[l,1], K=par_grid[l,2], p=p, par=par )
+        Esim(sim_name=sim_name, 
+             sim_save=sim_save, 
+             seed=seed1, 
+             I=par_grid[l,1],
+             K=par_grid[l,2], 
+             p=p, par=par )
         load( file.path(sim_save, sim_name) )
       }
       
@@ -501,8 +509,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
     row.names(par_comparison) = NULL
     par_mom = par_comparison %>%
       group_by(par_names) %>%
-      summarize(true_mean=mean(true), 
-                sim_mean=mean(mean), sim_sd=sd(mean), 
+      summarize(true_mean=mean(true), sim_mean=mean(mean),  
                 pCI=mean(in_CI), pdiff0=mean(diff_0), 
                 mRMSE=mean(RMSE), sRMSE=sd(RMSE))
     
@@ -512,7 +519,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
       par_res = rbind(par_res,
                       data.frame(I=par_grid[l,1], K=par_grid[l,2], par_mom) )
     }
-
+    
     
     # return object
     if( is.null(power_save) | is.null(model_name)){
@@ -530,13 +537,16 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
 
 # power plot ####
 plot_power = function(d=par_res, # object from Epower() function
-                      exclude='SI'){ # variable to exclude from plot
+                      exclude='SI', # variable to exclude from plot
+                      plotN = 1){ # number for the set of plot to show 
   
   # # test
   # d=par_res # object from Epower() function
   # exclude='SI' # variable to exclude from plot
-
-  # indentify unique parameters
+  # plotN = 2 # number for the set of plot to show
+  
+  
+  # identify unique parameters
   par_plot = unique( d$par_names )
   idx_plot = str_detect( par_plot, paste0('^', exclude) )
   par_plot = par_plot[!idx_plot]
@@ -544,38 +554,60 @@ plot_power = function(d=par_res, # object from Epower() function
   # length(par_plot)
   
   
-  nrows = ceiling( length(par_plot)/4 )
-  par(mfrow=c( nrows, 4))
+  K = unique( d$K )
   
-  # i=6
-  for(i in 1:length(par_plot)){
+  pp = (1:4) + 4*(plotN-1)
+  if( all(pp>length(par_plot)) ){
+    plotN = floor(length(par_plot) / length(K))
+    pp = (1:4) + 4*(plotN-1)
+  }
+  if( any(pp>length(par_plot)) ){
+    idx = pp>length(par_plot)
+    pp = pp[!idx]
+  } 
+  
+  
+  # plot
+  par( mfrow=c( min(length(par_plot), 4), length(K) ) )
+  # i=1
+  for(i in pp){
     
-    # main plot
-    plot( NULL, ylim=c(0,1), xlim=range( d$I ), 
-          xaxt='n', main=par_plot[i],
-          xlab='Experimental units (children)', 
-          ylab= 'Probability (100 simulations) ' )
-    axis(side=1, at = unique( d$I ) )
-    abline(h=0, col='red', lty=2)
-    abline(h=0.8, col='red', lty=2)
-    legend('bottomleft', legend = c('In CI', 'Power'), bty='n', 
-           box.lwd='n', lty=rep(1,2), lwd=rep(2,2),
-           col=c( col.alpha('black', 0.5), col.alpha('blue', 0.8) ) )
-    
+    # identify parameter
     idx_par = d$par_names == par_plot[i]
     # d[ idx_par, c('I','K','pCI')]
     
-    K = unique( d$K )
-    
-    # k=20
+    # k=10
     for(k in K){
+      
+      # identify plot
       idx = idx_par & d$K==k
       # d[ idx, c('I','K','pCI')]
       
+      # main plot
+      if( which(K==k)==1 ){
+        mplot = paste0( par_plot[i],',   K=', k)
+      } else{
+        mplot = paste0('K=',k)
+      }
+      plot( NULL, ylim=c(0,1), xlim=range( d$I ), xaxt='n', main='',
+            xlab='Experimental units (children)', 
+            ylab= 'Probability (100 simulations) ' )
+      mtext(mplot, 3, adj=0, cex=1.1)
+      axis(side=1, at = unique( d$I ) )
+      abline(h=c(0, 0.8), col='red', lty=2)
+      abline(h=seq(0.2,0.6,0.2), col=col.alpha('gray',0.6), lty=2)
+      legend('bottomright', legend = c('In CI', 'Power'), bty='n', 
+             box.lwd='n', lty=rep(1,2), lwd=rep(2,2),
+             col=c( col.alpha('black', 0.5), col.alpha('blue', 0.8) ) )
+      
       lines( d[ idx, c('I','pCI')], lwd=1.5, 
-             col=col.alpha('black', 0.3 * k/20))
+             col=col.alpha('black', 0.3 * k/20) )
+      points( d[ idx, c('I','pCI')], pch=19,
+              col=col.alpha('black', 0.3 * k/20) )
       lines( d[ idx, c('I','pdiff0')], lwd=1.5, 
-             col=col.alpha('blue', 0.5 * k/20))
+             col=col.alpha('blue', 0.5 * k/20) )
+      points( d[ idx, c('I','pdiff0')], pch=19, 
+              col=col.alpha('blue', 0.5 * k/20) )
     }
     
   }
