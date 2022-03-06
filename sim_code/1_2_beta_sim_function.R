@@ -586,12 +586,14 @@ plot_power = function(d=par_res, # object from Epower() function
       # main plot
       if( which(K==k)==1 ){
         mplot = paste0( par_plot[i],',   K=', k)
+        y_lab = 'Probability (100 simulations) '
       } else{
         mplot = paste0('K=',k)
+        y_lab = ''
       }
       plot( NULL, ylim=c(0,1), xlim=range( d$I ), xaxt='n', main='',
             xlab='Experimental units (children)', 
-            ylab= 'Probability (100 simulations) ' )
+            ylab= y_lab )
       mtext(mplot, 3, adj=0, cex=1.1)
       axis(side=1, at = unique( d$I ) )
       abline(h=c(0, 0.8), col='red', lty=2)

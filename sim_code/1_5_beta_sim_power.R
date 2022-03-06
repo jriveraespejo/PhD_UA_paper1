@@ -55,9 +55,9 @@ load(file.path( getwd(), 'sim_chain', 'Hbeta_NC_sim2_power.RData'))
 
 
 # plot results
-plot_power(d=par_res, exclude='SI', plotN = 2)
-
-
+plot_power(d=par_res, exclude='SI', plotN=1)
+plot_power(d=par_res, exclude='SI', plotN=2)
+plot_power(d=par_res, exclude='SI', plotN=3)
 
 
   

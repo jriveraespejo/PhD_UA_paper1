@@ -290,11 +290,12 @@ HJpower = function(power_save=NULL, # file_save need to include getwd()
                    I_grid, # experimental units (children) 
                    K_grid, # replicates (utterances)
                    D_grid, # duplicates (comparisons)
-                   J=NULL, # number of judges
+                   J=80, # number of judges
                    par_int, # parameter to analyze power
                    p=c(0.36, 0.32, 0.32), # children prop. on each group
                    par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                              m_j=0, s_j=0.5, # hyperprior generation of df (M)
+                             r=NULL, # rate for s_SI
                              s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
                              s_HJ=0.1, # var. in observed HJo (constant)
                              a=0, # test only intercept model
@@ -305,33 +306,34 @@ HJpower = function(power_save=NULL, # file_save need to include getwd()
                              bAHS=0) ){ # continuous interaction (goes together with bA)
   
   
-  # test
-  power_save=file.path(getwd(), 'sim_chain') # power result dir need to include getwd()
-  sim_name='HJ_sim2_power.RData' # file_save need to include getwd()
-  sim_save=file.path(getwd(), 'sim_data') # file_name need to include '.RData'
-  model_name='HJ_NC_sim2_re' # model for which we want to calculate power
-  model_in=file.path(getwd(), 'sim_models') # location load models
-  model_out=file.path(getwd(), 'sim_chain') # location to save results
-  seed=NULL # seed
-  Nsim=10 # number of simulation for power
-  par_int=c('aHS','bP','bA','m_i','s_i','m_j','s_j','s_SI','s_HJ','SI') # parameter to analyze power
-  I_grid = c(32, 40, 50) # experimental units (children)
-  K_grid = c(10, 15, 20) # replicates (utterances)
-  D_grid = c(20, 25, 30) # duplicates (comparisons)
-  J=80 # number of judges
-  p=c(0.36, 0.32, 0.32) # children prop. on each group
-  par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-            m_j=0, s_j=0.5, # hyperprior generation of df (M)
-            s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
-            s_HJ=0.1, # var. in observed HJo (constant)
-            a=0, # test only intercept model
-            aE=0, # test par with 4 levels, and 6 contrasts 
-            aHS=0, # test par with 3 levels, and 3 contrasts 
-            bP=0, # continuous (standardized) variable
-            bA=0, # continuous (integer) variable
-            bAHS=0) # continuous interaction (goes together with bA)
-  #         m_M=1.5, s_M=0.5
-  #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
+  # # test
+  # power_save=file.path(getwd(), 'sim_chain') # power result dir need to include getwd()
+  # sim_name='HJ_sim2_power.RData' # file_save need to include getwd()
+  # sim_save=file.path(getwd(), 'sim_data') # file_name need to include '.RData'
+  # model_name='HJ_NC_sim5_re' # model for which we want to calculate power
+  # model_in=file.path(getwd(), 'sim_models') # location load models
+  # model_out=file.path(getwd(), 'sim_chain') # location to save results
+  # seed=NULL # seed
+  # Nsim=10 # number of simulation for power
+  # par_int=c('aHS','bP','bA','m_i','s_i','s_SI','m_SI') # parameter to analyze power
+  # I_grid = c(32, 40, 50) # experimental units (children)
+  # K_grid = c(10, 15, 20) # replicates (utterances)
+  # D_grid = c(20, 25, 30) # duplicates (comparisons)
+  # J=80 # number of judges
+  # p=c(0.36, 0.32, 0.32) # children prop. on each group
+  # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
+  #           m_j=0, s_j=0.5, # hyperprior generation of df (M)
+  #           r=NULL, # rate for s_SI
+  #           s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
+  #           s_HJ=0.1, # var. in observed HJo (constant)
+  #           a=0, # test only intercept model
+  #           aE=0, # test par with 4 levels, and 6 contrasts 
+  #           aHS=-0.5, # test par with 3 levels, and 3 contrasts 
+  #           bP=-0.3, # continuous (standardized) variable
+  #           bA=0.15, # continuous (integer) variable
+  #           bAHS=0) # continuous interaction (goes together with bA)
+  # #         m_M=1.5, s_M=0.5
+  # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
   
   
   # expand grid

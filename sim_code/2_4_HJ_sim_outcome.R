@@ -466,7 +466,7 @@ sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
 # still 91.7% true parameters inside CI (depends on reference)
 
 sum(par_recovery_C$diff_0)/nrow(par_recovery_C)
-# still 26.9% of power
+# 26.9% of power
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
 # maximum RMSE is for m_SI[6] (NOT the extreme)
@@ -1039,7 +1039,7 @@ par_recovery_C = parameter_recovery( stan_object = res_C,
                                      est_par = par_est,
                                      true_par = par_true)
 par_recovery_C
-# samples below 300 for s_SI, some re_i
+# samples below 300 for s_i, s_SI, some re_i
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
 # 90.4% true parameters inside CI (depends on reference)
@@ -1061,12 +1061,12 @@ cont_recovery_C = contrast_recovery(stan_object = res_C,
                                     true_diff = diff_true)
 cont_recovery_C
 # contrast way underestimated, 
-# none cannot reject contrast=0
+# none can reject contrast=0
 
 
 # recovery plot
 recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
-# still good recovery, not so good for contrasts and re_i
+# still good recovery, not so good for m_i, s_SI, contrasts and re_i
 
 
 # triplot
@@ -1076,8 +1076,8 @@ tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
 # good convergence except for s_i and s_SI
-# good mixing except for s_i and re_i
-# lack of autocorrelation only for regression parameters and SI
+# good mixing except for s_i, s_SI and re_i
+# lack of autocorrelation only for reg par and m_SI
 
 
 
@@ -1085,10 +1085,6 @@ tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
 # disHJ_plot( stan_object=res_C, true_data=data_true, 
 #            par_object=par_recovery_C, M=NULL)
 
-
-
-# RESULT ####
-# this is the go to model
 
 
 
@@ -1105,7 +1101,7 @@ par_recovery_NC = parameter_recovery( stan_object = res_NC,
                                       est_par = par_est,
                                       true_par = par_true)
 par_recovery_NC
-# worst samples in almost everything
+# samples below 300 for bA, s_i, s_SI, some re_i, and SI
 
 sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
 # still 89% true parameters inside CI (depends on reference)
@@ -1114,8 +1110,8 @@ sum(par_recovery_NC$diff_0)/nrow(par_recovery_NC)
 # 49.3% of power
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for re_i[30] (NOT the extremes)
-# wrong sign
+# maximum RMSE is for re_i[30] (NOT the extreme)
+# correct sign, way underestimated
 # with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
 
@@ -1127,21 +1123,22 @@ cont_recovery_NC = contrast_recovery(stan_object = res_NC,
                                      true_diff = diff_true)
 cont_recovery_NC
 # way downward biased contrast
+# none can reject contrast 0
 
 
 # recovery plot
 recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
-# still good recovery of SI, but not contrasts
+# still good recovery of SI, but not m_i, s_SI, re_i, and contrasts
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_i','s_i','s_SI'))
-tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
-# tri_plot(stan_object=res_C, pars= paste0('bAHS[',1:3,']') )
-tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
-tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
-# not so good convergence for s_i, s_SI 
-# not good mixing s_i, s_SI and re_i
+tri_plot(stan_object=res_NC, pars=c('m_i','s_i','s_SI'))
+tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
+# tri_plot(stan_object=res_NC, pars= paste0('bAHS[',1:3,']') )
+tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
+tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
+# good convergence for all except s_i, s_SI 
+# not good mixing for s_i, s_SI, and some re_i
 # lack of autocorrelation for reg par and SI 
 
 
@@ -1213,7 +1210,7 @@ data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, reduce=T)
 
 
 ## parameters ####
-par_est = c('aHS','a','bP','bA','m_i','s_i','s_SI','re_i','SI')
+par_est = c('aHS','a','bP','bA','m_i','s_i','s_SI','re_i','m_SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
 data_true = with(mom$dL, data.frame(H=HJ, child=cid))
@@ -1234,7 +1231,7 @@ par_recovery_C = parameter_recovery( stan_object = res_C,
                                      est_par = par_est,
                                      true_par = par_true)
 par_recovery_C
-# all samples above 400  
+# all samples above 400, except s_SI
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
 # 94.5% true parameters inside CI (depends on reference)
@@ -1243,10 +1240,9 @@ sum(par_recovery_C$diff_0)/nrow(par_recovery_C)
 # 32.9% of power
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for aHS[3] (not one of the extremes)
+# maximum RMSE is for aHS[3] (NOT one of the extremes)
 # correct sign, way underestimated magnitude
 # with(mom$dS$dT, which( re_i == max(re_i) ) )
-
 
 
 
@@ -1256,12 +1252,12 @@ cont_recovery_C = contrast_recovery(stan_object = res_C,
                                     true_diff = diff_true)
 cont_recovery_C
 # contrast way underestimated, 
-# none cannot reject contrast=0
+# none can reject contrast=0
 
 
 # recovery plot
 recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
-# still good recovery, s_SI way underestimated and contrasts
+# still good recovery, except for s_SI, m_SI and contrasts
 
 
 # triplot
@@ -1270,12 +1266,9 @@ tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 # tri_plot(stan_object=res_C, pars= paste0('bAHS[',1:3,']') )
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('m_SI[', 1:5,']') )
-# good convergence except for m_i and s_SI
-# good mixing except for m_si, s_i and re_i
-# lack of autocorrelation only for regression parameters and m_SI
-
-
-
+# good convergence except for s_SI
+# good mixing except for m_i, s_SI, reg par, re_i, and m_SI
+# lack of autocorrelation only for reg par and m_SI
 
 
 
@@ -1287,7 +1280,7 @@ tri_plot(stan_object=res_C, pars=paste0('m_SI[', 1:5,']') )
 
 
 ## non-centered no cor ####
-model_nam = "HJ_NC_sim5"
+model_nam = "HJ_NC_sim5_re"
 model_out = file.path(getwd(), 'sim_chain')
 model_fit = file_id(model_out, model_nam) 
 res_NC = rstan::read_stan_csv( file.path( model_out, model_fit ) )
@@ -1298,16 +1291,18 @@ par_recovery_NC = parameter_recovery( stan_object = res_NC,
                                       est_par = par_est,
                                       true_par = par_true)
 par_recovery_NC
-# worst samples in almost everything
+# all samples above 3000
 
 sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
-# still 91.8% true parameters inside CI (depends on reference)
+# 95.9% true parameters inside CI (depends on reference)
+
+sum(par_recovery_NC$diff_0)/nrow(par_recovery_NC)
+# 26% of power
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for re_i[6] (not one of the extremes)
-# wrong sign
+# maximum RMSE is for aHS[3] (NOT one of the extremes)
+# correct sign, way underestimated effect
 # with(mom$dS$dT, which( re_i == max(re_i) ) )
-
 
 
 
@@ -1316,13 +1311,13 @@ cont_recovery_NC = contrast_recovery(stan_object = res_NC,
                                      est_diff = 'aHS',
                                      true_diff = diff_true)
 cont_recovery_NC
-# better contrasts (slightly downward biased)
-# third contrast cannot reject contrast=0
+# way downward biased
+# none can reject contrast=0
 
 
 # recovery plot
 recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
-# still good recovery of SI, better s_SI
+# still good recovery of m_SI, not good for s_SI, re_i and contrast
 
 
 # triplot
@@ -1331,9 +1326,9 @@ tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 # tri_plot(stan_object=res_C, pars= paste0('bAHS[',1:3,']') )
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('m_SI[', 1:5,']') )
-# not so good convergence for m_i, s_i, s_SI 
-# not good mixing m_i, s_i, s_SI
-# lack of autocorrelation for regression parameters and m_SI 
+# good convergence except for m_i, s_SI 
+# good mixing except for m_i, s_SI, re_i, m_SI
+# lack of autocorrelation for s_i, and reg par 
 
 
 
@@ -1349,4 +1344,8 @@ stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','s_SI') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='m_SI' )
-# in general non-centered is worst
+# in general non-centered is way better
+
+
+# RESULT ####
+# this is the go to model
