@@ -486,10 +486,16 @@ HJpower = function(power_save=NULL, # file_save need to include getwd()
                 mRMSE=mean(RMSE), sRMSE=sd(RMSE))
     
     if(l==1){
-      par_res = data.frame(I=par_grid[l,1], K=par_grid[l,2], par_mom)
+      par_res = data.frame(I=par_grid[l,1], 
+                           K=par_grid[l,2],
+                           D=par_grid[l,3],
+                           par_mom)
     } else{
       par_res = rbind(par_res,
-                      data.frame(I=par_grid[l,1], K=par_grid[l,2], par_mom) )
+                      data.frame(I=par_grid[l,1], 
+                                 K=par_grid[l,2], 
+                                 D=par_grid[l,3],
+                                 par_mom) )
     }
     
     
