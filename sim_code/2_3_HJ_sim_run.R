@@ -349,7 +349,7 @@ mod$sample( data=mom$dL,
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 500-600/4000 divergent transitions
+# 600-1400/4000 divergent transitions
 
 
 
@@ -578,7 +578,7 @@ mod$sample( data=mom$dL,
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 100-200/4000 divergent transitions
+# 200-800/4000 divergent transitions
 
 
 

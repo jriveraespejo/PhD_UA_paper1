@@ -311,7 +311,8 @@ CJDsim = function(sim_name=NULL, # sim_name need to include '.RData'
     
     # full observed data
     CJD = dO$CJD, 
-    cid = dO$child_id,
+    cid1 = dO$child_id1,
+    cid2 = dO$child_id2,
     uid = dO$utt_id,
     jid = dO$judge_id,
     

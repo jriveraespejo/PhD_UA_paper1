@@ -29,7 +29,7 @@ parameters{
     vector[I] re_i;       // random intercepts (per child)
     real m_k;             // mean of utterance random effects
     real<lower=0> s_SI;   // sd of SI
-    vector[I] re_k;       // random intercepts (per utterance)
+    vector[K] re_k;       // random intercepts (per utterance)
 }
 transformed parameters{
     vector[I] m_SI;       // SI linear predictor

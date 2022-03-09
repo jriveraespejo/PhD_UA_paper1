@@ -30,7 +30,7 @@ parameters{
     vector[J] re_j;       // random intercepts (per judge)
     real m_k;             // mean of utterance random effects
     real<lower=0> s_SI;   // sd of utterance random effects (measuremenet error also)
-    vector[J] re_k;       // random intercepts (per utterance)
+    vector[K] re_k;       // random intercepts (per utterance)
     real<lower=0> s_HJ;   // variability of measurement
 }
 transformed parameters{

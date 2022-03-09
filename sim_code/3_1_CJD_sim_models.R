@@ -26,7 +26,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgment
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -68,7 +69,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) ); 
 }
 "
@@ -94,7 +95,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -143,7 +145,7 @@ model{
     SI ~ normal(m_SI, s_SI);
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) ); 
 }
 "
@@ -200,7 +202,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -254,7 +257,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
@@ -281,7 +284,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -343,7 +347,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
@@ -398,7 +402,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -480,7 +485,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -603,7 +609,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -659,7 +666,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
@@ -685,7 +692,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -751,7 +759,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
@@ -815,7 +823,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -879,7 +888,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
@@ -905,7 +914,8 @@ data{
     int E[I];             // etiology
     real sPTA[I];         // (standardized) PTA values
     int CJD[N];           // replicated dichotomous comparative judgement
-    int cid[N];           // child's id
+    int cid1[N];          // first child's id
+    int cid2[N];          // second child's id
     int uid[N];           // utterance's id
     int jid[N];           // judges' id
 }
@@ -979,7 +989,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = SI[cid] + re_j[jid];
+    m_CJD = ( SI[cid1] - SI[cid2] ) + re_j[jid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
