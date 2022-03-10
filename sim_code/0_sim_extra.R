@@ -408,19 +408,24 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
   # # test
   # d=mom
   # xdata='A'
-  # ydata='HJ'
-  # alpha=0.01
+  # ydata='CJD'
+  # alpha=0.4
   # os=T
   # reduce=T
   
   # working data
-  mom_plot = with(mom, data.frame(cid=dL$cid, 
-                                  HS=dL$HS[dL$cid], 
-                                  E=dL$E[dL$cid],
-                                  Am=dL$Am[dL$cid], 
-                                  A=dS$dT$A[dL$cid],
-                                  PTA=dS$dT$PTA[dL$cid],
-                                  sPTA=dL$sPTA[dL$cid] ) )
+  if( ydata=='CJD' ){
+    icid = mom$dL$cid1
+  } else{
+    icid = mom$dL$cid
+  }
+  mom_plot = with(mom, data.frame(cid=icid, 
+                                  HS=dL$HS[icid], 
+                                  E=dL$E[icid],
+                                  Am=dL$Am[icid], 
+                                  A=dS$dT$A[icid],
+                                  PTA=dS$dT$PTA[icid],
+                                  sPTA=dL$sPTA[icid] ) )
   if( ydata=='H'){
     mom_plot[,ydata] = mom$dL[ydata]
   } else if( ydata=='HJ' & !reduce ){
@@ -429,13 +434,19 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
   } else if( ydata=='HJ' & reduce ){
     mom_plot$m_HJ = mom$dL$m_HJ
     mom_plot$s_HJ = mom$dL$s_HJ
+  } else if( ydata=='CJD' ){
+    mom_plot[,ydata] = mom$dL[ydata]
+    mom_plot = mom_plot %>%
+      group_by( cid ) %>%
+      summarise( across( everything() , ~mean(.x, na.rm=T))) %>%
+      data.frame()
   }
   
   if( ydata=='HJ' & os){
     ydata='HJo'
   } else if ( ydata=='HJ' & reduce ){
     ydata='m_HJ'
-  }
+  } 
   
   # making plots
   if(xdata=='Am' | xdata=='A' | xdata=='PTA' | xdata=='sPTA'){

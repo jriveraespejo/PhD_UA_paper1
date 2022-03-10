@@ -36,18 +36,18 @@ load( model_data )
 
 
 ## plotting data ####
-data_plots(d=mom, xdata='A', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='PTA', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='HS', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, os=T)
-# notice no relationship
+data_plots(d=mom, xdata='A', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='PTA', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='HS', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='E', ydata='CJD', alpha=0.35)
+# notice no clear relationship
 
 
 
 ## parameters ####
-par_est = c('a','m_i','s_i','m_j','s_j','s_SI','s_HJ','re_i','re_j','SI')
+par_est = c('a','m_i','s_i','m_j','s_j','s_SI','re_i','re_j','SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
-data_true = with(mom$dL, data.frame(HJ=HJ, cid=cid, uid=uid, jid=jid))
+data_true = with(mom$dL, data.frame(CJD=CJD, cid1=cid1, cid2=cid2, uid=uid, jid=jid))
 
 
 
@@ -64,35 +64,36 @@ par_recovery_C = parameter_recovery( stan_object = res_C,
                                      est_par = par_est,
                                      true_par = par_true)
 par_recovery_C
-# samples below 300 for all parameters, except for s_j and s_HJ
+# samples below 300 for all par, except for m_j, some re_j and SI
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
-# still 98.7% true parameters inside CI
+# still 92.7% true parameters inside CI
 
 sum(par_recovery_C$diff_0)/nrow(par_recovery_C)
-# 25.2% of power
+# 26.7% of power
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for re_i[35] (not the most extreme)
-# correct sign, overestimated magnitude
+# maximum RMSE is for re_i[22] (not the most extreme)
+# correct sign, underestimated magnitude
 # with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
 
 # recovery plot
 recovery_plots(par_object=par_recovery_C, cont_object=NULL)
-# but somehow it recovers well the parameters, but not the s_SI
+# it recovers well the parameters, but not the s_SI
 
 
 # triplot
 tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_j','s_j'))
-tri_plot(stan_object=res_C, pars=c('s_SI','s_HJ'))
+tri_plot(stan_object=res_C, pars=c('s_SI'))
 tri_plot(stan_object=res_C, pars=c('a'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('re_j[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
-# no convergence for m_i, s_i, m_j, s_SI, re_i, re_j, SI
-# bad mixing for m_i, s_i, m_j, s_SI, re_i, re_j, SI
-# no lack of autocorrelation, except for s_j, s_HJ, re_i, re_j,SI
+# no convergence for m_i, SI
+# bad mixing for m_i, s_i, m_j, s_j, s_SI, a, re_i, re_j, SI
+# no lack of autocorrelation, except for m_j, s_j, re_j
+# one chain doesnot work (sometimes)
 
 
 # # distributional plots
@@ -137,7 +138,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=NULL)
 
 # triplot
 tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_j','s_j'))
-tri_plot(stan_object=res_NC, pars=c('s_SI','s_HJ'))
+tri_plot(stan_object=res_NC, pars=c('s_SI'))
 tri_plot(stan_object=res_NC, pars=c('a'))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('re_j[', 1:5,']') )
@@ -155,7 +156,7 @@ tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
 
 # chain stats
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_j','s_j') )
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('s_SI','s_HJ') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('s_SI') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='a' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_j' )
@@ -204,19 +205,19 @@ load( model_data )
 
 
 ## plotting data ####
-data_plots(d=mom, xdata='A', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='PTA', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='HS', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, os=T)
+data_plots(d=mom, xdata='A', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='PTA', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='HS', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='E', ydata='CJD', alpha=0.35)
 # notice we see relationships
 
 
 
 ## parameters ####
-par_est = c('aHS','a','bP','bA','m_i','s_i','m_j','s_j','s_SI','s_HJ','re_i','re_j','SI')
+par_est = c('aHS','a','bP','bA','m_i','s_i','m_j','s_j','s_SI','re_i','re_j','SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
-data_true = with(mom$dL, data.frame(H=HJ, child=cid))
+data_true = with(mom$dL, data.frame(CJD=CJD, child=cid1))
 
 
 
@@ -303,7 +304,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 # triplot
 tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_j','s_j'))
-tri_plot(stan_object=res_C, pars=c('s_SI','s_HJ'))
+tri_plot(stan_object=res_C, pars=c('s_SI'))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('re_j[', 1:5,']') )
@@ -365,7 +366,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 # triplot
 tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_j','s_j'))
-tri_plot(stan_object=res_NC, pars=c('s_SI','s_HJ'))
+tri_plot(stan_object=res_NC, pars=c('s_SI'))
 tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('re_j[', 1:5,']') )
@@ -382,7 +383,7 @@ tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
 
 # chain stats
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_j','s_j') )
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('s_SI','s_HJ') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('s_SI') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_j' )
@@ -431,19 +432,19 @@ load( model_data )
 
 
 ## plotting data ####
-data_plots(d=mom, xdata='A', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='PTA', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='HS', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, os=T)
+data_plots(d=mom, xdata='A', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='PTA', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='HS', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='E', ydata='CJD', alpha=0.35)
 # notice we see relationships
 
 
 
 ## parameters ####
-par_est = c('aHS','a','bP','bA','m_i','s_i','m_j','s_j','s_SI','s_HJ','re_i','re_j','m_SI')
+par_est = c('aHS','a','bP','bA','m_i','s_i','m_j','s_j','s_SI','re_i','re_j','m_SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
-data_true = with(mom$dL, data.frame(H=HJ, child=cid))
+data_true = with(mom$dL, data.frame(CJD=CJD, child=cid))
 
 
 
@@ -491,7 +492,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 # triplot
 tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_j','s_j'))
-tri_plot(stan_object=res_C, pars=c('s_SI','s_HJ'))
+tri_plot(stan_object=res_C, pars=c('s_SI'))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('re_j[', 1:5,']') )
@@ -552,7 +553,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 # triplot
 tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_j','s_j'))
-tri_plot(stan_object=res_NC, pars=c('s_SI','s_HJ'))
+tri_plot(stan_object=res_NC, pars=c('s_SI'))
 tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('re_j[', 1:5,']') )
@@ -569,7 +570,7 @@ tri_plot(stan_object=res_NC, pars=paste0('m_SI[', 1:5,']') )
 
 # chain stats
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_j','s_j') )
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('s_SI','s_HJ') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('s_SI') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_j' )
@@ -625,18 +626,18 @@ load( model_data )
 
 
 ## plotting data ####
-data_plots(d=mom, xdata='A', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='PTA', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='HS', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, os=T)
+data_plots(d=mom, xdata='A', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='PTA', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='HS', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='E', ydata='CJD', alpha=0.35)
 # notice the relationships
 
 
 ## parameters ####
-par_est = c('aHS','a','bP','bA','m_i','s_i','m_j','s_j','r','s_SI','s_HJ','re_i','re_j','SI')
+par_est = c('aHS','a','bP','bA','m_i','s_i','m_j','s_j','r','s_SI','re_i','re_j','SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
-data_true = with(mom$dL, data.frame(H=HJ, child=cid))
+data_true = with(mom$dL, data.frame(CJD=CJD, child=cid))
 
 
 
@@ -681,7 +682,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_j','s_j','s_HJ'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_j','s_j'))
 tri_plot(stan_object=res_C, pars=c('r', paste0('s_SI[',1:4,']')))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
@@ -741,7 +742,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_j','s_j','s_HJ'))
+tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_j','s_j'))
 tri_plot(stan_object=res_NC, pars=c('r', paste0('s_SI[',1:4,']')))
 tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
@@ -761,7 +762,7 @@ tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
 
 # chain stats
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_j','s_j') )
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('r','s_SI','s_HJ') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('r','s_SI') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_j' )
@@ -815,19 +816,19 @@ load( model_data )
 
 
 ## plotting data ####
-data_plots(d=mom, xdata='A', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='PTA', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='HS', ydata='HJ', alpha=0.01, os=T)
-data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, os=T)
+data_plots(d=mom, xdata='A', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='PTA', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='HS', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='E', ydata='CJD', alpha=0.35)
 # notice relationships
 
 
 
 ## parameters ####
-par_est = c('aHS','bAHS','a','bP','m_i','s_i','m_j','s_j','r','s_SI','s_HJ','re_i','re_j','SI')
+par_est = c('aHS','bAHS','a','bP','m_i','s_i','m_j','s_j','r','s_SI','re_i','re_j','SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
 diff_true = with(mom$dS$par, c( aHS * c(1:2,1), bAHS*c(1:2,1)) )
-data_true = with(mom$dL, data.frame(H=HJ, child=cid))
+data_true = with(mom$dL, data.frame(CJD=CJD, child=cid))
 
 
 
@@ -874,7 +875,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_j','s_j','s_HJ'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_j','s_j'))
 tri_plot(stan_object=res_C, pars=c('r', paste0('s_SI[',1:4,']')))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP'))
 tri_plot(stan_object=res_C, pars=c( paste0('bAHS[',1:3,']')))
@@ -936,7 +937,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_j','s_j','s_HJ'))
+tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_j','s_j'))
 tri_plot(stan_object=res_NC, pars=c('r', paste0('s_SI[',1:4,']')))
 tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP'))
 tri_plot(stan_object=res_NC, pars=c( paste0('bAHS[',1:3,']')))
@@ -957,7 +958,7 @@ tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
 
 # chain stats
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_j','s_j') )
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('r','s_SI','s_HJ') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('r','s_SI') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bAHS') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_j' )
@@ -1010,10 +1011,10 @@ load( model_data )
 
 
 ## plotting data ####
-data_plots(d=mom, xdata='A', ydata='HJ', alpha=0.01, reduce=T)
-data_plots(d=mom, xdata='PTA', ydata='HJ', alpha=0.01, reduce=T)
-data_plots(d=mom, xdata='HS', ydata='HJ', alpha=0.01, reduce=T)
-data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, reduce=T)
+data_plots(d=mom, xdata='A', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='PTA', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='HS', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='E', ydata='CJD', alpha=0.35)
 # relationships are more diluted
 
 
@@ -1021,7 +1022,7 @@ data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, reduce=T)
 par_est = c('aHS','a','bP','bA','m_i','s_i','s_SI','re_i','SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
-data_true = with(mom$dL, data.frame(H=HJ, child=cid))
+data_true = with(mom$dL, data.frame(CJD=CJD, child=cid))
 
 
 
@@ -1202,10 +1203,10 @@ load( model_data )
 
 
 ## plotting data ####
-data_plots(d=mom, xdata='A', ydata='HJ', alpha=0.01, reduce=T)
-data_plots(d=mom, xdata='PTA', ydata='HJ', alpha=0.01, reduce=T)
-data_plots(d=mom, xdata='HS', ydata='HJ', alpha=0.01, reduce=T)
-data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, reduce=T)
+data_plots(d=mom, xdata='A', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='PTA', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='HS', ydata='CJD', alpha=0.35)
+data_plots(d=mom, xdata='E', ydata='CJD', alpha=0.35)
 # relationships are more diluted
 
 
@@ -1213,7 +1214,7 @@ data_plots(d=mom, xdata='E', ydata='HJ', alpha=0.01, reduce=T)
 par_est = c('aHS','a','bP','bA','m_i','s_i','s_SI','re_i','m_SI')
 par_true = data_detect_par(d=mom, par_int=par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
-data_true = with(mom$dL, data.frame(H=HJ, child=cid))
+data_true = with(mom$dL, data.frame(CJD=CJD, child=cid))
 
 
 

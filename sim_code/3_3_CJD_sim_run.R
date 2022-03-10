@@ -34,27 +34,27 @@ source( file.path( getwd(), 'sim_code', '3_2_CJD_sim_function.R') )
 # Covariates: None
 #
 # simulating and saving data
-HJsim(sim_name='CJD_sim1.RData', # sim_name need to include '.RData'
-      sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
-      seed=12345, # seed
-      I=32, # experimental units (children)
-      K=10, # replicates (utterances)
-      D=20, # duplicates (comparisons)
-      J=80, # judges
-      p=c(0.36, 0.32, 0.32), # children prop. on each group
-      par=list( m_i=0, s_i=0.5, # children's random effects
-                m_j=0, s_j=0.5, # judges' random effects
-                r=NULL, # rate for s_SI
-                s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
-                s_HJ=0.1, # var. in observed HJo (constant)
-                a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 ) )
+CJDsim(sim_name='CJD_sim1.RData', # sim_name need to include '.RData'
+       sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
+       seed=12345, # seed
+       I=32, # experimental units (children)
+       K=10, # replicates (utterances)
+       D=20, # duplicates (comparisons)
+       J=80, # judges
+       p=c(0.36, 0.32, 0.32), # children prop. on each group
+       par=list( m_i=0, s_i=0.5, # children's random effects
+                 m_j=0, s_j=0.5, # judges' random effects
+                 r=NULL, # rate for s_SI
+                 s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
+                 s_HJ=0.1, # var. in observed HJo (constant)
+                 a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 ) )
 
 
 # loading data
 data_nam = 'CJD_sim1.RData'
 model_data = file.path(getwd(), 'sim_data', data_nam)
 load(model_data)
-# mom
+# str(mom)
 
 
 ## centered ####
@@ -68,22 +68,10 @@ mod$sample( data=mom$dL,
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
-            max_treedepth=20, adapt_delta=0.95, #,init=0
-            iter_warmup=2000, iter_sampling=2000, thin=2) 
-# 5-10 out of 4000 hit the max_treedepth, good speed
-# 7-15 out of 4000 were divergent transitions
-#
-# max_treedepth warnings are not as serious as divergent transitions
-# (see https://mc-stan.org/docs/2_29/cmdstan-guide/diagnose.html)
-# but still does not allow you to properly explore the posterior
-# that is why we increase the max_treedepth (default max_treedepth=10),
-# and the adapt_delta  (default adapt_delta=0.90) 
-# in order to get a better posterior exploration
-# (see https://mc-stan.org/docs/2_29/cmdstan-guide/mcmc-config.html)
-#
-# I also increase the number of warm ups and iterations
-#
-# after changing, 400-500/4000 were divergent
+            max_treedepth=20, adapt_delta=0.95, #, init=0
+            iter_warmup=2000, iter_sampling=2000, thin=2)
+# 500-600/4000 divergent transitions before fixing
+# 200-300/4000 after fixing
 
 
 
@@ -98,12 +86,10 @@ mod$sample( data=mom$dL,
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
-            max_treedepth=20, adapt_delta=0.95, #,init=0
+            max_treedepth=20, adapt_delta=0.95, #, init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 1500-1600 out of 4000 hit the max_treedepth, really slow
-# 2-5 out of 4000 were divergent
-#
-# after increasing it, 10-30/4000 divergence, but even slower
+# 200-350/4000 divergent transitions before fixing
+# 250-350/4000 after fixing, but 2000/4000 max_treedepth
 
 
 
@@ -138,20 +124,20 @@ mod$sample( data=mom$dL,
 #   sPTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-HJsim(sim_name='CJD_sim2.RData', # sim_name need to include '.RData'
-      sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
-      seed=12345, # seed
-      I=32, # experimental units (children)
-      K=10, # replicates (utterances)
-      D=20, # duplicates (comparisons)
-      J=80, # judges
-      p=c(0.36, 0.32, 0.32), # children prop. on each group
-      par=list( m_i=0, s_i=0.5, # children's random effects
-                m_j=0, s_j=0.5, # judges' random effects
-                r=NULL, # rate for s_SI
-                s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
-                s_HJ=0.1, # var. in observed HJo (constant)
-                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ))
+CJDsim(sim_name='CJD_sim2.RData', # sim_name need to include '.RData'
+       sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
+       seed=12345, # seed
+       I=32, # experimental units (children)
+       K=10, # replicates (utterances)
+       D=20, # duplicates (comparisons)
+       J=80, # judges
+       p=c(0.36, 0.32, 0.32), # children prop. on each group
+       par=list( m_i=0, s_i=0.5, # children's random effects
+                 m_j=0, s_j=0.5, # judges' random effects
+                 r=NULL, # rate for s_SI
+                 s_SI=0.1, # variability in children's observed SIs (vector[I] or constant)
+                 s_HJ=0.1, # var. in observed HJo (constant)
+                 a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ))
 
 
 # loading data
@@ -171,9 +157,10 @@ mod$sample( data=mom$dL,
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
-            max_treedepth=20, adapt_delta=0.95, #,init=0
+            max_treedepth=20, adapt_delta=0.95, #, init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 50-100 divergent transitions
+# 1000-1200/4000 divergent transitions without fixing
+# 300-450/4000 after fixing
 
 
 ## non-centered ####
@@ -187,9 +174,10 @@ mod$sample( data=mom$dL,
             output_dir=model_out, 
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
-            max_treedepth=20, adapt_delta=0.95, #,init=0
+            max_treedepth=20, adapt_delta=0.95, #, init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 10-50/4000 divergent transitions
+# 900-1100/4000 divergent transitions without fixing
+# 550-650/4000 after fixing
 
 
 
@@ -297,20 +285,20 @@ mod$sample( data=mom$dL,
 #   sPTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-HJsim(sim_name='CJD_sim3.RData', # sim_name need to include '.RData'
-      sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
-      seed=12345, # seed
-      I=32, # experimental units (children)
-      K=10, # replicates (utterances)
-      D=20, # duplicates (comparisons)
-      J=80, # judges
-      p=c(0.36, 0.32, 0.32), # children prop. on each group
-      par=list( m_i=0, s_i=0.5, # children's random effects
-                m_j=0, s_j=0.5, # judges' random effects
-                r=3, # rate for s_SI
-                s_SI=NULL, # variability in children's observed SIs (vector[I] or constant)
-                s_HJ=0.1, # var. in observed HJo (constant)
-                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ))
+CJDsim(sim_name='CJD_sim3.RData', # sim_name need to include '.RData'
+       sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
+       seed=12345, # seed
+       I=32, # experimental units (children)
+       K=10, # replicates (utterances)
+       D=20, # duplicates (comparisons)
+       J=80, # judges
+       p=c(0.36, 0.32, 0.32), # children prop. on each group
+       par=list( m_i=0, s_i=0.5, # children's random effects
+                 m_j=0, s_j=0.5, # judges' random effects
+                 r=3, # rate for s_SI
+                 s_SI=NULL, # variability in children's observed SIs (vector[I] or constant)
+                 s_HJ=0.1, # var. in observed HJo (constant)
+                 a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ))
 
 
 # loading data
@@ -394,20 +382,20 @@ mod$sample( data=mom$dL,
 #   sPTA range, L=low, M1<M2=mid, H=high
 #
 # simulating and saving data
-HJsim(sim_name='CJD_sim4.RData', # sim_name need to include '.RData'
-      sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
-      seed=12345, # seed
-      I=32, # experimental units (children)
-      K=10, # replicates (utterances)
-      D=20, # duplicates (comparisons)
-      J=80, # judges
-      p=c(0.36, 0.32, 0.32), # children prop. on each group
-      par=list( m_i=0, s_i=0.5, # children's random effects
-                m_j=0, s_j=0.5, # judges' random effects
-                r=3, # rate for s_SI
-                s_SI=NULL, # variability in children's observed SIs (vector[I] or constant)
-                s_HJ=0.1, # var. in observed HJo (constant)
-                a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
+CJDsim(sim_name='CJD_sim4.RData', # sim_name need to include '.RData'
+       sim_save=file.path(getwd(), 'sim_data'), # sim_save need to include getwd()
+       seed=12345, # seed
+       I=32, # experimental units (children)
+       K=10, # replicates (utterances)
+       D=20, # duplicates (comparisons)
+       J=80, # judges
+       p=c(0.36, 0.32, 0.32), # children prop. on each group
+       par=list( m_i=0, s_i=0.5, # children's random effects
+                 m_j=0, s_j=0.5, # judges' random effects
+                 r=3, # rate for s_SI
+                 s_SI=NULL, # variability in children's observed SIs (vector[I] or constant)
+                 s_HJ=0.1, # var. in observed HJo (constant)
+                 a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
 
 
 # loading data
