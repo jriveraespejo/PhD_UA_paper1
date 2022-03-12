@@ -459,7 +459,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = m_SI[cid] + re_j[jid] + re_k[uid];
+    m_CJD = ( m_SI[cid1] - m_SI[cid2] ) + re_j[jid] + re_k[uid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
@@ -551,7 +551,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = m_SI[cid] + re_j[jid] + re_k[uid];
+    m_CJD = ( m_SI[cid1] - m_SI[cid2] ) + re_j[jid] + re_k[uid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 "
@@ -1071,7 +1071,7 @@ parameters{
 model{
     // parameter to not follow
     vector[I] m_SI;       // SI linear predictor
-    vector[R] mu;
+    vector[R] m_CJD;
 
 
     // hyperpriors
@@ -1109,9 +1109,9 @@ model{
     SI ~ normal( m_SI, s_SI);
     
     
-    // reduced HJ likelihood
-    mu = inv_logit( SI[rcid] );
-    c_CJD ~ binomial( n_CJD , mu);
+    // reduced CJD likelihood
+    m_CJD = inv_logit( SI[rcid] );
+    c_CJD ~ binomial( n_CJD , m_CJD);
 }
 "
 
@@ -1159,12 +1159,11 @@ transformed parameters{
 
     // random effects
     re_i = m_i + s_i*z_i;
-
 }
 model{
     // parameter to not follow
     vector[I] m_SI;       // SI linear predictor
-    vector[R] mu;
+    vector[R] m_CJD;
     
     // hyperpriors
     m_i ~ normal( 0 , 0.5 );
@@ -1202,9 +1201,9 @@ model{
     SI ~ normal( m_SI, s_SI);
     
     
-    // reduced HJ likelihood
-    mu = inv_logit( SI[rcid] );
-    c_CJD ~ binomial( n_CJD , mu);
+    // reduced CJD likelihood
+    m_CJD = inv_logit( SI[rcid] );
+    c_CJD ~ binomial( n_CJD , m_CJD);
 }
 "
 
@@ -1306,7 +1305,7 @@ transformed parameters{
 }
 model{
     // to not follow
-    vector[R] mu;
+    vector[R] m_CJD;
     
     
     // hyperpriors
@@ -1325,9 +1324,9 @@ model{
     re_i ~ normal( m_i , s_i );
     re_k ~ normal( m_k , s_SI );
     
-    // reduced HJ likelihood
-    mu = inv_logit( m_SI[rcid] + re_k[ruid] );
-    c_CJD ~ normal( n_CJD, mu);
+    // reduced CJD likelihood
+    m_CJD = inv_logit( m_SI[rcid] + re_k[ruid] );
+    c_CJD ~ normal( n_CJD, m_CJD);
 }
 "
 
@@ -1401,7 +1400,8 @@ transformed parameters{
 }
 model{
     // to not follow
-    vector[R] mu;
+    vector[R] m_CJD;
+    
     
     // hyperpriors
     m_i ~ normal( 0 , 0.5 );
@@ -1421,9 +1421,9 @@ model{
     //bAHS ~ normal( 0 , 0.3 );
 
 
-        // reduced HJ likelihood
-    mu = inv_logit( m_SI[rcid] + re_k[ruid] );
-    c_CJD ~ normal( n_CJD, mu);
+    // reduced CJD likelihood
+    m_CJD = inv_logit( m_SI[rcid] + re_k[ruid] );
+    c_CJD ~ normal( n_CJD, m_CJD);
 }
 "
 

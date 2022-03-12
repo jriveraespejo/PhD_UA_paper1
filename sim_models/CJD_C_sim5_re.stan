@@ -54,7 +54,7 @@ transformed parameters{
 }
 model{
     // to not follow
-    vector[R] mu;
+    vector[R] m_CJD;
     
     
     // hyperpriors
@@ -73,8 +73,8 @@ model{
     re_i ~ normal( m_i , s_i );
     re_k ~ normal( m_k , s_SI );
     
-    // reduced HJ likelihood
-    mu = inv_logit( m_SI[rcid] + re_k[ruid] );
-    c_CJD ~ normal( n_CJD, mu);
+    // reduced CJD likelihood
+    m_CJD = inv_logit( m_SI[rcid] + re_k[ruid] );
+    c_CJD ~ normal( n_CJD, m_CJD);
 }
 

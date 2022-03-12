@@ -33,7 +33,7 @@ parameters{
 model{
     // parameter to not follow
     vector[I] m_SI;       // SI linear predictor
-    vector[R] mu;
+    vector[R] m_CJD;
 
 
     // hyperpriors
@@ -71,8 +71,8 @@ model{
     SI ~ normal( m_SI, s_SI);
     
     
-    // reduced HJ likelihood
-    mu = inv_logit( SI[rcid] );
-    c_CJD ~ binomial( n_CJD , mu);
+    // reduced CJD likelihood
+    m_CJD = inv_logit( SI[rcid] );
+    c_CJD ~ binomial( n_CJD , m_CJD);
 }
 

@@ -1,0 +1,46 @@
+# stan_version_major = 2
+# stan_version_minor = 28
+# stan_version_patch = 1
+# model = CJD_C_sim3_model
+# start_datetime = 2022-03-11 10:01:00 UTC
+# method = sample (Default)
+#   sample
+#     num_samples = 2000
+#     num_warmup = 2000
+#     save_warmup = 0 (Default)
+#     thin = 2
+#     adapt
+#       engaged = 1 (Default)
+#       gamma = 0.050000000000000003 (Default)
+#       delta = 0.94999999999999996
+#       kappa = 0.75 (Default)
+#       t0 = 10 (Default)
+#       init_buffer = 75 (Default)
+#       term_buffer = 50 (Default)
+#       window = 25 (Default)
+#     algorithm = hmc (Default)
+#       hmc
+#         engine = nuts (Default)
+#           nuts
+#             max_depth = 20
+#         metric = diag_e (Default)
+#         metric_file =  (Default)
+#         stepsize = 1 (Default)
+#         stepsize_jitter = 0 (Default)
+#     num_chains = 1 (Default)
+# id = 4
+# data
+#   file = C:/Users/JRIVER~1/AppData/Local/Temp/RtmpIt8rtp/standata-3d747cd330ac.json
+# init = 2 (Default)
+# random
+#   seed = 1501842373
+# output
+#   file = C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper1/sim_chain/CJD_C_sim3-4.csv
+#   diagnostic_file =  (Default)
+#   refresh = 100 (Default)
+#   sig_figs = -1 (Default)
+#   profile_file = C:/Users/JRiveraEspejo/Desktop/1. Work/#Classes/PhD Antwerp/#thesis/paper1/sim_chain/CJD_C_sim3-profile-4.csv
+# num_threads = 1 (Default)
+# stanc_version = stanc3 v2.28.1
+# stancflags = --name=CJD_C_sim3_model
+lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,divergent__,energy__,a,aHS.1,aHS.2,aHS.3,bP,bA,m_i,s_i,re_i.1,re_i.2,re_i.3,re_i.4,re_i.5,re_i.6,re_i.7,re_i.8,re_i.9,re_i.10,re_i.11,re_i.12,re_i.13,re_i.14,re_i.15,re_i.16,re_i.17,re_i.18,re_i.19,re_i.20,re_i.21,re_i.22,re_i.23,re_i.24,re_i.25,re_i.26,re_i.27,re_i.28,re_i.29,re_i.30,re_i.31,re_i.32,m_j,s_j,re_j.1,re_j.2,re_j.3,re_j.4,re_j.5,re_j.6,re_j.7,re_j.8,re_j.9,re_j.10,re_j.11,re_j.12,re_j.13,re_j.14,re_j.15,re_j.16,re_j.17,re_j.18,re_j.19,re_j.20,re_j.21,re_j.22,re_j.23,re_j.24,re_j.25,re_j.26,re_j.27,re_j.28,re_j.29,re_j.30,re_j.31,re_j.32,re_j.33,re_j.34,re_j.35,re_j.36,re_j.37,re_j.38,re_j.39,re_j.40,re_j.41,re_j.42,re_j.43,re_j.44,re_j.45,re_j.46,re_j.47,re_j.48,re_j.49,re_j.50,re_j.51,re_j.52,re_j.53,re_j.54,re_j.55,re_j.56,re_j.57,re_j.58,re_j.59,re_j.60,re_j.61,re_j.62,re_j.63,re_j.64,re_j.65,re_j.66,re_j.67,re_j.68,re_j.69,re_j.70,re_j.71,re_j.72,re_j.73,re_j.74,re_j.75,re_j.76,re_j.77,re_j.78,re_j.79,re_j.80,r,s_SI.1,s_SI.2,s_SI.3,s_SI.4,s_SI.5,s_SI.6,s_SI.7,s_SI.8,s_SI.9,s_SI.10,s_SI.11,s_SI.12,s_SI.13,s_SI.14,s_SI.15,s_SI.16,s_SI.17,s_SI.18,s_SI.19,s_SI.20,s_SI.21,s_SI.22,s_SI.23,s_SI.24,s_SI.25,s_SI.26,s_SI.27,s_SI.28,s_SI.29,s_SI.30,s_SI.31,s_SI.32,SI.1,SI.2,SI.3,SI.4,SI.5,SI.6,SI.7,SI.8,SI.9,SI.10,SI.11,SI.12,SI.13,SI.14,SI.15,SI.16,SI.17,SI.18,SI.19,SI.20,SI.21,SI.22,SI.23,SI.24,SI.25,SI.26,SI.27,SI.28,SI.29,SI.30,SI.31,SI.32

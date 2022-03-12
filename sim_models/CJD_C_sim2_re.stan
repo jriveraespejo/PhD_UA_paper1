@@ -69,7 +69,7 @@ model{
     
     
     // CJD likelihood 
-    m_CJD = m_SI[cid] + re_j[jid] + re_k[uid];
+    m_CJD = ( m_SI[cid1] - m_SI[cid2] ) + re_j[jid] + re_k[uid];
     CJD ~ bernoulli( inv_logit(m_CJD) );
 }
 

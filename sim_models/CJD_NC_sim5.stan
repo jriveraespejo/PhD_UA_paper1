@@ -35,12 +35,11 @@ transformed parameters{
 
     // random effects
     re_i = m_i + s_i*z_i;
-
 }
 model{
     // parameter to not follow
     vector[I] m_SI;       // SI linear predictor
-    vector[R] mu;
+    vector[R] m_CJD;
     
     // hyperpriors
     m_i ~ normal( 0 , 0.5 );
@@ -78,8 +77,8 @@ model{
     SI ~ normal( m_SI, s_SI);
     
     
-    // reduced HJ likelihood
-    mu = inv_logit( SI[rcid] );
-    c_CJD ~ binomial( n_CJD , mu);
+    // reduced CJD likelihood
+    m_CJD = inv_logit( SI[rcid] );
+    c_CJD ~ binomial( n_CJD , m_CJD);
 }
 
