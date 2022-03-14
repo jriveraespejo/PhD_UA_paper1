@@ -75,6 +75,6 @@ model{
     
     // reduced CJD likelihood
     m_CJD = inv_logit( m_SI[rcid] + re_k[ruid] );
-    c_CJD ~ normal( n_CJD, m_CJD);
+    c_CJD ~ binomial( n_CJD , m_CJD);
 }
 

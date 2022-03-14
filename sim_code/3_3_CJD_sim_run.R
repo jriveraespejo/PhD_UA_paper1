@@ -321,7 +321,8 @@ mod$sample( data=mom$dL,
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 400-600/4000 divergent transitions
+# 400-1000/4000 divergent transitions
+# it took ages to run
 
 
 ## non-centered ####
@@ -338,7 +339,7 @@ mod$sample( data=mom$dL,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
 # 650-750/4000 divergent transitions
-
+# it took ages to run
 
 
 
@@ -419,6 +420,7 @@ mod$sample( data=mom$dL,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
 # 600-800/4000 divergent transitions
+# it took ages to run
 
 
 
@@ -436,6 +438,7 @@ mod$sample( data=mom$dL,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
 # 500-600/4000 divergent transitions
+# it took ages to run
 
 
 
@@ -492,7 +495,7 @@ mod$sample( data=mom$dL,
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 150-300/4000 divergent transitions
+# 150-250/4000 divergent transitions
 
 
 
@@ -509,7 +512,7 @@ mod$sample( data=mom$dL,
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 300-500/4000 divergent transitions
+# 550-650/4000 divergent transitions
 
 
 
@@ -566,7 +569,7 @@ mod$sample( data=mom$dL,
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95, #,init=0
             iter_warmup=2000, iter_sampling=2000, thin=2)
-# 100-200/4000 divergent transitions
+# 100-150/4000 divergent transitions
 
 
 
