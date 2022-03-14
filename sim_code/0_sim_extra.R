@@ -407,10 +407,10 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
   
   # # test
   # d=mom
-  # xdata='A'
-  # ydata='CJD'
-  # alpha=0.4
-  # os=T
+  # xdata='HS'
+  # ydata='H'
+  # alpha=0.15
+  # os=F
   # reduce=T
   
   # working data
@@ -453,9 +453,21 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     
     par(mfrow=c(2,2))
     plot(mom_plot[,c(xdata,ydata)], pch=19, col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    
     plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
-    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
-    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==2,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==3,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    
     par(mfrow=c(1,1))  
     
   } else if(xdata=='HS' | xdata=='E'){
@@ -463,6 +475,8 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     cxdata = unique(mom_plot[,c(xdata)])
     plot(mom_plot[,c(xdata,ydata)], pch=19, xaxt="n", col=col.alpha('black', alpha))
     axis(side=1, at=cxdata, labels = T)
+    coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
   }
   
 }
