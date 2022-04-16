@@ -454,19 +454,23 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     par(mfrow=c(2,2))
     plot(mom_plot[,c(xdata,ydata)], pch=19, col=col.alpha('black', alpha))
     coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
     coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$HS==2,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
     coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$HS==3,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
     coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     par(mfrow=c(1,1))  
     
@@ -476,10 +480,48 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     plot(mom_plot[,c(xdata,ydata)], pch=19, xaxt="n", col=col.alpha('black', alpha))
     axis(side=1, at=cxdata, labels = T)
     coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=1.5 )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
   }
   
 }
+
+
+
+# function:
+#     data_plots
+# description:  
+#     It plots all relevant data plots 
+# arguments:
+#     precis_object = data produced from precis() function
+#     var_str = string identifying data to plot
+#     yrange = range for y axis
+#     a = alpha for color in plot
+#
+prior_plots = function(precis_obj, var_str, yrange=c(0,1), a=0.2){
+  
+  # # test
+  # precis_obj=par_prior
+  # var_str='H'
+  # yrange=c(0,1)
+  # a=0.2
+  # precis_obj[idx,]
+  
+  # plot
+  vars_str = paste0('^',var_str, '[:punct:][:digit:]{1,2}[:punct:]')
+  idx = which( str_detect(row.names(par_prior), vars_str) )
+  plot(1:length(idx), precis_obj$mean[idx], pch=19, 
+       col=col.alpha('black',a),
+       xlab='children id', ylab=var_str, ylim=yrange)
+  for(i in 1:length(idx)){
+    lines( x=rep(i,2), y=with(precis_obj, c(`5.5%`[idx[i]],`94.5%`[idx[i]]) ),
+           col=col.alpha('black',a))
+  }
+  
+}
+
+
 
 
 

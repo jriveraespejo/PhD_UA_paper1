@@ -1,0 +1,73 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Synthetic data generation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+\begin{frame}[t, negative]
+	\subsectionpage
+\end{frame}
+%
+%
+\begin{frame}
+	{Intervention}
+	%
+	\begin{columns}
+		%
+		\begin{column}{0.5\textwidth}
+			%
+			\begin{itemize}
+				%
+				\item Purpose: to keep a control on all the factors responsible for the outcome's variation \texcolort{blue}{(understand the system)}.
+				%
+				\item It is modeled by modifying the structural model (and causal diagram).
+				%
+				\item remember: $\pmb{V}=\{Z,X,Y\}$, $\pmb{U}=\{U_{z},U_{x},U_{y}\}$, and $\pmb{F}=\{f_{z},f_{x},f_{y}\}$.
+				%
+				\item Intervention on $X$ can be written in do-calculus\footnote{we are not delving into this (the usual suspects \cite{Pearl_1988, Pearl_2009, Pearl_et_al_2016, Pearl_et_al_2018})} as: $P(\pmb{V} \; | \; do(X=x))$.
+				%
+			\end{itemize}
+			%
+		\end{column}
+		%
+		\begin{column}{0.5\textwidth}  
+			%
+			\begin{equ}
+				%
+				M = \left\{ \begin{aligned} 
+					Z \leftarrow & \; f_{z}(U_{z}) \\
+					X \leftarrow & \; f_{x}(U_{x}) \\
+					Y \leftarrow & \; f_{y}(X, Z, U_{y}) \\
+					U \sim & \; P(\pmb{U})
+				\end{aligned} \right
+				%
+				\caption*{(a) structural model}
+			\end{equ}
+			%
+			\begin{figure}
+				%
+				\begin{tikzpicture}
+					% nodes
+					\node[formula] at (-2,0) {$x$};
+					\node[formula] at (-1,-0.3) {$X$};
+					\node[formula] at (1,1.5) {$U_{z}$};
+					\node[formula] at (0,1) {$Z$};
+					\node[formula] at (2,0) {$U_{y}$};
+					\node[formula] at (1,-0.3) {$Y$};
+					
+					% paths
+					\draw [{Circle [open]}-{latex}](-1.7,0)--(-1,0); % Ux->X
+					\draw [{Circle}-{latex}](-1,0)--(0.9,0); % X->Y
+					\draw [{Circle [open]}-{latex}{Circle}](1.7,0)--(0.9,0); % Uy->Y
+					\draw [{Circle}-{latex}](0,0.8)--(0.9,0.1); % Z->Y
+					\draw [{Circle [open]}-{latex}](0.9,1.3)--(0.1,0.8); % Uz->Z
+				\end{tikzpicture}
+				\caption*{(b) causal diagram}
+			\end{figure}
+			%
+		\end{column}
+		%
+	\end{columns}
+	%
+\end{frame}
+%
+%

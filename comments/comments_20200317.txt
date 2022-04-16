@@ -1,0 +1,7 @@
+region of practical equivalence (RoPE), Kruske
+MAGIC
+
+
+Can I use it?,
+My software run on it?
+How much computer time I need it?

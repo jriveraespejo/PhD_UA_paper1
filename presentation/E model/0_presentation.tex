@@ -1,0 +1,146 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% define document
+\documentclass[aspectratio=1610]{beamer}
+\usetheme[sw]{uantwerpen}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% packages
+\usepackage[english]{babel}
+\usepackage{metalogo, kantlipsum, pgfplots, booktabs}
+\usepackage[square,numbers]{natbib}
+\usepackage[toc]{appendix}
+\usepackage{graphicx, times, caption, subcaption}
+\usepackage{amsfonts, amsmath, amssymb, listings}
+\usepackage{url, comment, csquotes, color, colortbl}
+\usepackage{tikz} 
+\usetikzlibrary{arrows.meta}
+\usepackage{fontspec} % Is necessary to access OpenType fonts
+\usepackage{lilyglyphs} % Currently there are no package options available
+%\usepackage[hidelinks]{hyperref} % issues
+%\usepackage[nottoc,notlot,notlof]{tocbibind} % issues
+%\usepackage{enumitem} % issues
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% define details
+% for code snippet
+\newcommand*\command[1]{{\tt \textbackslash #1}}
+\NewEnviron{codesnippet}[1][0.8\textwidth]{
+  \scriptsize
+  \qquad\framebox[#1][l]{\texttt{
+      \setlength\textwidth{#1}
+      \begin{minipage}{0.9\textwidth}
+        \BODY
+      \end{minipage}
+    }
+  }
+}
+\newcommand*\ind[1][2ex]{\hspace*{#1}}
+\newcommand*\bframe[1][]{\command{begin}\{#1frame\}}
+\newcommand*\eframe[1][]{\command{end}\{#1frame\}}
+%
+% for equation captions
+\DeclareCaptionType{equ}[][]
+%\captionsetup[equ]{labelformat=empty}
+%
+% for cross-reference footnotes
+\newcommand{\footnoteref}[1]{\textsuperscript{\ref{#1}}}
+%
+% graph location
+\graphicspath{{Images}}
+%
+% define color for tables and code
+\definecolor{gray}{gray}{0.95}
+\definecolor{DarkGreen}{rgb}{0.0,0.4,0.0} % Comment color
+\definecolor{highlight}{RGB}{255,251,204} % Code highlight color
+%
+% to set the style of the code
+\lstdefinestyle{Style1}{ % style for your code snippet
+	language=R, backgroundcolor=\color{highlight}, % Set the background color for the snippet - useful for highlighting
+	basicstyle=\footnotesize\ttfamily, % The default font size and style of the code
+	breakatwhitespace=false, % If true, only allows line breaks at white space
+	breaklines=true, % Automatic line breaking (prevents code from protruding outside the box)
+	captionpos=b, % Sets the caption position: b for bottom; t for top
+	commentstyle=\usefont{T1}{pcr}{m}{sl}\color{DarkGreen}, % Style of comments within the code - dark green courier font
+	deletekeywords={}, % If you want to delete any keywords from the current language separate them by commas
+	%escapeinside={\%}, % This allows you to escape to LaTeX using the character in the bracket
+	firstnumber=1, % Line numbers begin at line 1
+	frame=single, % Frame around the code box, value can be: none, leftline, topline, bottomline, lines, single, shadowbox
+	frameround=tttt, % Rounds the corners of the frame for the top left, top right, bottom left and bottom right positions
+	keywordstyle=\color{Blue}\bf, % Functions are bold and blue
+	morekeywords={}, % Add any functions no included by default here separated by commas
+	numbers=left, % Location of line numbers, can take the values of: none, left, right
+	numbersep=10pt, % Distance of line numbers from the code box
+	numberstyle=\tiny\color{Gray}, % Style used for line numbers
+	rulecolor=\color{black}, % Frame border color
+	showstringspaces=false, % Don't put marks in string spaces
+	showtabs=false, % Display tabs in the code as lines
+	stepnumber=5, % The step distance between line numbers, i.e. how often will lines be numbered
+	stringstyle=\color{Purple}, % Strings are purple
+	tabsize=2, % Number of spaces per tab in the code
+}
+%
+% command insert the code snippet 
+\newcommand{\insertcode}[2]{\begin{itemize}\item[]\lstinputlisting[caption=#2,label=#1,style=Style1]{#1}\end{itemize}} % The first argument is the script location/filename and the second is a caption for the listing
+%
+% independence symbol
+\newcommand{\dsep}[3]{#1 \perp\kern-5pt\perp #2}
+\newcommand{\ndsep}[3]{#1 \not\!\perp\!\!\!\perp #2}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% define title
+\title{Objective rating method: Entropy}
+\subtitle[tools]{Speech intelligibility estimation}
+\date[today]{\today}
+\author[josema]{Jose Rivera}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% start document
+\begin{document}
+%
+%
+\begin{frame}[negativefill]
+  \maketitle
+\end{frame}
+%
+%
+\begin{frame}
+  {What are we going to talk about?}
+  \tableofcontents
+\end{frame}
+%
+%
+% imputs
+\input 1_preliminars
+\input 2_process_model
+\input 3_synthetic_data
+%\input 4_model_design
+%\input 5_model2data
+%\input 6_conclusion
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% blibliography
+\newpage
+\section{References}
+%
+%
+\begin{frame}[negative]
+	\sectionpage
+\end{frame}
+%
+%
+\begin{frame}
+	\sectionpage
+\end{frame}
+%
+%
+\bibliography{{../bib/bibliography}}
+\bibliographystyle{dcu}
+%
+%
+\end{document}
+\endinput
