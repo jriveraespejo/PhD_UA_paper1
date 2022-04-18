@@ -66,13 +66,17 @@ source( file.path( getwd(), 'sim_code', '0_sim_extra.R') )
 Esim = function(sim_name=NULL, # file_name need to include '.RData'
                 sim_save=NULL, # file_save need to include getwd()
                 seed=NULL, # seed
-                I=400, # experimental units (children)
+                I=350, # experimental units (children)
                 K=10, # replicates (utterances)
                 p=c(0.50, 0.175, 0.325), # children prop. on each group
                 par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-                          s_SI=0.3, # within variability of SI
                           m_M=10, s_M=NULL, # generation of df (M)
-                          a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) ){
+                          a=0, 
+                          aE=c(0.1,0,-0.1,-0.2), 
+                          aHS=c(0.4,0,-0.4), 
+                          bP=-0.1, 
+                          bA=0.15, 
+                          bAHS=rep(0,3) ) ){
   
   # # test
   # sim_name=NULL # file_name need to include '.RData'
@@ -82,11 +86,13 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
   # K = 10 # replicates (utterances)
   # p=c(0.36, 0.32, 0.32) # children prop. on each group
   # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-  #           s_SI=0.3, # within variability of SI
-  #           m_M=10, s_M=NULL, # hyperprior generation of df (M)
-  #           a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 )
-  # #         m_M=1.5, s_M=0.5
-  # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
+  #           m_M=10, s_M=NULL, # generation of df (M)
+  #           a=0, 
+  #           aE=rep(0,4), 
+  #           aHS=c(0.4,0,-0.4), 
+  #           bP=-0.1, 
+  #           bA=0.15, 
+  #           bAHS=rep(0,3) )
 
   
   
@@ -129,16 +135,16 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
     set.seed(seed-1)  
   }
   par$re_i = rnorm(I, par$m_i, par$s_i)
-  dT$re_i = par$re_i # children's random effects
+  dT$re_i = par$re_i # children's random effects (between SI var.)
   
   
   # linear predictor / SI index
-  dT$m_SI = with(dT, re_i + par$a + par$aE*E + par$aHS*HS +
-                   par$bA*(A - min(A)) +
-                   par$bAHS*(A - min(A))*HS + 
-                   par$bP * c( standardize(PTA) ) )
-  dT$SI = rnorm(I, dT$m_SI, par$s_SI) # speech intelligibility
+  dT$SI = with(dT, re_i + par$a + par$aE[E] + par$aHS[HS] +
+                 par$bA*(A - min(A)) +
+                 par$bAHS[HS]*(A - min(A)) + 
+                 par$bP*c( standardize(PTA) ) )
   
+  # true entropy
   dT$Ht = inv_logit(-dT$SI) # true entropy (SI -> Ht: negative)
   
   
@@ -352,16 +358,8 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                   I_grid, # experimental units (children) 
                   K_grid, # replicates (utterances)
                   par_int, # parameter to analyze power
-                  p=c(0.36, 0.32, 0.32), # children prop. on each group
-                  par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-                            m_M=10, s_M=NULL, # hyperprior generation of df (M)
-                            a=0, # test only intercept model
-                            aE=0, # test par with 4 levels, and 6 contrasts 
-                            aHS=0, # test par with 3 levels, and 3 contrasts 
-                            bP=0, # continuous (standardized) variable
-                            bA=0, # continuous (integer) variable
-                            bAHS=0) ){ # continuous interaction (goes together with bA)
-  
+                  p=c(0.34, 0.33, 0.33) ){ # children prop. on each group
+
   
   # # test
   # power_save=file.path(getwd(), 'sim_chain') # power result dir need to include getwd()
@@ -371,21 +369,11 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
   # model_in=file.path(getwd(), 'sim_models') # location load models
   # model_out=file.path(getwd(), 'sim_chain') # location to save results
   # seed=NULL # seed
-  # Nsim=10 # number of simulation for power
+  # Nsim=100 # number of simulation for power
   # par_int=c('aHS','bP','bA','m_i','s_i','m_M','SI') # parameter to analyze power
-  # I_grid = c(40, 50) # experimental units (children)
-  # K_grid = c(10, 15, 20) # replicates (utterances)
-  # p=c(0.38, 0.31, 0.31) # children prop. on each group
-  # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-  #           m_M=10, s_M=NULL, # hyperprior generation of df (M)
-  #           a=0, # test only intercept model
-  #           aE=0, # test par with 4 levels, and 6 contrasts
-  #           aHS=-0.5, # test par with 3 levels, and 3 contrasts
-  #           bP=-0.3, # continuous (standardized) variable
-  #           bA=0.15, # continuous (integer) variable
-  #           bAHS=0) # continuous interaction (goes together with bA)
-  # #         m_M=1.5, s_M=0.5
-  # #         a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0
+  # I_grid = c(48, 60) # experimental units (children)
+  # K_grid = c(10, 20) # replicates (utterances)
+  # p=c(0.34, 0.33, 0.33) # children prop. on each group
   
   
   # expand grid
@@ -411,10 +399,18 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
     # 1. model compilation ####
     mod = cmdstan_model( file.path(model_in, paste0(model_name, '.stan') ) )
     
+    # 2. estimated parameters ####
+    model_fit = file_id(model_out, model_name) 
+    res = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+    post = extract.samples( res )
+    pidx = sample( 1:nrow(post$a), Nsim ) # sample of parameters
+    # str(post)
+    
+        
     nsim = 1
     while(nsim <= Nsim){
       
-      # 2. data simulation ####
+      # 3. data simulation ####
       if( is.null(seed) ){
         seed1 = sample(1:500, 1)
         seed1 = seed1 + nsim*sample(1:100, 1)
@@ -425,33 +421,52 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                    seed=seed1, 
                    I=par_grid[l,1], 
                    K=par_grid[l,2], 
-                   p=p, par=par )  
+                   p=p, 
+                   par=list( m_i=post$m_i[pidx[nsim]], 
+                             s_i=post$s_i[pidx[nsim]],
+                             m_M=post$m_M[pidx[nsim]], 
+                             s_M=NULL,
+                             a=post$a[pidx[nsim]], 
+                             aE=rep(0,4), 
+                             aHS=post$aHS[pidx[nsim],], 
+                             bP=post$bP[pidx[nsim]], 
+                             bA=post$bA[pidx[nsim]], 
+                             bAHS=rep(0,3) ) )  
       } else{
         Esim(sim_name=sim_name, 
              sim_save=sim_save, 
              seed=seed1, 
              I=par_grid[l,1],
              K=par_grid[l,2], 
-             p=p, par=par )
+             p=p, 
+             par=list( m_i=post$m_i[pidx[nsim]], 
+                       s_i=post$s_i[pidx[nsim]],
+                       m_M=post$m_M[pidx[nsim]], 
+                       s_M=NULL,
+                       a=post$a[pidx[nsim]], 
+                       aE=rep(0,4), 
+                       aHS=post$aHS[pidx[nsim],], 
+                       bP=post$bP[pidx[nsim]], 
+                       bA=post$bA[pidx[nsim]], 
+                       bAHS=rep(0,3) ) )
         load( file.path(sim_save, sim_name) )
       }
       
       
-      # 3. model running ####
+      # 4. model running ####
       mod$sample( data=mom$dL, 
                   output_dir=model_out, 
                   output_basename = str_replace(model_name, '.stan', ''),
                   chains=4, parallel_chains=4,
                   show_messages=F)
-      #init=0, 
-      # adapt_delta=0.95) 
+      
       
       # load model results
       model_fit = file_id(model_out, model_name)
       res = rstan::read_stan_csv( file.path( model_out, model_fit ) )
       
       
-      # 4. true parameter comparison ####
+      # 5. true parameter comparison ####
       # extract par_true
       par_true = data_detect_par(d=mom, par_int=par_int)
       # length(par_true)
@@ -465,7 +480,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
       names(par_true) = row.names(par_recovery)
       
       
-      # 5. contrast comparison ####
+      # 6. contrast comparison ####
       
       # true contrasts
       par_extra = which( par_int %in% c('aHS','aE','bAHS') )
@@ -499,7 +514,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                                         true_diff = diff_true)
       
       
-      # 6. storage simulations ####
+      # 7. storage simulations ####
       par_mom = par_recovery[,c('true','mean','in_CI','diff_0','RMSE')]
       par_mom = rbind(par_mom,
                       cont_recovery[,c('true','mean','in_CI','diff_0','RMSE')])

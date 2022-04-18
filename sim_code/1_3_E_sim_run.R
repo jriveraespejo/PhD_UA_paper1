@@ -56,9 +56,13 @@ Esim(sim_name='Hbeta_sim1.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.34, 0.33, 0.33), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
                m_M=10, s_M=NULL, # generation of df (M)
-               a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 ) )
+               a=0, 
+               aE=rep(0,4), 
+               aHS=rep(0,3), 
+               bP=0, 
+               bA=0, 
+               bAHS=rep(0,3) ) )
 
 
 data_nam = 'Hbeta_sim1.RData'
@@ -90,9 +94,13 @@ Esim(sim_name='Hbeta_sim1.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.428,0.20,0.372), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
                m_M=10, s_M=NULL, # generation of df (M)
-               a=0, aE=0, aHS=0, bP=0, bA=0, bAHS=0 ) )
+               a=0, 
+               aE=rep(0,4), 
+               aHS=rep(0,3), 
+               bP=0, 
+               bA=0, 
+               bAHS=rep(0,3) ) )
 
 
 # loading data
@@ -172,9 +180,13 @@ Esim(sim_name='Hbeta_sim2.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.34, 0.33, 0.33), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
                m_M=10, s_M=NULL, # generation of df (M)
-               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
+               a=0, 
+               aE=rep(0,4), 
+               aHS=c(0.4,0,-0.4), 
+               bP=-0.1, 
+               bA=0.15, 
+               bAHS=rep(0,3) ) )
 
 
 data_nam = 'Hbeta_sim2.RData'
@@ -206,9 +218,13 @@ Esim(sim_name='Hbeta_sim2.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.428,0.20,0.372), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
                m_M=10, s_M=NULL, # generation of df (M)
-               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
+               a=0, 
+               aE=rep(0,4), 
+               aHS=c(0.4,0,-0.4), 
+               bP=-0.1, 
+               bA=0.15, 
+               bAHS=rep(0,3) ) )
 
 
 # loading data
@@ -229,7 +245,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95) #,init=0
-# YES divergent transitions: 0-50 of 4000
+# NO divergent transitions
 
 
 ## non centered ####
@@ -287,9 +303,13 @@ Esim(sim_name='Hbeta_sim3.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.34, 0.33, 0.33), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
-               m_M=10, s_M=NULL, # generation of df (M)
-               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
+               m_M=1.5, s_M=0.5, # generation of df (M)
+               a=0, 
+               aE=rep(0,4), 
+               aHS=c(0.4,0,-0.4), 
+               bP=-0.1, 
+               bA=0.15, 
+               bAHS=rep(0,3) ) )
 
 
 data_nam = 'Hbeta_sim3.RData'
@@ -320,9 +340,13 @@ Esim(sim_name='Hbeta_sim3.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.428,0.20,0.372), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
                m_M=1.5, s_M=0.5, # generation of df (M)
-               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=0 ) )
+               a=0, 
+               aE=rep(0,4), 
+               aHS=c(0.4,0,-0.4), 
+               bP=-0.1, 
+               bA=0.15, 
+               bAHS=rep(0,3) ) )
 
 
 # loading data
@@ -343,7 +367,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95) #,init=0
-# YES divergent transitions: 17-400 of 4000
+# NO divergent transitions
 
 
 ## non-centered ####
@@ -429,7 +453,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95) #,init=0
-# YES divergent transitions: 29-450 of 4000
+# NO divergent transitions
 
 
 ## non-centered ####
@@ -489,9 +513,13 @@ Esim(sim_name='Hbeta_sim5.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.34, 0.33, 0.33), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
-               m_M=10, s_M=NULL, # generation of df (M)
-               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
+               m_M=1.5, s_M=0.5, # generation of df (M)
+               a=0, 
+               aE=rep(0,4), 
+               aHS=c(0.4,0,-0.4), 
+               bP=-0.1, 
+               bA=0.15, 
+               bAHS=c(0.05,0,-0.05) ) )
 
 
 data_nam = 'Hbeta_sim5.RData'
@@ -524,9 +552,13 @@ Esim(sim_name='Hbeta_sim5.RData', # file_name need to include '.RData'
      K=10, # replicates (utterances)
      p=c(0.428,0.20,0.372), # children prop. on each group
      par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
-               s_SI=0.3, # within variability of SI
                m_M=1.5, s_M=0.5, # generation of df (M)
-               a=0, aE=-0.1, aHS=-0.4, bP=-0.1, bA=0.15, bAHS=-0.05 ) )
+               a=0, 
+               aE=rep(0,4), 
+               aHS=c(0.4,0,-0.4), 
+               bP=-0.1, 
+               bA=0.15, 
+               bAHS=c(0.05,0,-0.05) ) )
 
 
 # loading data
@@ -547,7 +579,7 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95) #,init=0
-# YES divergent transitions: 150-450 of 4000
+# NO divergent transitions
 
 
 ## non-centered no cor ####

@@ -37,11 +37,11 @@ par_prior = precis(res_prior, depth=2)
 
 
 # plots
-par(mfrow=c(2,2))
+layout(matrix(c(1,2,3,3), 2, 2, byrow=T), 
+       widths=c(1,1), heights=c(1,1))
 prior_plots(precis_obj=par_prior, var_str='SI', yrange=c(-3,3))
 prior_plots(precis_obj=par_prior, var_str='Ht', yrange=c(0,1))
 prior_plots(precis_obj=par_prior, var_str='H', yrange=c(0,1))
-par(mfrow=c(1,1))
 
 
 
@@ -52,7 +52,7 @@ load( model_data )
 # mom
 
 
-## plotting data ####
+# plotting data
 data_plots(d=mom, xdata='A', ydata='H', alpha=0.05, os=F)
 data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.05, os=F)
 data_plots(d=mom, xdata='HS', ydata='H', alpha=0.05, os=F)
@@ -60,10 +60,11 @@ data_plots(d=mom, xdata='E', ydata='H', alpha=0.05, os=F)
 # no relationship
 
 
-## parameters ####
-par_est = c('a','m_i','s_i','re_i','SI','s_SI','Ht')
+# parameters 
+par_est = c('a','m_i','s_i','re_i','SI','Ht')
 par_true = data_detect_par(d=mom, par_int=par_est)
 data_true = with(mom$dL, data.frame(H=H, child=cid))
+
 
 
 
@@ -80,24 +81,24 @@ par_recovery_C = parameter_recovery( stan_object = res_C,
                                    true_par = par_true)
 par_recovery_C
 # View(par_recovery_C)
-# bad samples for a, m_i, but good for s_i, 
-# re_i and Ht are good
+# bad samples for a, m_i, re_i, but ggod for s_i
+# SI and Ht are good
 
 sum(par_recovery_C$in_CI)/nrow(par_recovery_C)
-# 92.2% true parameters inside CI
+# 91.5% true parameters inside CI
 
 sum(par_recovery_C$diff_0)/nrow(par_recovery_C)
-# 60.2% true parameters reject Ho: bX=0
+# 63.7% true parameters reject Ho: bX=0
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for re_i[140] (not the most extreme)
-# way under estimated
-# with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
+# maximum RMSE is for SI[140] (not the most extreme)
+# underestimated
+# with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
 
 
 # recovery plot
 recovery_plots(par_object=par_recovery_C, cont_object=NULL)
-# still not bad recovery
+# still not bad recovery of SI and Ht
 
 
 # triplot
@@ -106,14 +107,15 @@ tri_plot(stan_object=res_C, pars=c('a'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
-# good convergence only for SI, Ht, s_i
-# good mixing only for SI, Ht, s_i
-# lack of autocorrelation only for SI, Ht, s_i
+# good convergence only for s_i, re_i, SI, Ht
+# good mixing only for s_i, SI, Ht
+# lack of autocorrelation only for s_i, SI, Ht
 
 
 # distributional plots
 distH_plot( stan_object=res_C, true_data=data_true, 
-           par_object=par_recovery_C, M=10)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=10)
 # well enough capture of the data
 
 
@@ -136,14 +138,14 @@ par_recovery_NC
 # re_i and Ht better than centered model
 
 sum(par_recovery_NC$in_CI)/nrow(par_recovery_NC)
-# 92.1% true parameters inside CI
+# 91.5% true parameters inside CI
 
 sum(par_recovery_NC$diff_0)/nrow(par_recovery_C)
-# 62% true parameters reject Ho: bX=0
+# 63.8% true parameters reject Ho: bX=0
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for re_i[140] (not the most extreme)
-# way underestimated
+# maximum RMSE is for SI[140] (not the most extreme)
+# underestimated
 # with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
 
@@ -165,7 +167,8 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_NC, true_data=data_true, 
-           par_object=par_recovery_NC, M=10)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=10)
 # great recovery of data
 
 
@@ -218,11 +221,13 @@ par_prior = precis(res_prior, depth=2)
 
 
 # plots
-par(mfrow=c(2,2))
+# pdf("prior_predictive.pdf")
+layout(matrix(c(1,2,3,3), 2, 2, byrow=T), 
+       widths=c(1,1), heights=c(1,1))
 prior_plots(precis_obj=par_prior, var_str='SI', yrange=c(-3,3))
 prior_plots(precis_obj=par_prior, var_str='Ht', yrange=c(0,1))
 prior_plots(precis_obj=par_prior, var_str='H', yrange=c(0,1))
-par(mfrow=c(1,1))
+# dev.off()
 
 
 
@@ -233,7 +238,7 @@ load( model_data )
 # mom
 
 
-## plotting data ####
+# plotting data
 data_plots(d=mom, xdata='A', ydata='H', alpha=0.05, os=F)
 data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.05, os=F)
 data_plots(d=mom, xdata='HS', ydata='H', alpha=0.05, os=F)
@@ -242,7 +247,7 @@ data_plots(d=mom, xdata='E', ydata='H', alpha=0.05, os=F)
 
 
 
-## parameters ####
+# parameters
 par_est = c('aHS','a','bP','bA','m_i','s_i','m_M','re_i','SI','Ht')
 par_true = data_detect_par(d=mom, par_int = par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
@@ -285,6 +290,7 @@ data_true = with(mom$dL, data.frame(H=H, child=cid))
 # p
 # # intercept -> non-significant
 # # PTA -> significant (if you do not use E)
+
 
 
 
@@ -337,7 +343,7 @@ recovery_plots(par_object=par_recovery_C, cont_object=cont_recovery_C)
 
 
 # triplot
-tri_plot(stan_object=res_C, pars=c('m_i','s_i'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_M'))
 tri_plot(stan_object=res_C, pars=c( 'a', paste0('aHS[',1:3,']'), 'bP', 'bA'))
 tri_plot(stan_object=res_C, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_C, pars=paste0('SI[', 1:5,']') )
@@ -350,7 +356,8 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_C, true_data=data_true, 
-           par_object=par_recovery_C, M=10)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=10)
 # captures well the data
 
 
@@ -402,7 +409,7 @@ recovery_plots(par_object=par_recovery_NC, cont_object=cont_recovery_NC)
 
 
 # triplot
-tri_plot(stan_object=res_NC, pars=c('m_i','s_i'))
+tri_plot(stan_object=res_C, pars=c('m_i','s_i','m_M'))
 tri_plot(stan_object=res_NC, pars=c( 'a',paste0('aHS[',1:3,']'), 'bP', 'bA' ))
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
@@ -414,12 +421,13 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_NC, true_data=data_true, 
-           par_object=par_recovery_NC, M=10)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=10)
 # still captures the data
 
 
 # chain stats
-stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i') )
+stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_M') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
@@ -458,6 +466,23 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
 #   PTA range, L=low, M1<M2=mid, H=high
 #
+## prior ####
+model_nam = "Hbeta_C_sim3_prior"
+model_out = file.path(getwd(), 'sim_chain')
+model_fit = file_id(model_out, model_nam) 
+res_prior = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+par_prior = precis(res_prior, depth=2)
+
+
+# plots
+layout(matrix(c(1,2,3,3), 2, 2, byrow=T), 
+       widths=c(1,1), heights=c(1,1))
+prior_plots(precis_obj=par_prior, var_str='SI', yrange=c(-3,3))
+prior_plots(precis_obj=par_prior, var_str='Ht', yrange=c(0,1))
+prior_plots(precis_obj=par_prior, var_str='H', yrange=c(0,1))
+
+
+
 ## data ####
 data_nam = "Hbeta_sim3"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
@@ -465,7 +490,7 @@ load( model_data )
 # mom
 
 
-## plotting data ####
+# plotting data
 data_plots(d=mom, xdata='A', ydata='H', alpha=0.15, os=F)
 data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.15, os=F)
 data_plots(d=mom, xdata='HS', ydata='H', alpha=0.15, os=F)
@@ -473,7 +498,7 @@ data_plots(d=mom, xdata='E', ydata='H', alpha=0.15, os=F)
 # notice relationship
 
 
-## parameters ####
+# parameters
 par_est = c('aHS','a','bP','bA','m_i','s_i','m_M','s_M','re_i','M','SI','Ht')
 par_true = data_detect_par(d=mom, par_int = par_est)
 diff_true = mom$dS$par$aHS * c(1:2,1)
@@ -542,7 +567,8 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_C, true_data=data_true, 
-           par_object=par_recovery_C, M=NULL)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=NULL)
 # seems it overfits the data
 
 
@@ -608,7 +634,8 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_NC, true_data=data_true, 
-           par_object=par_recovery_NC, M=NULL)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=NULL)
 # it might overfit the data
 
 
@@ -634,6 +661,23 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 # Outcome = no known process behind (no known M)
 # Covariates: not modeled
 #
+## prior ####
+model_nam = "Hbeta_C_sim4_prior"
+model_out = file.path(getwd(), 'sim_chain')
+model_fit = file_id(model_out, model_nam) 
+res_prior = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+par_prior = precis(res_prior, depth=2)
+
+
+# plots
+layout(matrix(c(1,2,3,3), 2, 2, byrow=T), 
+       widths=c(1,1), heights=c(1,1))
+prior_plots(precis_obj=par_prior, var_str='SI', yrange=c(-3,3))
+prior_plots(precis_obj=par_prior, var_str='Ht', yrange=c(0,1))
+prior_plots(precis_obj=par_prior, var_str='H', yrange=c(0,1))
+
+
+
 ## data ####
 data_nam = "Hbeta_sim4"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
@@ -641,8 +685,9 @@ load( model_data )
 # mom
 
 
-## parameters ####
+# parameters
 data_true = with(mom$dL, data.frame(H=H, child=cid))
+
 
 
 ## centered ####
@@ -680,7 +725,8 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_C, true_data=data_true, 
-           par_object=par_recovery_C, M=NULL)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=NULL)
 # some children have a more uniform distribution
 
 
@@ -718,7 +764,8 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_NC, true_data=data_true, 
-           par_object=par_recovery_NC, M=NULL)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=NULL)
 # same as previous
 
 
@@ -765,8 +812,26 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 #
 #   ideally is non-linear
 #   SI[PTA=L] > SI[PTA=H] > SI[PTA=M1|M2]
-#   PTA range, L=low, M1<M2=mid, H=high
+#   PTArange, L=low, M1<M2=mid, H=high
 #
+## prior ####
+model_nam = "Hbeta_C_sim5_nocor_prior"
+model_out = file.path(getwd(), 'sim_chain')
+model_fit = file_id(model_out, model_nam) 
+res_prior = rstan::read_stan_csv( file.path( model_out, model_fit ) )
+par_prior = precis(res_prior, depth=2)
+
+
+# plots
+layout(matrix(c(1,2,3,3), 2, 2, byrow=T), 
+       widths=c(1,1), heights=c(1,1))
+prior_plots(precis_obj=par_prior, var_str='SI', yrange=c(-3,3))
+prior_plots(precis_obj=par_prior, var_str='Ht', yrange=c(0,1))
+prior_plots(precis_obj=par_prior, var_str='H', yrange=c(0,1))
+
+
+
+
 ## data ####
 data_nam = "Hbeta_sim5"
 model_data = file.path(getwd(), 'sim_data', paste0( data_nam, '.RData') )
@@ -774,7 +839,7 @@ load( model_data )
 # mom
 
 
-## plotting data ####
+# plotting data
 data_plots(d=mom, xdata='A', ydata='H', alpha=0.15, os=F)
 data_plots(d=mom, xdata='PTA', ydata='H', alpha=0.15, os=F)
 data_plots(d=mom, xdata='HS', ydata='H', alpha=0.15, os=F)
@@ -783,11 +848,12 @@ data_plots(d=mom, xdata='E', ydata='H', alpha=0.15, os=F)
 
 
 
-## parameters ####
+# parameters
 par_est = c('aHS','bAHS','a','bP','m_i','s_i','m_M','s_M','re_i','M','SI','Ht')
 par_true = data_detect_par(d=mom, par_int = par_est)
 diff_true = with(mom$dS$par, c( aHS*c(1:2,1), bAHS*c(1:2,1) ) )
 data_true = with(mom$dL, data.frame(H=H, child=cid))
+
 
 
 ## centered no cor ####
@@ -853,7 +919,8 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 
 # distributional plots
 distH_plot( stan_object=res_C, true_data=data_true, 
-           par_object=par_recovery_C, M=NULL)
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=NULL)
 # captures well the data
 
 
@@ -919,8 +986,9 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 
 
 # distributional plots
-distH_plot( stan_object=res_NC, true_data=data_true, 
-           par_object=par_recovery_NC, M=NULL)
+distH_plot( stan_object=res_C, true_data=data_true, 
+            csize=6, rplot=c(3,2),
+            par_object=par_recovery_C, M=NULL)
 # captures well the data
 
 

@@ -38,7 +38,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    real<lower=0> s_SI;   // variability of SI
 }
 model{
     // hyperpriors
@@ -48,16 +47,13 @@ model{
     // priors
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
-    s_SI ~ exponential( 2 );
 }
 generated quantities {
-    vector[I] m_SI;               // mean SI index (per child)
     vector[I] SI;                 // SI index
     vector[I] Ht;                 // average entropy (per child)
     vector[N] H;                  // replicated entropies
     
-    m_SI = a + re_i;              // linear predictor
-    SI = to_vector( normal_rng(m_SI, s_SI) );  // SI index
+    SI = a + re_i;                // linear predictor
     Ht = inv_logit(-SI);          // average entropy (SI -> Ht: negative)
     
     // likelihood
@@ -91,15 +87,15 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    vector[I] SI;         // SI index
-    real<lower=0> s_SI;   // variability of SI
 }
 transformed parameters{
+    vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
+
+    SI = a + re_i;        // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
-    vector[I] m_SI;       // mean SI index (per child)
 
     // hyperpriors
     m_i ~ normal( 0 , 0.2 );
@@ -108,12 +104,8 @@ model{
     // priors
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
-    s_SI ~ exponential( 2 );
     
     // likelihood
-    m_SI = a + re_i;          // linear predictor
-    SI ~ normal(m_SI, s_SI);  // SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
     }
@@ -142,18 +134,14 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // non-centered random interpcepts
-    vector[I] z_SI;       // non-centered SI index
-    real<lower=0> s_SI;   // variability of SI
 }
 transformed parameters{
     vector[I] re_i;       // random intercepts (per child)
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index
     vector[I] Ht;         // true entropy (per child)
 
     re_i = m_i + s_i*z_re;// non-centered RE
-    m_SI = a + re_i;      // linear predictor
-    SI = m_SI + s_SI*z_SI;// non-centered SI
+    SI = a + re_i;        // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
@@ -165,11 +153,8 @@ model{
     // priors
     a ~ normal( 0 , 0.2 );
     z_re ~ std_normal();
-    s_SI ~ exponential( 2 );
-    
-    // likelihood
-    z_SI ~ std_normal();      // non-centered SI index
 
+    // likelihood
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , 10 );
     }
@@ -236,7 +221,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    real<lower=0> s_SI;   // variability of SI
     real<lower=0> m_M;    // dfs beta
 }
 model{
@@ -252,24 +236,21 @@ model{
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );
-    s_SI ~ exponential( 2 );
 }
 generated quantities {
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     vector[N] H;          // replicated entropies
 
     // linear predictor
     for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
-    SI = to_vector( normal_rng(m_SI, s_SI) );  // SI
-    
+
     // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);
     
@@ -312,16 +293,25 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    vector[I] SI;         // SI index
-    real<lower=0> s_SI;   // variability of SI
     real<lower=0> m_M;    // dfs beta
 }
 transformed parameters{
+    vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
+
+    // linear predictor
+    for(i in 1:I){
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // multicollinearity between E and HS
+    }
+
+    // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
-    vector[I] m_SI;       // mean SI index (per child)
     
     // hyperpriors
     m_i ~ normal( 0 , 0.2 );
@@ -335,18 +325,8 @@ model{
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );
-    s_SI ~ exponential( 2 );
-    
+
     // likelihood
-    for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS
-      
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
-    }
-    SI ~ normal(m_SI, s_SI);  // SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , m_M );
     }
@@ -384,13 +364,10 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercepts (per child) non-centered
-    vector[I] z_SI;       // SI index
-    real<lower=0> s_SI;   // variability of SI
     real<lower=0> m_M;    // df beta
 }
 transformed parameters{
     vector[I] re_i;       // random intercept (per child)
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
@@ -398,14 +375,12 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
-    SI = m_SI + s_SI*z_SI;// non-centered SI
-
     
     // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);  
@@ -423,11 +398,8 @@ model{
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );
-    s_SI ~ exponential( 2 );
-    
+
     // likelihood
-    z_SI ~ std_normal();      // non-centered SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , m_M );
     }
@@ -494,7 +466,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     real<lower=0> M[I];   // df (per child)
@@ -514,24 +485,21 @@ model{
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
-    s_SI ~ exponential( 2 );
 }
 generated quantities {
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index
     vector[I] Ht;         // true entropy (per child)
     vector[N] H;          // replicated entropies
 
     // linear predictor
     for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
-    SI = to_vector( normal_rng(m_SI, s_SI) );  // SI
-    
+
     // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);
     
@@ -575,19 +543,27 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    vector[I] SI;         // SI index
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     real<lower=0> M[I];   // df (per child)
 }
 transformed parameters{
+    vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
-    Ht = inv_logit(-SI); // average entropy (SI -> Ht: negative)  
+
+    // linear predictor
+    for(i in 1:I){
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // multicollinearity between E and HS
+    }
+
+    // average entropy (SI -> Ht: negative)
+    Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)  
 }
 model{
-    vector[I] m_SI;       // mean SI index (per child)
-
     // hyperpriors
     m_i ~ normal( 0 , 0.2 );
     s_i ~ exponential( 1 );
@@ -602,18 +578,8 @@ model{
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
-    s_SI ~ exponential( 2 );
-    
+
     // likelihood
-    for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS
-      
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
-    }
-    SI ~ normal(m_SI, s_SI);  // SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
     }
@@ -652,8 +618,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercept (per child) noncentered
-    vector[I] z_SI;       // SI index
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     vector[I] z_M;        // noncentered df (per child)
@@ -661,7 +625,6 @@ parameters{
 transformed parameters{
     vector[I] re_i;       // intercept (per child)
     vector[I] M;          // df (per child)
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
@@ -671,14 +634,13 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
-    SI = m_SI + s_SI*z_SI;// non-centered SI
-    
+
     // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);  
 }
@@ -697,11 +659,8 @@ model{
     aHS ~ normal( 0 , 0.5 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
-    s_SI ~ exponential( 2 );
-    
+
     // likelihood
-    z_SI ~ std_normal();      // non-centered SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
     }
@@ -736,7 +695,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercept
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     real<lower=0> M[I];   // df (per child)
@@ -752,16 +710,13 @@ model{
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
-    s_SI ~ exponential( 2 );
 }
 generated quantities {
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index
     vector[I] Ht;         // true entropy (per child)
     vector[N] H;          // replicated entropies
     
-    m_SI = a + re_i;      // linear predictor
-    SI = to_vector( normal_rng(m_SI, s_SI) );  // SI index
+    SI = a + re_i;        // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 
     // likelihood
@@ -793,19 +748,18 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercept
-    vector[I] SI;         // SI index
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     real<lower=0> M[I];   // df (per child)
 }
 transformed parameters{
+    vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
+
+    SI = a + re_i;        // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
-    vector[I] m_SI;       // mean SI index (per child)
-
     // hyperpriors
     m_i ~ normal( 0 , 0.2 );
     s_i ~ exponential( 1 );
@@ -816,12 +770,8 @@ model{
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
-    s_SI ~ exponential( 2 );
 
     // likelihood
-    m_SI = a + re_i;          // linear predictor
-    SI ~ normal(m_SI, s_SI);  // SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
     }
@@ -850,8 +800,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercepts (per child) noncentered
-    vector[I] z_SI;       // SI index
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     vector[I] z_M;        // noncentered df (per child)
@@ -859,7 +807,6 @@ parameters{
 transformed parameters{
     vector[I] re_i;       // random intercepts (per child)
     vector[I] M;          // df (per child)
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     
@@ -868,8 +815,7 @@ transformed parameters{
     re_i = m_i + s_i*z_re;
     M = exp( m_M + s_M*z_M );
     
-    m_SI = a + re_i;      // linear predictor
-    SI = m_SI + s_SI*z_SI;// non-centered SI
+    SI = a + re_i;        // linear predictor
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)
 }
 model{
@@ -883,11 +829,8 @@ model{
     a ~ normal( 0 , 0.2 );
     z_re ~ std_normal();
     z_M ~ std_normal();
-    s_SI ~ exponential( 2 );
-    
+
     // likelihood
-    z_SI ~ std_normal();      // non-centered SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
     }
@@ -897,6 +840,7 @@ model{
 # saving
 model_nam = "Hbeta_NC_sim4.stan"
 writeLines(mcmc_code, con=file.path(getwd(), 'sim_models', model_nam) )
+
 
 
 
@@ -956,7 +900,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     real<lower=0> M[I];   // df (per child)
@@ -977,27 +920,24 @@ model{
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
     bAHS ~ normal( 0 , 0.3 );
-    s_SI ~ exponential( 2 );
 }
 generated quantities {
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index
     vector[I] Ht;         // true entropy (per child)
     vector[N] H;          // replicated entropies
 
     // linear predictor
     for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // when no interaction
     }
-    SI = to_vector( normal_rng(m_SI, s_SI) );  // SI index
-    
+
     // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);
     
@@ -1040,19 +980,30 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    vector[I] SI;         // SI index
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     real<lower=0> M[I];   // df (per child)
 }
 transformed parameters{
+    vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
+
+    // linear predictor
+    for(i in 1:I){
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // no multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      // multicollinearity between E and HS
+      
+      //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      // when no interaction
+    }
+
+    // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);  // average entropy (SI -> Ht: negative)  
 }
 model{
-    vector[I] m_SI;       // mean SI index (per child)
-
     // simple hyperpriors
     m_i ~ normal( 0 , 0.2 );
     s_i ~ exponential( 1 );
@@ -1068,21 +1019,8 @@ model{
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
     bAHS ~ normal( 0 , 0.3 );
-    s_SI ~ exponential( 2 );
     
     // likelihood
-    for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS
-      
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
-      
-      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // when no interaction
-    }
-    SI ~ normal(m_SI, s_SI);  // SI index
-
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
     }
@@ -1122,8 +1060,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] z_re;       // random intercept (per child) noncentered
-    vector[I] z_SI;       // SI index
-    real<lower=0> s_SI;   // variability of SI
     real m_M;             // mean of df
     real<lower=0> s_M;    // variability of df
     vector[I] z_M;        // noncentered df (per child)
@@ -1131,7 +1067,6 @@ parameters{
 transformed parameters{
     vector[I] re_i;       // intercept (per child)
     vector[I] M;          // df (per child)
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index (per child)    
     vector[I] Ht;         // true entropy (per child)
     
@@ -1141,17 +1076,16 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bAHS[HS[i]]*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // when no interaction
     }
-    SI = m_SI + s_SI*z_SI;// non-centered SI
-    
+
     // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);  
 }
@@ -1171,11 +1105,8 @@ model{
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
     bAHS ~ normal( 0 , 0.3 );
-    s_SI ~ exponential( 2 );
-    
+
     // likelihood
-    z_SI ~ std_normal();      // non-centered SI index
-    
     for(n in 1:N){
       H[n] ~ beta_proportion( Ht[cid[n]] , M[cid[n]] );
     }

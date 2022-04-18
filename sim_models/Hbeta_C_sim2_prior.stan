@@ -20,7 +20,6 @@ parameters{
     real m_i;             // mean of population
     real<lower=0> s_i;    // variability of population
     vector[I] re_i;       // random intercepts (per child)
-    real<lower=0> s_SI;   // variability of SI
     real<lower=0> m_M;    // dfs beta
 }
 model{
@@ -36,24 +35,21 @@ model{
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );
-    s_SI ~ exponential( 2 );
 }
 generated quantities {
-    vector[I] m_SI;       // mean SI index (per child)
     vector[I] SI;         // SI index (per child)
     vector[I] Ht;         // true entropy (per child)
     vector[N] H;          // replicated entropies
 
     // linear predictor
     for(i in 1:I){
-      m_SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // no multicollinearity between E and HS
       
-      //m_SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
+      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
       // multicollinearity between E and HS
     }
-    SI = to_vector( normal_rng(m_SI, s_SI) );  // SI
-    
+
     // average entropy (SI -> Ht: negative)
     Ht = inv_logit(-SI);
     

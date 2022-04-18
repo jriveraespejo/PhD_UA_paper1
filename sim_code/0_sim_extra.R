@@ -52,8 +52,8 @@ data_detect_par = function(d, par_int){
   
   # # test
   # d=mom
-  # par_int=c('aE','aHS','bA','bP','m_i','s_i','re_i','M','SI','Ht')
-  
+  # par_int=c('a','m_i','s_i','s_SI','re_i','SI','Ht')
+
   
   # storage parameters
   par_true = c()
@@ -81,13 +81,13 @@ data_detect_par = function(d, par_int){
     par_true = c(par_true, unlist( d$dS$par[idx_par] ))
   }
   
-  par_ext = which( par_int %in% c('m_SI','SI','Ht') )
+  par_ext = which( par_int %in% c('SI','Ht') )
   if( length(par_ext)!=0 ){
     for( m in par_ext ){
-      if(par_int[m] %in% c('m_SI','SI') ){
-        idx_par = which( names(d$dS$dT) %in% 'm_SI')
+      if(par_int[m] %in% c('SI') ){
+        idx_par = which( names(d$dS$dT) %in% 'SI')
       } else if(par_int[m]=='Ht'){
-        idx_par = which( names(d$dS$dT) %in% 'm_H')
+        idx_par = which( names(d$dS$dT) %in% 'Ht')
       }
       par_true = c(par_true, d$dS$dT[,idx_par] )
     }
@@ -885,12 +885,14 @@ stat_plot = function(par_object1, par_object2, pars, cChain=4000, cRhat=1.05){
 #     M = shape parameter in dbeta2, default = 10
 #     rsize = number of samples form posterior (default = 100)
 #     csize = number of children sampled (default = 16)
+#     rplot = layout for plot 
 #     model = model for which we made the plot (default=H, entropy)
 #             available models: H, HJ, CJD, CJO
 #     alpha1, alpha2 = color alpha parameters
 #
 distH_plot = function(stan_object, true_data, par_object, 
-                      M=10, rsize=100, csize=16, seed=1,
+                      M=10, rsize=100, csize=6, seed=1,
+                      rplot=c(3,2),
                       alpha1=0.3, alpha2=0.4){ 
   
   # # test
@@ -935,7 +937,7 @@ distH_plot = function(stan_object, true_data, par_object,
   
   
   # plot
-  par(mfrow=c(4,4))
+  par(mfrow=rplot)
   
   # i=1
   for(i in 1:ncol(out_mom) ){ # children

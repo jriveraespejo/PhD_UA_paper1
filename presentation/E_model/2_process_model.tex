@@ -1,5 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Estimand and Process model}
+\section{Research hypothesis procedure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimand and process model}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %
@@ -38,6 +43,7 @@
 						P(\pmb{U}) & = P(U_{ik}, U_{i}, U_{A}, U_{E}, U_{HS}, U_{P}) \\ 
 						& = P(U_{ik}) P(U_{i}) P(U_{A}) P(U_{E}) P(U_{HS}) P(U_{P})
 					\end{aligned}
+					%
 				\end{equation*}
 				%
 			\end{itemize}
@@ -50,19 +56,19 @@
 				%
 				\begin{tikzpicture}
 					% nodes
-					\node[formula] at (3,0) {$H^{O}_{ik}$};
-					\node[formula] at (2,-0.7) {$U_{ik}$};
-					\node[formula] at (1,-0.4) {$H^{T}_{i}$};
-					\node[formula] at (-0.5,-0.4) {$SI_{i}$};
-					\node[formula] at (-1.5,-0.7) {$U_{i}$};
-					\node[formula] at (-0.9,1.75) {$HS_{i}$};
-					\node[formula] at (-0.5,2.7) {$U_{HS}$};
-					\node[formula] at (-2.2,1.5) {$E_{i}$};
-					\node[formula] at (-2,2.7) {$U_{E}$};
-					\node[formula] at (1.5,1.5) {$PTA_{i}$};
-					\node[formula] at (1,2.7) {$U_{P}$};
-					\node[formula] at (-2,1) {$A_{i}$};
-					\node[formula] at (-2.8,1) {$U_{A}$};
+					\node at (3,0) {$H^{O}_{ik}$};
+					\node at (2,-0.7) {$U_{ik}$};
+					\node at (1,-0.4) {$H^{T}_{i}$};
+					\node at (-0.5,-0.4) {$SI_{i}$};
+					\node at (-1.5,-0.7) {$U_{i}$};
+					\node at (-0.9,1.75) {$HS_{i}$};
+					\node at (-0.5,2.7) {$U_{HS}$};
+					\node at (-2.2,1.5) {$E_{i}$};
+					\node at (-2,2.7) {$U_{E}$};
+					\node at (1.5,1.5) {$PTA_{i}$};
+					\node at (1,2.7) {$U_{P}$};
+					\node at (-2,1) {$A_{i}$};
+					\node at (-2.8,1) {$U_{A}$};
 					
 					% paths
 					\draw[{Circle[open]}-{latex}](0.85,0)--(2.6,0); % Hi->Hik
@@ -81,12 +87,13 @@
 					\draw[{Circle[open]}-{latex}](-2.8,0.70)--(-2,0.70); % UA->Ai
 					
 					% extras
-					\node[formula] at (0.2,-0.25) {$(-)$}; % symbol
-					\draw[dashed] (1.5,0.5) rectangle (3.5,-1);
-					%\node[formula] at (2,0.7) {$k=1,\dots,K$};
+					\node at (0.2,-0.25) {$(-)$}; % symbol
+					\draw[dotted, thick] (1.5,0.5) rectangle (3.5,-1);
+					%\node at (2,0.7) {$k=1,\dots,K$};
 					\draw[dashed] (-3.2,3) rectangle (3.7,-1.2);
-					%\node[formula] at (2,0.7) {$k=1,\dots,K$};
+					%\node at (2,0.7) {$k=1,\dots,K$};
 				\end{tikzpicture}
+				%
 				\caption*{General causal diagram}
 			\end{figure}
 			%
@@ -118,10 +125,10 @@
 				%
 				\item to do the last, we stratify for all variables that explain variability, ergo, use a \textcolor{blue}{direct effects} model
 				%
-				\item We have two levels: replicates ($k$), child's level ($i$), denoted by squares
+				\item two levels: replicates ($k$), children ($i$), denoted by discontinuous squares
 				%
 				\item $U_{ik}=$ replicates measurement error \\
-				$U_{i}=$ within child SI variability \\
+				$U_{i}=$ between child SI variability \\
 				%
 			\end{enumerate}
 			%
@@ -133,19 +140,19 @@
 				%
 				\begin{tikzpicture}
 					% nodes
-					\node[formula] at (3,0) {$H^{O}_{ik}$};
-					\node[formula] at (2,-0.7) {$U_{ik}$};
-					\node[formula] at (1,-0.4) {$H^{T}_{i}$};
-					\node[formula] at (-0.5,-0.4) {$SI_{i}$};
-					\node[formula] at (-1.5,-0.7) {$U_{i}$};
-					\node[formula] at (-0.9,1) {$HS_{i}$};
-					%\node[formula] at (-0.5,2.7) {$U_{HS}$};
-					%\node[formula] at (-2.2,1.5) {$E_{i}$};
-					%\node[formula] at (-2,2.7) {$U_{E}$};
-					%\node[formula] at (1.5,1.5) {$PTA_{i}$};
-					%\node[formula] at (1,2.7) {$U_{P}$};
-					\node[formula] at (-2,1) {$A_{i}$};
-					%\node[formula] at (-2.8,1) {$U_{A}$};
+					\node at (3,0) {$H^{O}_{ik}$};
+					\node at (2,-0.7) {$U_{ik}$};
+					\node at (1,-0.4) {$H^{T}_{i}$};
+					\node at (-0.5,-0.4) {$SI_{i}$};
+					\node at (-1.5,-0.7) {$U_{i}$};
+					\node at (-0.9,1) {$HS_{i}$};
+					%\node at (-0.5,2.7) {$U_{HS}$};
+					%\node at (-2.2,1.5) {$E_{i}$};
+					%\node at (-2,2.7) {$U_{E}$};
+					%\node at (1.5,1.5) {$PTA_{i}$};
+					%\node at (1,2.7) {$U_{P}$};
+					\node at (-2,1) {$A_{i}$};
+					%\node at (-2.8,1) {$U_{A}$};
 					
 					% paths
 					\draw[{Circle[open]}-{latex}](0.85,0)--(2.6,0); % Hi->Hik
@@ -164,11 +171,11 @@
 					%\draw[{Circle[open]}-{latex}](-2.8,0.70)--(-2,0.70); % UA->Ai
 					
 					% extras
-					\node[formula] at (0.2,-0.25) {$(-)$}; % symbol
-					\draw[dashed] (1.5,0.5) rectangle (3.5,-1);
-					%\node[formula] at (2,0.7) {$k=1,\dots,K$};
+					\node at (0.2,-0.25) {$(-)$}; % symbol
+					\draw[dotted, thick] (1.5,0.5) rectangle (3.5,-1);
+					%\node at (2,0.7) {$k=1,\dots,K$};
 					\draw[dashed] (-2.5,1.3) rectangle (3.7,-1.2);
-					%\node[formula] at (2,0.7) {$k=1,\dots,K$};
+					%\node at (2,0.7) {$k=1,\dots,K$};
 				\end{tikzpicture}
 				\caption*{(b) total effects}
 			\end{figure}
@@ -177,19 +184,19 @@
 				%
 				\begin{tikzpicture}
 					% nodes
-					\node[formula] at (3,0) {$H^{O}_{ik}$};
-					\node[formula] at (2,-0.7) {$U_{ik}$};
-					\node[formula] at (1,-0.4) {$H^{T}_{i}$};
-					\node[formula] at (-0.5,-0.4) {$SI_{i}$};
-					\node[formula] at (-1.5,-0.7) {$U_{i}$};
-					\node[formula] at (-0.9,1.75) {$HS_{i}$};
-					%\node[formula] at (-0.5,2.7) {$U_{HS}$};
-					\node[formula] at (-2.2,1.5) {$E_{i}$};
-					%\node[formula] at (-2,2.7) {$U_{E}$};
-					\node[formula] at (1.5,1.5) {$PTA_{i}$};
-					%\node[formula] at (1,2.7) {$U_{P}$};
-					\node[formula] at (-2,1) {$A_{i}$};
-					%\node[formula] at (-2.8,1) {$U_{A}$};
+					\node at (3,0) {$H^{O}_{ik}$};
+					\node at (2,-0.7) {$U_{ik}$};
+					\node at (1,-0.4) {$H^{T}_{i}$};
+					\node at (-0.5,-0.4) {$SI_{i}$};
+					\node at (-1.5,-0.7) {$U_{i}$};
+					\node at (-0.9,1.75) {$HS_{i}$};
+					%\node at (-0.5,2.7) {$U_{HS}$};
+					\node at (-2.2,1.5) {$E_{i}$};
+					%\node at (-2,2.7) {$U_{E}$};
+					\node at (1.5,1.5) {$PTA_{i}$};
+					%\node at (1,2.7) {$U_{P}$};
+					\node at (-2,1) {$A_{i}$};
+					%\node at (-2.8,1) {$U_{A}$};
 					
 					% paths
 					\draw[{Circle[open]}-{latex}](0.85,0)--(2.6,0); % Hi->Hik
@@ -208,11 +215,11 @@
 					%\draw[{Circle[open]}-{latex}](-2.8,0.70)--(-2,0.70); % UA->Ai
 					
 					% extras
-					\node[formula] at (0.2,-0.25) {$(-)$}; % symbol
-					\draw[dashed] (1.5,0.5) rectangle (3.5,-1);
-					%\node[formula] at (2,0.7) {$k=1,\dots,K$};
+					\node at (0.2,-0.25) {$(-)$}; % symbol
+					\draw[dotted, thick] (1.5,0.5) rectangle (3.5,-1);
+					%\node at (2,0.7) {$k=1,\dots,K$};
 					\draw[dashed] (-2.5,2) rectangle (3.7,-1.2);
-					%\node[formula] at (2,0.7) {$k=1,\dots,K$};
+					%\node at (2,0.7) {$k=1,\dots,K$};
 				\end{tikzpicture}
 				\caption*{(a) direct effects}
 			\end{figure}
@@ -225,7 +232,8 @@
 %
 %
 \begin{frame}
-	{Causal and probabilistic model}
+	{Probabilistic (causal) model}
+	{First form}
 	%
 	\begin{columns}
 		%
@@ -234,16 +242,136 @@
 			\begin{equ}
 				%
 				\begin{aligned} 
-					H^{O}_{ik} & \sim \; BetapProp( H^{T}_{i}, df_{ik}) \\
+					%
+					H^{O}_{ik} & \sim \; BetapProp( H^{T}_{i}, M_{ik}) \\
+					%
 					H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
+					%
 					SI_{i} & \sim \; Normal( \mu_{SI}, \sigma_{Ui}) \\
-					& \mu_{SI} = a_{i} + \alpha + \alpha_{HS[i]} + \color{red}{\alpha_{E[i]}} \\ 
+					%
+					& \mu_{SI} = \alpha + \alpha_{HS[i]} + \alpha_{E[i]} \\ 
+					%
+					& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\
+					%
+					HS_{i} & \sim \; \text{data} \\
+					%
+					A_{i} & \sim \; \text{data} \\
+					%
+					E_{i} & \sim \; \text{data} \\
+					%
+					PTA_{i} & \sim \; \text{data} \\
+					%
+					U & \sim \; \text{unobservable}
+					%
+				\end{aligned}
+				%
+				\caption*{(a) general probabilistic model}
+			\end{equ}
+			%
+		\end{column}
+		%
+		\begin{column}{0.5\textwidth}  
+			%
+			\begin{equ}
+				%
+				\begin{aligned} 
+					%
+					H^{O}_{ik} \leftarrow & \; f(H^{T}_{i}, U_{ik}) \\
+					%
+					H^{T}_{i} \leftarrow & \; f(SI_{i}) \\
+					%
+					SI_{i} \leftarrow & \; f(HS_{i}, A_{i}, E_{i}, PTA_{i}, U_{i}) \\ \\ \\
+					%
+					HS_{i} \leftarrow & \; f(U_{HS}) \\
+					%
+					A_{i} \leftarrow & \; f(U_{A}) \\
+					%
+					E_{i} \leftarrow & \; f(U_{E}) \\
+					%
+					PTA_{i} \leftarrow & \; f(U_{P}) \\
+					%
+					U \sim & \; P(\pmb{U})
+					%
+				\end{aligned}
+				%
+				\caption*{(a) general structural model}
+			\end{equ}
+			%
+		\end{column}
+		%
+	\end{columns}
+	%
+\end{frame}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.38]{BetaProp_dist.pdf}}]
+	{Probabilistic (causal) model}
+	{First form}
+	
+	\begin{equ}
+		%
+		\begin{aligned} 
+			%
+			H^{O}_{ik} & \sim \; \color{red}{ BetapProp( H^{T}_{i}, M_{ik} ) }\\
+			%
+			H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
+			%
+			SI_{i} & \sim \; Normal( \mu_{SI}, \sigma_{Ui}) \\
+			%
+			& \mu_{SI} = \alpha + \alpha_{HS[i]} + \alpha_{E[i]} \\ 
+			%
+			& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\
+			%
+			HS_{i} & \sim \; \text{data} \\
+			%
+			A_{i} & \sim \; \text{data} \\
+			%
+			E_{i} & \sim \; \text{data} \\
+			%
+			PTA_{i} & \sim \; \text{data} \\
+			%
+			U & \sim \; \text{unobservable}
+			%
+		\end{aligned}
+		%
+		\caption*{(a) general probabilistic model}
+	\end{equ}
+	%
+\end{lhframe}
+%
+%
+\begin{frame}
+	{Probabilistic (causal) model}
+	{Second form}
+	%
+	\begin{columns}
+		%
+		\begin{column}{0.5\textwidth}
+			%
+			\begin{equ}
+				%
+				\begin{aligned} 
+					%
+					H^{O}_{ik} & \sim \; BetapProp( H^{T}_{i}, M_{ik}) \\
+					%
+					H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
+					%
+					SI_{i} & = \; a_{i} + \alpha + \alpha_{HS[i]} + \color{red}{\alpha_{E[i]}} \\ 
+					%
 					& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \color{red}{\beta_{P} PTA_{i}} \\
+					%
+					a_{i} & \sim \; Normal( 0, \sigma_{Ui}) \\
+					%
 					HS_{i} & \sim \; \color{blue}{\text{data}} \\
+					%
 					A_{i} & \sim \; \color{blue}{\text{data}} \\
+					%
 					E_{i} & \sim \; \color{blue}{\text{data}} \\
+					%
 					PTA_{i} & \sim \; \color{blue}{\text{data}} \\
+					%
 					U & \sim \; \color{blue}{\text{unobservable}}
+					%
 				\end{aligned}
 				%
 				\caption*{(a) general probabilistic model}
@@ -257,13 +385,21 @@
 				%
 				\begin{aligned} 
 					H^{O}_{ik} \leftarrow & \; f(H^{T}_{i}, U_{ik}) \\
+					%
 					H^{T}_{i} \leftarrow & \; f(SI_{i}) \\
+					%
 					SI_{i} \leftarrow & \; f(HS_{i}, A_{i}, E_{i}, PTA_{i}, U_{i}) \\ \\ \\
+					%
 					HS_{i} \leftarrow & \; f(U_{HS}) \\
+					%
 					A_{i} \leftarrow & \; f(U_{A}) \\
+					%
 					E_{i} \leftarrow & \; f(U_{E}) \\
+					%
 					PTA_{i} \leftarrow & \; f(U_{P}) \\
+					%
 					U \sim & \; P(\pmb{U})
+					%
 				\end{aligned}
 				%
 				\caption*{(a) general structural model}

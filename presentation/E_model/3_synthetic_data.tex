@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Synthetic data generation}
+\subsection{Synthetic data generation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %
@@ -8,66 +8,104 @@
 \end{frame}
 %
 %
-\begin{frame}
-	{Intervention}
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.7]{sim_code1.png}}]
+	{Idealized data\footnote{more details in file: \textcolor{blue}{\texttt{1\_2\_E\_sim\_fun.R} }}}
+	
+	Simulation data can serve as \cite{Kruschke_2014, McElreath_2020},
+	\begin{enumerate}
+		%
+		\item A place where to test your model, on multiple purposes,
+		%
+		\begin{itemize}
+			\item parameter recovery
+			\item power
+		\end{itemize}
+		%
+		\item A (possible) reflection of a population, 
+		%
+		\begin{itemize}
+			\item children's group proportion \cite{DeRaeve_2016}
+		\end{itemize}
+		%
+		\item A (possible) reflection of a hypothesis,
+		%
+		\begin{itemize}
+			\item size of effects \alert{(no previous information)}
+		\end{itemize}
+		%
+	\end{enumerate}
 	%
-	\begin{columns}
-		%
-		\begin{column}{0.5\textwidth}
-			%
-			\begin{itemize}
-				%
-				\item Purpose: to keep a control on all the factors responsible for the outcome's variation \texcolort{blue}{(understand the system)}.
-				%
-				\item It is modeled by modifying the structural model (and causal diagram).
-				%
-				\item remember: $\pmb{V}=\{Z,X,Y\}$, $\pmb{U}=\{U_{z},U_{x},U_{y}\}$, and $\pmb{F}=\{f_{z},f_{x},f_{y}\}$.
-				%
-				\item Intervention on $X$ can be written in do-calculus\footnote{we are not delving into this (the usual suspects \cite{Pearl_1988, Pearl_2009, Pearl_et_al_2016, Pearl_et_al_2018})} as: $P(\pmb{V} \; | \; do(X=x))$.
-				%
-			\end{itemize}
-			%
-		\end{column}
-		%
-		\begin{column}{0.5\textwidth}  
-			%
-			\begin{equ}
-				%
-				M = \left\{ \begin{aligned} 
-					Z \leftarrow & \; f_{z}(U_{z}) \\
-					X \leftarrow & \; f_{x}(U_{x}) \\
-					Y \leftarrow & \; f_{y}(X, Z, U_{y}) \\
-					U \sim & \; P(\pmb{U})
-				\end{aligned} \right
-				%
-				\caption*{(a) structural model}
-			\end{equ}
-			%
-			\begin{figure}
-				%
-				\begin{tikzpicture}
-					% nodes
-					\node[formula] at (-2,0) {$x$};
-					\node[formula] at (-1,-0.3) {$X$};
-					\node[formula] at (1,1.5) {$U_{z}$};
-					\node[formula] at (0,1) {$Z$};
-					\node[formula] at (2,0) {$U_{y}$};
-					\node[formula] at (1,-0.3) {$Y$};
-					
-					% paths
-					\draw [{Circle [open]}-{latex}](-1.7,0)--(-1,0); % Ux->X
-					\draw [{Circle}-{latex}](-1,0)--(0.9,0); % X->Y
-					\draw [{Circle [open]}-{latex}{Circle}](1.7,0)--(0.9,0); % Uy->Y
-					\draw [{Circle}-{latex}](0,0.8)--(0.9,0.1); % Z->Y
-					\draw [{Circle [open]}-{latex}](0.9,1.3)--(0.1,0.8); % Uz->Z
-				\end{tikzpicture}
-				\caption*{(b) causal diagram}
-			\end{figure}
-			%
-		\end{column}
-		%
-	\end{columns}
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.7]{sim_code1.png}}]
+	{Idealized data}
+	
+	About the size of the effects \\
+	\alert{(in logits, no previous info)},
 	%
-\end{frame}
+	\begin{enumerate}
+		%
+		\item $aE=-0.1$, assumes $E$ ordered by severity \alert{(it might not be possible)},
+		%
+		\item $aHS=-0.4$, assumes $0.4$ difference between $NH$ children and $HI/CI$,
+		%
+		\item $bP=-0.1$, assumes decrease of SI per $PTA$ unit \\
+		($+10 \; PTA$ units $\Rightarrow -1$ logit),
+		%
+		\item $bA=-0.15$, assumes decrease of SI per $A$ unit, beyond the minimum \\
+		($+10 \; A$ units $\Rightarrow +1.5$ logits),
+		%
+	\end{enumerate}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.48]{sim_code2.png}}]
+	{Idealized data}
+	
+	\begin{enumerate}
+		%
+		\item variables are generated in a random fashion 
+		\item random effects define the between SI variability
+		%
+	\end{enumerate}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.48]{sim_code3.png}}]
+	{Idealized data}
+	
+	\begin{enumerate}
+		%
+		\item we use \textcolor{blue}{second form} of the probabilistic model
+		\item ``true' entropy ($Ht$) is inversely related to $SI$
+		\item we simulate measurement error through $M$ from $BetaProp()$ distribution (as previously shown).
+		%
+	\end{enumerate}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.48]{sim_code4.png}}]
+	{Idealized data}
+	
+	\begin{enumerate}
+		%
+		\item we simulate replicate measures of entropy ($H$)
+		\item we storage all relevant parameters and data
+		%
+	\end{enumerate}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.45]{data_example.pdf}}]
+	{Example}
+	
+	notice we can simulate any desired relationship, or lack of thereof.
+	%
+\end{lhframe}
 %
 %
