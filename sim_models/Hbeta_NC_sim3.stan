@@ -58,8 +58,8 @@ model{
     a ~ normal( 0 , 0.2 );
     z_re ~ std_normal();
     z_M ~ std_normal();
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
 

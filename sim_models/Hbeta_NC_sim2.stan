@@ -50,8 +50,8 @@ model{
     // priors
     a ~ normal( 0 , 0.2 );
     z_re ~ std_normal();
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );

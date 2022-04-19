@@ -72,7 +72,7 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
                 par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                           m_M=10, s_M=NULL, # generation of df (M)
                           a=0, 
-                          aE=c(0.1,0,-0.1,-0.2), 
+                          aE=rep(0,4), 
                           aHS=c(0.4,0,-0.4), 
                           bP=-0.1, 
                           bA=0.15, 

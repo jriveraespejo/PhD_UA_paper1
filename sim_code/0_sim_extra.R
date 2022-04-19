@@ -25,7 +25,10 @@ file_id = function(chains_path, model_int){
   # # test
   # chains_path = model_out
   # model_int = model_nam
-
+  
+  # packages
+  require(stringr)
+  
   # list all files
   chains_list = list.files( chains_path )
   
@@ -52,30 +55,14 @@ data_detect_par = function(d, par_int){
   
   # # test
   # d=mom
-  # par_int=c('a','m_i','s_i','s_SI','re_i','SI','Ht')
+  # par_int=c('a','aHS','bP','bA','m_i','s_i','m_M','re_i','SI','Ht')
 
   
   # storage parameters
   par_true = c()
   
+  
   # true parameters
-  par_ext = which( par_int %in% c('aE','aHS','bAHS') )
-  if( length(par_ext)!=0 ){
-    for( m in par_ext ){
-      if(par_int[m]=='aHS'){
-        par_true = c(par_true, with(d$dS, par$aHS * unique(dT$HS)) )
-      } else if(par_int[m]=='aE'){
-        par_true = c(par_true, with(d$dS, par$aE * unique(dT$E)) )
-      } else if(par_int[m]=='bAHS'){
-        par_true = c(par_true, with(d$dS, par$bA + par$bAHS*unique(dT$HS)) ) 
-      }
-    }
-  }
-  
-  if(length(par_ext)!=0){
-    par_int = par_int[-par_ext]
-  }
-  
   for(m in 1:length(par_int)){
     idx_par = which( names(d$dS$par) %in% par_int[m] )
     par_true = c(par_true, unlist( d$dS$par[idx_par] ))
@@ -92,6 +79,8 @@ data_detect_par = function(d, par_int){
       par_true = c(par_true, d$dS$dT[,idx_par] )
     }
   }
+  
+  names(par_true)=NULL
   
   return(par_true)
 }
@@ -112,6 +101,9 @@ number_detect_par = function(precis_object, est_par){
   # # test
   # precis_object=res_stan
   # est_par=par_est
+  
+  # packages
+  require(stringr)
 
   # j=1
   for(j in 1:length(est_par)){
@@ -152,6 +144,9 @@ index_detect_par = function(precis_object, est_par){
   # precis_object=res_stan
   # est_par=par_est
   
+  # packages
+  require(stringr)
+  
   # j=1
   for(j in 1:length(est_par)){
     
@@ -174,6 +169,9 @@ index_detect_par = function(precis_object, est_par){
 }
 
 
+
+
+
 # function:
 #     rmse_pars
 # description:  
@@ -183,27 +181,43 @@ index_detect_par = function(precis_object, est_par){
 #     est_par = character vector with the names of parameters of interest
 #     true_par = vector of values for true parameters
 #
-rmse_pars = function(stan_object, est_par, true_par, seed=1){
+rmse_pars = function(stan_object, est_par, true_par){
   
   # # test
-  # stan_object = res
+  # stan_object = cont_post
+  # est_par=c('aHS','bAHS')
+  # true_par=true_diff
   # prec = 3
   # seed = 1
   
+  # packages
+  require(rethinking)
+  
   # calculate rmse for samples vs true parameters
-  set.seed(seed)
-  post = extract.samples( stan_object )
-  idx = names(post) %in% est_par
-  post = post[idx]
+  if( typeof(stan_object)=='S4' ){
+    post = extract.samples( stan_object )
+    idx = names(post) %in% est_par
+    post = post[idx]
+    
+    J = length(est_par) # to run par
+  } else if( typeof(stan_object)=='double' ){
+    J = 1
+  }
+
   # str(post)
   
   rmse_sim = rep(NA, length(true_par))
   
-  # j=11
-  for(j in 1:length(est_par) ){
+  # j=1
+  for(j in 1:J ){
     
     # extract simulations of parameters
-    sim_par = post[[est_par[j]]]
+    if( typeof(stan_object)=='S4' ){
+      sim_par = post[[est_par[j]]]
+    } else if( typeof(stan_object)=='double' ){
+      sim_par = stan_object
+    }
+    
     dimen = dim( sim_par )
     
     if( is.na(dimen[2]) ){
@@ -241,6 +255,100 @@ rmse_pars = function(stan_object, est_par, true_par, seed=1){
 
 
 
+
+
+# function:
+#     HPDI
+# description:  
+#     It display the highest posterior density interval (HPDI)
+#     for all parameters
+# arguments:
+#     stan_object = object containing a stanfit object
+#     prob = probability of the density
+#
+HPDI = function(stan_object, p=0.95) {
+  
+  # # test
+  # stan_object=res_C
+  # p=0.95
+  
+  # packages
+  require(rstan)
+  require(runjags)
+  
+  # converting 
+  samples = As.mcmc.list(stan_object) # to coda mcmc
+  samples = combine.mcmc(samples) # combine mcmc
+  # str(samples)
+  
+  # calculating HPDI
+  hpdi_res = coda::HPDinterval(samples, prob=p)
+  # str(hpdi_res)
+  
+  return(hpdi_res)
+}
+
+
+
+
+
+# function:
+#     set_rope
+# description:  
+#     it creates a set of ROPE values based on 
+#     a set of cutt-offs and reduction/increse values 
+# arguments:
+#     stan_object = object containing a stanfit object (it can be a list also)
+#     est_par = character vector with the names of parameters of interest
+#     true_par = vector of values for true parameters
+#
+set_rope = function(true_par, 
+                    cuts=c(0,0.1,0.2,0.5,0.8,1.2,2), # based on Cohen's d
+                    rvalues=c(0.2,0.2,0.15,0.3,0.3,0.4,0.8)){ # based on Cohen's d
+  
+  # # test
+  # true_par=par_true
+  # cuts=c(0,0.1,0.2,0.5,0.8) # based on Cohen's d
+  # rvalues=c(0.2,0.05,0.1,0.15,0.2)
+  
+  # storage
+  par_ROPE = data.frame(ROPE_lower=true_par, 
+                        ROPE_upper=true_par,
+                        ROPE_prec=0)
+  
+  # ROPE
+  rope_val = abs(true_par)
+  
+  # cuts==0
+  idx = rope_val==cuts[1]
+  par_ROPE$ROPE_lower[idx] = true_par[idx] - rvalues[1]
+  par_ROPE$ROPE_upper[idx] = true_par[idx] + rvalues[1]
+  
+  
+  # other cuts
+  for( j in 2:length(cuts)){
+    idx = rope_val > cuts[j-1] & rope_val <= cuts[j]
+    par_ROPE$ROPE_lower[idx] = true_par[idx] - rvalues[j]
+    par_ROPE$ROPE_upper[idx] = true_par[idx] + rvalues[j]
+  }
+  
+  # final cut
+  idx = rope_val > cuts[length(cuts)]
+  par_ROPE$ROPE_lower[idx] = true_par[idx] - 1
+  par_ROPE$ROPE_upper[idx] = true_par[idx] + 1
+  
+  # precision
+  par_ROPE$ROPE_prec = with(par_ROPE, ROPE_upper-ROPE_lower)
+  
+  # return object
+  return(par_ROPE)
+  
+}
+
+
+
+
+
 # function:
 #     parameter_recovery
 # description:  
@@ -255,42 +363,167 @@ rmse_pars = function(stan_object, est_par, true_par, seed=1){
 #     est_par = character vector with the names of parameters of interest
 #     true_par = vector of values for true parameters
 #
-parameter_recovery = function(stan_object, est_par, true_par, 
-                              diff=F, prec=3, seed=1){
+parameter_recovery = function(stan_object, est_par, true_par,
+                              prec=3, p=0.90){
   
   # # test
   # stan_object=res_C
   # est_par=par_est
   # true_par=par_true
+  # p=0.90
   # prec=3
   # seed=1
   
-  # get the point estimates
-  res_stan = precis(stan_object, depth=4) #, pars=est_par
   
-  # identify parameters of interest
+  # packages
+  require(rethinking)
+  
+  
+  # get the point estimates
+  res_stan = precis(stan_object, depth=4, prob=p) #, pars=est_par
+  names(res_stan)[3:4] = c('CI_lower','CI_upper')
+  
+  
+  # get the HPDI
+  hpdi_res = HPDI(stan_object, p=0.95)
+  rem = which( row.names(hpdi_res)=='lp__')
+  hpdi_res = hpdi_res[-rem,] # remove
+  attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
+  
+  res_stan = cbind(res_stan, hpdi_res) # join info
+  
+  
+  # reordering
+  res_stan = res_stan[,c(1:4,7:8,5:6)]
   idx = number_detect_par(res_stan, est_par)
-  res_stan = round( res_stan[idx,], prec) #
+  res_stan = res_stan[idx,]
   
   
   # introduce true parameters
-  res_stan$true = round(true_par, prec)
+  res_stan$true = true_par
   
-  # do the parameters have the same sign
-  res_stan$same_sign = with(res_stan, as.integer(sign(true) == sign(mean)) )
-  
-  # identify if parameters are inside compatibility interval
-  res_stan$in_CI = with(res_stan, as.integer(true>=`5.5%` & true<=`94.5%`) )
-  res_stan$diff_0 = with(res_stan, 
-                         ifelse(true<0, `94.5%`< 0,
-                                ifelse(true>0, `5.5%`>0, in_CI) ) )
   
   # rmse
-  res_stan$RMSE = round( rmse_pars(stan_object, est_par, true_par, seed=seed), prec)  
+  res_stan$RMSE = round( rmse_pars(stan_object, est_par, true_par), prec)  
+  
+  
+  # introduce ROPE
+  ROPE = set_rope(true_par)
+  res_stan = cbind(res_stan, ROPE)
+  
+  res_stan = round( res_stan, prec ) # round
+  
+  
+  # same sign?
+  res_stan$sign = with(res_stan, as.integer(sign(true) == sign(mean)) )
+  
+  
+  # ROPE goals
+  res_stan$reject_null = as.integer( 
+    with(res_stan, -0.2>HPDI_upper | 0.2<HPDI_lower ) )
+  res_stan$accept_val = as.integer( 
+    with(res_stan, ROPE_lower<HPDI_lower | ROPE_upper>HPDI_upper ) )
+  res_stan$precision = as.integer( 
+    with(res_stan, (HPDI_upper-HPDI_lower) < ROPE_prec ) )
+  
   
   # return object
   return(res_stan)
 }
+
+
+# function:
+#     true_contrast
+# description:  
+#     Extracts the contrast from the data.
+# arguments:
+#     stan_object = object containing a stanfit object (it can be a list also)
+#     est_diff = character vector with the names of parameters of interest
+#     true_diff = vector of values for true differences
+#
+true_contrast = function(d, par_int){
+  
+  # # test
+  # d = mom
+  # par_int = c('aHS','bAHS')
+  
+  
+  # storage
+  cont_true = c()
+  cont_name = c()
+  
+
+  # parameter contrasts
+  par_1 = which( !( par_int %in% c('SI','Ht') ) )
+  if( length(par_1)!=0 ){
+    
+    # m=1
+    for(m in par_1){
+
+      # identify parameters
+      idx_par = which( names(d$dS$par) %in% par_int[m] )
+      par_true = unlist( d$dS$par[idx_par] )
+      par_name = names(par_true)
+      
+      # extract par
+      # i=2; j=3
+      for(i in 1:length(par_true)){
+        for(j in 1:length(par_true)){
+          
+          if( j>i ){
+            if( i == 1 & j==2 & m==1){
+              cont_true = par_true[j] - par_true[i] 
+              cont_name = paste( c( par_name[j], par_name[i]), collapse=' - ' )
+            } else{
+              cont_true = cbind(cont_true, 
+                                par_true[j] - par_true[i] ) 
+              cont_name = c(cont_name, 
+                            paste( c( par_name[j], par_name[i]), collapse=' - ' ) )
+            }
+          }
+        }
+      }
+    }
+    
+    attr(cont_true, "dimnames") = NULL
+  }
+  
+  
+  
+  par_2 = which( par_int %in% c('SI','Ht') )
+  if( length(par_2)!=0 ){
+    
+    for(m in par_2){
+      
+      # identify parameters
+      idx_par = which( names(d$dS$dT) %in% par_int[m] )
+      par_true = unlist( d$dS$dT[,idx_par] )
+      par_name = paste0( par_int[m], '[', d$dS$dT$child_id, ']' )
+      
+      # extract par
+      # i=2; j=3
+      for(i in 1:length(par_true)){
+        for(j in 1:length(par_true)){
+          
+          if( j>i ){
+            cont_true = cbind(cont_true, 
+                              par_true[j] - par_true[i] ) 
+            cont_name = c(cont_name, 
+                          paste( c( par_name[j], par_name[i]), collapse=' - ' ) )
+          }
+        }
+      }
+    }
+    
+    attr(cont_true, "dimnames") = NULL
+  }
+  
+
+  # return object
+  return( t(cont_true) )
+}
+
+
 
 
 
@@ -303,85 +536,103 @@ parameter_recovery = function(stan_object, est_par, true_par,
 #     stan_object = object containing a stanfit object (it can be a list also)
 #     est_diff = character vector with the names of parameters of interest
 #     true_diff = vector of values for true differences
+#     p = probability for HPDI
 #
-contrast_recovery = function(stan_object, est_diff, true_diff, prec=3, seed=1){
+contrast_recovery = function(stan_object, est_diff, true_diff, 
+                             p=0.90, prec=3, seed=1){
   
   # # test
-  # stan_object=res
-  # est_diff='aHS'
-  # true_diff=true_diff
+  # stan_object=res_C
+  # est_diff=c('aHS','bAHS')
+  # true_diff=true_contrast(d=mom, par_int=c('aHS','bAHS'))
+  # p=0.90
   # prec=3
   # seed=1
+
   
   # extract samples
-  set.seed(seed)
   post = extract.samples( stan_object )
   idx = names(post) %in% est_diff
   post = post[idx]
   # names(post)
   
-  # calculating results
-  res_stan = precis(stan_object, depth=4)
   
   # calculations
-  # k=1
+  # k=2
   for(k in 1:length(est_diff)){
     
     # selecting parameter
-    idx = number_detect_par(res_stan, est_diff[k])
-    lab_par = rownames(res_stan)[idx]
-    npars = length(idx)
+    post_mom = post[[k]]
+    par_name = paste0( est_diff[k], '[', 1:ncol(post_mom), ']' )
     
-    # storage
-    # i=2
-    # j=3
-    for(i in 1:npars){
-      for(j in 1:npars){
+    # i=1;j=3
+    for(i in 1:ncol(post_mom)){
+      for(j in 1:ncol(post_mom)){
         
-        if(j>i){
-          if(i == 1 & j==2 & k==1){
-            diff = post[[est_diff[k]]][,j] - post[[est_diff[k]]][,i] 
-            diff_name = paste( c( lab_par[j], lab_par[i]), collapse=' - ' )
+        if( j>i ){
+          if( i == 1 & j==2 & k==1 ){
+            cont_post = post_mom[,j] - post_mom[,i] 
+            cont_name = paste( c(par_name[j], par_name[i]), collapse='-' )
           } else{
-            diff = cbind(diff ,
-                         post[[est_diff[k]]][,j] - post[[est_diff[k]]][,i] ) 
-            diff_name = c(diff_name, 
-                          paste( c( lab_par[j], lab_par[i]), collapse=' - ' ) )
+            cont_post = cbind(cont_post, 
+                              post_mom[,j] - post_mom[,i] ) 
+            cont_name = c(cont_name, 
+                          paste( c(par_name[j], par_name[i]), collapse='-' ) )
           }
         }
-        
       }
     }
+    
+    attr(cont_post, "dimnames")[[2]] = cont_name
     
   }
   
   # storage
-  diff = as_tibble(diff)
-  names(diff) = diff_name
-  res_diff = precis( diff, depth=4, hist=F )
-  res_diff[,1:4] = round( res_diff[,1:4], prec)
+  res_stan = precis( as_tibble(cont_post), 
+                     depth=4, hist=F, prob=p )
+  names(res_stan)[3:4] = c('CI_lower','CI_upper')
   
-  # introduce true differences
-  res_diff$true = round( true_diff, prec)
+  # get the HPDI
+  hpdi_res = coda::HPDinterval(as.mcmc(cont_post), prob=p)
+  attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
   
-  # do the parameters have the same sign
-  res_diff$same_sign = with(res_diff, as.integer(sign(true) == sign(mean)) )
+  res_stan = cbind(res_stan, hpdi_res) # join info
   
-  # identify if parameters are inside compatibility interval
-  res_diff$in_CI = with(res_diff, as.integer(true>=`5.5%` & true<=`94.5%`) )
-  res_diff$diff_0 = with(res_diff, 
-                         ifelse(true<0, `94.5%`< 0,
-                                ifelse(true>0, `5.5%`>0, in_CI) ) )
+  # extra lines
+  res_stan$n_eff = NA
+  res_stan$Rhat4 = NA
+  
+  
+  # introduce true parameters
+  res_stan$true = true_diff
+  
   
   # rmse
-  dimen = dim(diff)
-  true_rep = matrix( rep( true_diff, dimen[1] ),
-                     ncol=dimen[2], nrow=dimen[1], byrow=T)
-  rmse_sim = sqrt( colMeans( (diff - true_rep)^2 ) )
-  res_diff$RMSE = round(rmse_sim, prec)  
+  res_stan$RMSE = round( rmse_pars(cont_post, est_diff, true_diff), prec)  
+  
+  
+  # introduce ROPE
+  ROPE = set_rope(true_diff)
+  res_stan = cbind(res_stan, ROPE)
+  
+  res_stan = round( res_stan, prec ) # round
+  
+  
+  # same sign?
+  res_stan$sign = with(res_stan, as.integer(sign(true) == sign(mean)) )
+  
+  
+  # ROPE goals
+  res_stan$reject_null = as.integer( 
+    with(res_stan, -0.2>HPDI_upper | 0.2<HPDI_lower ) )
+  res_stan$accept_val = as.integer( 
+    with(res_stan, ROPE_lower<HPDI_lower | ROPE_upper>HPDI_upper ) )
+  res_stan$precision = as.integer( 
+    with(res_stan, (HPDI_upper-HPDI_lower) < ROPE_prec ) )
+  
   
   # return object
-  return(res_diff)
+  return(res_stan)
 }
 
 
@@ -579,7 +830,7 @@ recovery_plots = function(par_object, cont_object=NULL){
   for(i in 1:length(par_mom)){
   
     # plot parameters
-    y_lim = range( with(par_mom[[i]], c(`5.5%`, `94.5%`, mean, true)), na.rm=T )
+    y_lim = range( with(par_mom[[i]], c(HPDI_lower, HPDI_upper, mean, true)), na.rm=T )
     
     plot(1:nrow(par_mom[[i]]), par_mom[[i]]$mean, ylim=y_lim, xaxt='n', yaxt='n',
          col=col.alpha('blue', 0.3), pch=19, 
@@ -589,7 +840,7 @@ recovery_plots = function(par_object, cont_object=NULL){
     axis(side=1, at=1:nrow(par_mom[[i]]), labels=rownames(par_mom[[i]]), las=2)
     axis(side=2, at=round( seq(y_lim[1], y_lim[2], by=0.2), 2), las=1)
     for(j in 1:nrow(par_mom[[i]])){
-      lines(x=rep(j,2), y=with( par_mom[[i]][j,], c(`5.5%`, `94.5%`) ) ,
+      lines(x=rep(j,2), y=with( par_mom[[i]][j,], c(HPDI_lower, HPDI_upper) ) ,
             col=col.alpha('blue', 0.3))
     }
     points(1:nrow(par_mom[[i]]), par_mom[[i]]$true, col=col.alpha('black', 1), pch=3)
@@ -963,7 +1214,8 @@ distH_plot = function(stan_object, true_data, par_object,
             rep( 0.3, sum(true_data$child==idx_col[i]) ), 
             pch=19, col=col.alpha('blue', alpha2))
     points( par_object$mean[i], 0, pch=19, col='red')
-    lines(x=with(par_object[i,], c(`5.5%`,`94.5%`)), y=rep(0, 2), col='red')
+    lines(x=with(par_object[i,], c(HPDI_lower, HPDI_upper)), 
+          y=rep(0, 2), col='red')
     
   }
   

@@ -56,8 +56,8 @@ model{
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
     bAHS ~ normal( 0 , 0.3 );

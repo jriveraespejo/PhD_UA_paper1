@@ -231,8 +231,8 @@ model{
     // priors
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );
@@ -320,8 +320,8 @@ model{
     // priors
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );
@@ -393,8 +393,8 @@ model{
     // priors
     a ~ normal( 0 , 0.2 );
     z_re ~ std_normal();
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
     m_M ~ lognormal( 1.5 , 0.5 );
@@ -481,8 +481,8 @@ model{
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
 }
@@ -574,8 +574,8 @@ model{
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
 
@@ -655,8 +655,8 @@ model{
     a ~ normal( 0 , 0.2 );
     z_re ~ std_normal();
     z_M ~ std_normal();
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     bA ~ normal( 0 , 0.3 );
 
@@ -915,8 +915,8 @@ model{
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
     bAHS ~ normal( 0 , 0.3 );
@@ -1014,8 +1014,8 @@ model{
     a ~ normal( 0 , 0.2 );
     re_i ~ normal( m_i , s_i );
     M ~ lognormal( m_M , s_M );
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
     bAHS ~ normal( 0 , 0.3 );
@@ -1100,8 +1100,8 @@ model{
     a ~ normal( 0 , 0.2 );
     z_re ~ std_normal();
     z_M ~ std_normal();
-    //aE ~ normal( 0 , 0.5 );
-    aHS ~ normal( 0 , 0.5 );
+    //aE ~ normal( 0 , 0.3 );
+    aHS ~ normal( 0 , 0.3 );
     bP ~ normal( 0 , 0.3 );
     //bA ~ normal( 0 , 0.3 );
     bAHS ~ normal( 0 , 0.3 );
