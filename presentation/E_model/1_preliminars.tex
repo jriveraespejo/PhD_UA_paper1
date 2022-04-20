@@ -46,15 +46,15 @@
 \begin{frame}
 	{Objective measure of SI}
 	%
-	the \alert{most objective (we know of)} measure of SI comes from a \textcolor{blue}{transcription task}:
+	the \textcolor{blue}{most objective (we know of)} measure of SI comes from a \textcolor{blue}{transcription task}:
 	
 	\begin{enumerate}
 		%
-		\item transcribing children's utterances (made by multiple judges),
+		\item transcribe children's utterances (made by multiple judges),
 		%
 		\item align transcriptions at the utterance level,
 		%
-		\item calculate an entropy measure (H), defined as
+		\item calculate an entropy measure (H), per utterance per child:
 		%
 		\begin{equation*} \label{eq:entropy}
 			H = H(\pmb{p}) = \frac{-\sum_{i=1}^{n} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(N)}
@@ -85,48 +85,23 @@
 \end{frame}
 %
 %
-\begin{frame}
-	{A typical scientific lab\footnote{\citet{McElreath_2020}, lecture $20$ and \citet{McElreath_2022}, chapter $17$}}
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.40]{process_models.png}}]
+	{A typical scientific lab}
+	
+	What is needed / deal with\footnote{Figure extracted from  \citet{McElreath_2020}} 
 	%
-	\begin{columns}
+	\begin{enumerate}
 		%
-		\begin{column}{0.5\textwidth}
-			%
-			What is needed?
-		
-			\begin{enumerate}
-				%
-				\item Quality of theory
-				\item Quality of data
-				\item Reliable procedures and code
-				\item Quality of data analysis
-				\item Documentation
-				\item Reporting
-				%
-			\end{enumerate} 
-			%
-		\end{column}
+		\item \textcolor{blue}{Quality of theory}
+		\item \textcolor{blue}{Quality of data}
+		\item \alert{Reliable procedures and code}
+		\item \textcolor{blue}{Quality of data analysis}
+		\item \textcolor{blue}{Documentation}
+		\item Reporting
 		%
-		\begin{column}{0.5\textwidth}  
-			%
-			What we will deal with:
-			%
-			\begin{enumerate}
-				%
-				\item \textcolor{blue}{Quality of theory}
-				\item \textcolor{blue}{Quality of data}
-				\item \alert{Reliable procedures and code}
-				\item \textcolor{blue}{Quality of data analysis}
-				\item \textcolor{blue}{Documentation}
-				\item Reporting
-				%
-			\end{enumerate} 
-			%
-		\end{column}
-		%
-	\end{columns}
+	\end{enumerate} 
 	%
-\end{frame}
+\end{lhframe}
 %
 %
 \begin{frame}
@@ -205,7 +180,8 @@
 	%
 	\begin{itemize}
 		%
-		\item A sound analysis, and sound results \alert{(even when we cannot answer our question)}.
+		\item A sound analysis and results \\
+		\alert{(even when we cannot answer our question)}.
 		%
 		\item An improved planning to get data.
 		%

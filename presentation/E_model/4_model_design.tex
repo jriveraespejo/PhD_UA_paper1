@@ -8,8 +8,8 @@
 \end{frame}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.60]{model_design1.png}}]
-	{Model design\footnote{Following \citet{Fogarty_et_al_2022}}}
+\begin{lhframe}[rhgraphic={\includegraphics[scale=2]{tide_machine.jpg}}]
+	{Model design and test\footnote{Following \citet{Fogarty_et_al_2022}}}
 	
 	Purpose:
 	%
@@ -20,57 +20,105 @@
 		\item to have a sound analysis
 		%
 	\end{itemize}
-	% 
-\end{lhframe}
-%
-%
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.59]{model_design2.png}}]
-	{Model design}
 	
 	Procedure:
 	%
 	\begin{itemize}
 		%
 		\item step by step, instantiating one difficulty at the time
-		\item Try the centered and non-centered versions
+		%
+		\item use probabilistic assumptions defined in \textcolor{blue}{estimand and process model}
+		%
+		\item is like running \textcolor{blue}{synthetic data generation} backwards
 		%
 	\end{itemize}
 	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=2]{tide_machine.jpg}}]
+	{Model design and test}
+	
+	We evaluate,
+	%
+	\begin{itemize}
+		%
+		\item the probabilistic model implementation \cite{McElreath_2020, Betancourt_et_al_2013} \\
+		{\small (centered and non-centered versions) }
+		%
+		\item prior predictive
+		\item ``health" of MCMC chains
+		\item parameter recovery
+		\item posterior predictive
+		\item power
+		%
+	\end{itemize}
+	% 
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.59]{model_design1.png}}]
+	{Probabilistic model}
+	
+	starts with,
+	%
+	\begin{itemize}
+		%
+		\item the simplest model
+		\item the simplest data generating procedure
+		%
+	\end{itemize}
+	% 
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.59]{model_design2.png}}]
+	{Probabilistic model}
+	
+	try,
+	%
+	\begin{itemize}
+		%
+		\item the centered and non-centered parametrization
+		%
+	\end{itemize}
+	% 
 \end{lhframe}
 %
 %
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.59]{model_design3.png}}]
-	{Model design}
+	{Probabilistic model}
 	
-	In total $5$ random effects models (from $5$ synthetic data types) were tested: 
+	escalate,
 	%
 	\begin{itemize}
 		%
-		\item only intercept, $M=10$ (centered, non-centered), 
-		%
-		\item multivariate regression, $M=10$ (centered, non-centered),
-		%
-		\item multivariate regression, $M$ per individual (centered, non-centered),
-		%
-		\item no known process (centered, non-centered),
-		%
-		\item multivariate regression with interaction, $M$ per individual (centered, non-centered),
+		\item complexity of model
+		\item traits of the data
 		%
 	\end{itemize}
 	%
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.55]{model_design5.png}}]
-	{Model design}
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.55]{model_design3.png}}]
+	{Probabilistic model}
 	
-	Procedure:
+	We tested $5$ random effects models: \\
+	{\small (from $5$ synthetic data types)} \\ 
+	{\small (centered, and non-centered)}
 	%
 	\begin{itemize}
 		%
-		\item notice we used the hypothesis and (some) probabilistic assumptions defined in section \textcolor{blue}{Estimand and process model}
+		\item only intercept, $M=10$, 
 		%
-		\item is like running section \textcolor{blue}{Synthetic data generation} backwards
+		\item causal model, $M=10$,
+		%
+		\item causal model, $M$ per individual,
+		%
+		\item no known process,
+		%
+		\item causal model with interaction, $M$ per individual,
 		%
 	\end{itemize}
 	%
@@ -78,7 +126,7 @@
 %
 %
 \begin{frame}
-	{Prior predictive simulation}
+	{Prior predictive}
 	%
 	\begin{columns}
 		%
@@ -110,8 +158,8 @@
 					a_{i} & \sim \; Normal( \mu_{a}, \sigma_{a}) \\
 					M_{i} & \sim \; LogNormal( \mu_{M}, \sigma_{M}) \\
 					\alpha & \sim \; Normal( 0, 0.2) \\
-					\alpha_{HS[i]} & \sim \; Normal( 0, 0.5) \\
-					\alpha_{E[i]} & \sim \; Normal( 0, 0.5) \\ 
+					\alpha_{HS[i]} & \sim \; Normal( 0, 0.3) \\
+					\alpha_{E[i]} & \sim \; Normal( 0, 0.3) \\ 
 					\beta_{A, HS[i]} & \sim \; Normal( 0, 0.3) \\
 					\beta_{P} & \sim \; Normal( 0, 0.3) \\
 					%
@@ -132,8 +180,29 @@
 \end{frame}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.45]{prior_predictive.pdf}}]
-	{Prior predictive simulation}
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.5]{prior_elicitation.png}}]
+	{Prior predictive}
+	
+	Undesired assumptions can easily creep in \textcolor{blue}{non-linear models}\footnote{Figure extracted from \citet{Rivera_2021}.} \\
+	Example:
+	%
+	\begin{align*}
+		\text{ \small{(\textcolor{black}{black} line)} } & \\
+		\theta & \sim N(0,100) \\
+		logit(p) & =  \theta
+	\end{align*}
+	%
+	\begin{align*}
+		\text{ \small{(\textcolor{blue}{blue} line)} } & \\
+		\theta & \sim N(0,1) \\
+		logit(p) & =  \theta
+	\end{align*}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{prior_predictive.pdf}}]
+	{Prior predictive}
 	
 	What our priors imply? \\ \\
 	\textcolor{blue}{NO undesired assumption} has crept in:
@@ -145,25 +214,225 @@
 		%
 	\end{itemize}
 	
-	i.e. the \alert{full space} of the scales \alert{can be reached} by the parameters
+	i.e. the \textcolor{blue}{scales' full space can be reached} by (a combination of) the parameters
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{chains1.pdf}}]
+	{``Health" of MCMC chains}
+	
+	The MCMC chains achieve,
+	%
+	\begin{itemize}
+		%
+		\item good convergence
+		\item good mixing
+		\item lack of autocorrelation
+		%
+	\end{itemize}
+	
+	same results on the \textcolor{blue}{ \texttt{n\_eff} } and \textcolor{blue}{ \texttt{RHat} } statistics.
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{chains2.pdf}}]
+	{``Health" of MCMC chains}
+	
+	The MCMC chains achieve,
+	%
+	\begin{itemize}
+		%
+		\item good convergence
+		\item good mixing
+		\item lack of autocorrelation
+		%
+	\end{itemize}
+	
+	same results on the \textcolor{blue}{ \texttt{n\_eff} } and \textcolor{blue}{ \texttt{RHat} } statistics.
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{chain_stat.pdf}}]
+	{``Health" of MCMC chains}
+	
+	The non-centered parametrization has,
+	%
+	\begin{itemize}
+		%
+		\item better \textcolor{blue}{ \texttt{n\_eff} } \\
+		(denoting lack of autocorrelation)
+		\item better \textcolor{blue}{ \texttt{Rhat} } \\
+		(denoting good convergence)
+		\item better mixing \\
+		(inspected visually, not shown)
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{recovery.pdf}}]
+	{Parameter recovery}
+	{On idealized data}
+	
+	The model,
+	%
+	\begin{itemize}
+		%
+		\item recovers the parameters in the right scale,
+		\item most of the ``true" parameters are inside of the \textcolor{blue}{compatibility intervals (CI)}
+		\item contrast are approximately correct
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{posterior_predictive.pdf}}]
+	{Posterior predictive}
+	
+	But how well reproduces the data?,
+	\subheading{The model with \textcolor{blue}{less working assumptions}\footnote{random effects causal model, with $M=10$},}
+	%
+	\begin{itemize}
+		%
+		\item captures the variability of the replicates,
+		\item provides a ``true" $H$ and $SI$
+		%
+	\end{itemize}
+	
+	More complex models, 
+	\begin{itemize}
+		%
+		\item captures even better the data, but might \textcolor{blue}{overfit},
+		\item avoid \textcolor{blue}{overfit} when the model is fit to the data (ITA \cite{Anderson_2008, Chamberlain_1965})
+		%
+	\end{itemize}
 	%
 \end{lhframe}
 %
 %
 \begin{frame}
-	{Parameter recovery}
-	%
-\end{frame}
-%
-%
-\begin{frame}
-	{Posterior predictive}
-	%
-\end{frame}
-%
-%
-\begin{frame}
 	{Power}
+	{Equivalent prior sampling method \cite{Winkler_1967, Kruschke_2014}} 
+	
+	\begin{figure}
+		\includegraphics[scale=0.45]{power_process.png}
+		\caption{ Flow of information in a power analysis, in which simulated data come from random hypothetical parameters. Extracted from \citet{Kruschke_2014}. }
+	\end{figure}
+	%
+\end{frame}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.55]{power_image.jpg}}]
+	{Power}
+	{Equivalent prior sampling method} 
+	%
+	\begin{enumerate}
+		%
+		\item generate idealized data 
+		%
+		\item generate parameters' distribution \\
+		\small{(with Bayes theorem)}
+		%
+		\item simulate data sample \\
+		\small{ (variability in data and parameters) }
+		%
+		\item apply models to simulated data \\
+		\small{ (include priors) }
+		%
+		\item evaluate desire goals
+		%
+		\begin{itemize}
+			\item reject the null hypothesis
+			\item affirm predicted value
+			\item achieve precision in estimate
+		\end{itemize}
+		%
+		\item repeat procedure \\
+		\small{ (to approximate power) }
+		%
+	\end{enumerate}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.50]{power_function.png}}]
+	{Power}
+	{Equivalent prior sampling method} 
+	%
+	\begin{enumerate}
+		%
+		\item \sout{generate idealized data}
+		%
+		\item \sout{generate parameters' distribution} \\
+		\small{(with Bayes theorem)}
+		%
+		\item \textcolor{blue}{simulate data sample} \\
+		\small{ (variability in data and parameters) }
+		%
+		\item \textcolor{blue}{apply models to simulated data} \\
+		\small{ (include priors) }
+		%
+		\item evaluate desire goals
+		%
+		\begin{itemize}
+			\item reject the null hypothesis
+			\item affirm predicted value
+			\item achieve precision in estimate
+		\end{itemize}
+		%
+		\item repeat procedure \\
+		\small{ (to approximate power) }
+		%
+	\end{enumerate}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.40]{ES_ROPE.png}}]
+	{Power}
+	{Equivalent prior sampling method} 
+	%
+	\begin{enumerate}
+		%
+		\item \sout{generate idealized data}
+		%
+		\item \sout{generate parameters' distribution} \\
+		\small{(with Bayes theorem)}
+		%
+		\item \sout{simulate data sample} \\
+		\small{(variability in data and parameters)}
+		%
+		\item \sout{apply models to simulated data} \\
+		\small{(include priors)}
+		%
+		\item \textcolor{blue}{evaluate desire goals}\footnote{region of practical equivalence (ROPE) \cite{Kruschke_2014}, effect sizes \cite{Cohen_1988, Sawilowsky_2009}}
+		%
+		\begin{itemize}
+			\item reject the null hypothesis
+			\item affirm predicted value
+			\item achieve precision in estimate
+		\end{itemize}
+		%
+		\item \textcolor{blue}{repeat procedure} \\
+		\small{ (to approximate power) }
+		%
+	\end{enumerate}
+	%
+\end{lhframe}
+%
+%
+\begin{frame}
+	{Power results}
+	
+	\begin{figure}
+		\includegraphics[scale=0.45]{power_process.png}
+		\caption{ Flow of information in a power analysis, in which simulated data come from random hypothetical parameters. Extracted from \citet{Kruschke_2014}. }
+	\end{figure}
 	%
 \end{frame}
 %

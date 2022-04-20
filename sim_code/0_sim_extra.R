@@ -367,7 +367,7 @@ parameter_recovery = function(stan_object, est_par, true_par,
                               prec=3, p=0.90){
   
   # # test
-  # stan_object=res_C
+  # stan_object=res_NC
   # est_par=par_est
   # true_par=par_true
   # p=0.90
@@ -550,6 +550,12 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
   # seed=1
 
   
+  # packages
+  require(rethinking)
+  require(tibble)
+  require(coda)
+  
+  
   # extract samples
   post = extract.samples( stan_object )
   idx = names(post) %in% est_diff
@@ -593,7 +599,7 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
   names(res_stan)[3:4] = c('CI_lower','CI_upper')
   
   # get the HPDI
-  hpdi_res = coda::HPDinterval(as.mcmc(cont_post), prob=p)
+  hpdi_res = HPDinterval( as.mcmc(cont_post), prob=p)
   attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
   
   res_stan = cbind(res_stan, hpdi_res) # join info

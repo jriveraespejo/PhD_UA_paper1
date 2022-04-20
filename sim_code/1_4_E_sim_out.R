@@ -399,9 +399,9 @@ res_NC = rstan::read_stan_csv( file.path( model_out, model_fit ) )
 
 # final comparison
 par_recovery_NC = parameter_recovery( stan_object = res_NC,
-                                   est_par = par_est,
-                                   true_par = par_true,
-                                   p=0.90)
+                                      est_par = par_est,
+                                      true_par = par_true,
+                                      p=0.90)
 par_recovery_NC
 # View(par_recovery_NC)
 # great samples for all parameters
@@ -438,14 +438,23 @@ cont_recovery_NC
 
 
 # recovery plot
+# pdf("recovery.pdf")
 recovery_plots(par_object=par_recovery_NC, 
                cont_object=cont_recovery_NC)
+# dev.off()
 # not good recovery of contrasts
 
 
 # triplot
+# pdf("chains1.pdf")
 tri_plot(stan_object=res_NC, pars=c('m_i','s_i','m_M'))
-tri_plot(stan_object=res_NC, pars=c( 'a',paste0('aHS[',1:3,']'), 'bP', 'bA' ))
+# dev.off()
+
+# pdf("chains2.pdf")
+tri_plot(stan_object=res_NC, pars=c( 'a', paste0('aHS[',1:3,']'), 
+                                     'bP', 'bA' ))
+# dev.off()
+
 tri_plot(stan_object=res_NC, pars=paste0('re_i[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('SI[', 1:5,']') )
 tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
@@ -454,10 +463,13 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 # lack of autocorrelation for all
 
 
+
 # distributional plots
+# pdf("posterior_predictive.pdf")
 distH_plot( stan_object=res_NC, true_data=data_true, 
             csize=6, rplot=c(3,2),
             par_object=par_recovery_C, M=10)
+# dev.off()
 # still captures the data
 
 
@@ -465,7 +477,11 @@ distH_plot( stan_object=res_NC, true_data=data_true,
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('m_i','s_i','m_M') )
 stat_plot(par_recovery_C, par_recovery_NC, pars=c('a','aHS','bP','bA') )
 stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
+
+# pdf("chain_stat.pdf")
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
+# dev.off()
+
 stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
 # most parameter have better n_eff and Rhat under non-centered
 

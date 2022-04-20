@@ -24,19 +24,20 @@
 				%
 				\item $H_{ik}=$ (observed) entropy replicates
 				%
-				\item $H_{i}=$ (latent) child's entropy
+				\item $H_{i}=$ (latent) ``true" entropy
 				%
-				\item $SI_{i}=$ (latent) child's SI score \alert{(inversely related to $H^{T}_{i}$)}
+				\item $SI_{i}=$ (latent) SI score \\
+				{\small \textcolor{blue}{(inversely related to $H^{T}_{i}$)} }
 				%
-				\item $A_{i}=$ child's ``hearing" age
+				\item $A_{i}=$ ``hearing" age (minimum)
 				%
-				\item $E_{i}=$ child's etiology of disease
+				\item $E_{i}=$ etiology of disease
 				%
-				\item $HS_{i}=$ child's hearing status
+				\item $HS_{i}=$ hearing status
 				%
-				\item $PTA_{i}=$ child's pure tone average
+				\item $PTA_{i}=$ pure tone average (standardized)
 				%
-				\item variables \alert{assumed independent}, beyond the described relationships,
+				\item variables \textcolor{blue}{assumed independent}, beyond the described relationships,
 				\begin{equation*}
 					%
 					\begin{aligned} 
@@ -67,7 +68,7 @@
 					\node at (-2,2.7) {$U_{E}$};
 					\node at (1.5,1.5) {$PTA_{i}$};
 					\node at (1,2.7) {$U_{P}$};
-					\node at (-2,1) {$A_{i}$};
+					\node at (-2.1,1) {$A_{i}$};
 					\node at (-2.8,1) {$U_{A}$};
 					
 					% paths
@@ -76,10 +77,11 @@
 					\draw[{Circle[open]}-{latex}](-0.5,0)--(0.85,0); % SIi->Hi
 					\draw[{Circle[open]}-{latex}](-1.6,-0.4)--(-0.5,0); % Ui->SIi
 					\draw[{Circle}-{latex}](-0.45,1.6)--(-0.45,0.05); % HSi->SIi
+					\draw[-{latex}](-0.45,1.50)--(-1.90,0.75); % HSi->Ai
+					\draw[-{latex}](-0.45,1.5)--(0.9,1.5); % HSi->PTAi
 					\draw[{Circle}-{latex}](-2,1.5)--(-0.5,1.5); % Ei->HSi
-					\draw[{Circle}-{latex}](1,1.5)--(-0.4,1.5); % PTAi->HSi
 					\draw[-{latex}](-1.9,1.45)--(-0.47,0.05); % Ei->SIi
-					\draw[-{latex}](0.9,1.45)--(-0.4,0.05); % PTAi->SIi
+					\draw[{Circle}-{latex}](0.95,1.55)--(-0.4,0.05); % PTAi->SIi
 					\draw[{Circle}-{latex}](-2,0.75)--(-0.5,0); % Ai->SIi
 					\draw[{Circle[open]}-{latex}](-1.95,2.5)--(-1.95,1.6); % UE->Ei
 					\draw[{Circle[open]}-{latex}](-0.45,2.5)--(-0.45,1.6); % UHS->HSi
@@ -105,6 +107,169 @@
 %
 %
 \begin{frame}
+	{Probabilistic (causal) model}
+	{First form}
+	%
+	\begin{columns}
+		%
+		\begin{column}{0.5\textwidth}
+			%
+			\begin{equ}
+				%
+				\begin{aligned} 
+					%
+					H^{O}_{ik} \leftarrow & \; f(H^{T}_{i}, U_{ik}) \\
+					%
+					H^{T}_{i} \leftarrow & \; f(SI_{i}) \\
+					%
+					SI_{i} \leftarrow & \; f(HS_{i}, A_{i}, E_{i}, PTA_{i}, U_{i}) \\ \\ \\
+					%
+					HS_{i} \leftarrow & \; f(U_{HS}) \\
+					%
+					A_{i} \leftarrow & \; f(U_{A}) \\
+					%
+					E_{i} \leftarrow & \; f(U_{E}) \\
+					%
+					PTA_{i} \leftarrow & \; f(U_{P}) \\
+					%
+					U \sim & \; P(\pmb{U})
+					%
+				\end{aligned}
+				%
+				\caption*{(a) general structural model}
+			\end{equ}
+			%
+		\end{column}
+		%
+		\begin{column}{0.5\textwidth}  
+			%
+			\begin{equ}
+				%
+				\begin{aligned} 
+					%
+					H^{O}_{ik} & \sim \; BetaProp( H^{T}_{i}, M_{ik}) \\
+					%
+					H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
+					%
+					SI_{i} & \sim \; Normal( \mu_{SI}, \sigma_{Ui}) \\
+					%
+					& \mu_{SI} = \alpha + \alpha_{HS[i]} + \alpha_{E[i]} \\ 
+					%
+					& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\
+					%
+					HS_{i} & \sim \; \text{data} \\
+					%
+					A_{i} & \sim \; \text{data} \\
+					%
+					E_{i} & \sim \; \text{data} \\
+					%
+					PTA_{i} & \sim \; \text{data} \\
+					%
+					U & \sim \; \text{unobservable}
+					%
+				\end{aligned}
+				%
+				\caption*{(a) general probabilistic model}
+			\end{equ}
+			%
+		\end{column}
+		%
+	\end{columns}
+	%
+\end{frame}
+%
+%
+\begin{frame}
+	{Probabilistic (causal) model}
+	{First form}
+	%
+	\begin{columns}
+		%
+		\begin{column}{0.5\textwidth}
+			%
+			Notice, 
+			\begin{itemize}
+				\item $\alpha$, $\alpha_{HS[i]}$, $\alpha_{E[i]}$, $\beta_{A, HS[i]}$, $\beta_{P}$ \\
+				are structural parameters \textcolor{blue}{(as in SEM)}
+				%
+				\item $U_{ik}=$ replicates measurement error \\
+				$U_{i}=$ between child SI variability
+				%
+				\item variability of $U_{ik}$ is modeled by $M_{ik}$ \\
+				variability of $U_{i}$ is modeled by $\sigma_{Ui}$
+				%
+			\end{itemize}
+		\end{column}
+		%
+		\begin{column}{0.5\textwidth}  
+			%
+			\begin{equ}
+				%
+				\begin{aligned} 
+					%
+					H^{O}_{ik} & \sim \; \textcolor{blue}{BetaProp}( H^{T}_{i}, M_{ik}) \\
+					%
+					H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
+					%
+					SI_{i} & \sim \; \textcolor{blue}{Normal}( \mu_{SI}, \sigma_{Ui}) \\
+					%
+					& \mu_{SI} = \alpha + \alpha_{HS[i]} + \alpha_{E[i]} \\ 
+					%
+					& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\
+					%
+					HS_{i} & \sim \; \text{data} \\
+					%
+					A_{i} & \sim \; \text{data} \\
+					%
+					E_{i} & \sim \; \text{data} \\
+					%
+					PTA_{i} & \sim \; \text{data} \\
+					%
+					U & \sim \; \textcolor{blue}{\text{unobservable}}
+					%
+				\end{aligned}
+				%
+				\caption*{(a) general probabilistic model}
+			\end{equ}
+			%
+		\end{column}
+		%
+	\end{columns}
+	%
+\end{frame}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.38]{BetaProp_dist.pdf}}]
+	{Probabilistic (causal) model}
+	{Express variability in BetaProp}
+	
+	\begin{equ}
+		%
+		\begin{aligned} 
+			%
+			H^{O}_{ik} & \sim \; BetaProp( H^{T}_{i}, \textcolor{blue}{ M_{ik} } ) \\
+			%
+			H^{T}_{i} & = \; \alpha / ( \alpha + \beta ) \\
+			%
+			M_{ik} & = \; \alpha + \beta \\ \\
+			%
+			\alpha & = \; H^{T}_{i} \cdot M_{ik} \\
+			%
+			\beta & = \; (1 - H^{T}_{i} ) \cdot M_{ik} \\ \\
+			%
+			\alpha & = \; 0.5 \cdot 2 \\
+			%
+			\beta & = \; (1 - 0.5 ) \cdot 2
+			%
+		\end{aligned}
+		%
+		%\caption*{(a) general probabilistic model}
+	\end{equ}
+	%
+\end{lhframe}
+%
+%
+\begin{frame}
 	{Interested in two effects}
 	%
 	\begin{columns}
@@ -119,16 +284,13 @@
 					%
 					\item children’s characteristics that lead to the fitting of specific apparatus,
 					%
-					\item the (convenience of) sample selection \alert{(fixed with post-stratification)}
+					\item the (convenience of) sample selection \textcolor{blue}{(fixed with post-stratification)}
 					%
 				\end{itemize}
 				%
 				\item to do the last, we stratify for all variables that explain variability, ergo, use a \textcolor{blue}{direct effects} model
 				%
 				\item two levels: replicates ($k$), children ($i$), denoted by discontinuous squares
-				%
-				\item $U_{ik}=$ replicates measurement error \\
-				$U_{i}=$ between child SI variability \\
 				%
 			\end{enumerate}
 			%
@@ -151,7 +313,7 @@
 					%\node at (-2,2.7) {$U_{E}$};
 					%\node at (1.5,1.5) {$PTA_{i}$};
 					%\node at (1,2.7) {$U_{P}$};
-					\node at (-2,1) {$A_{i}$};
+					%\node at (-2,1) {$A_{i}$};
 					%\node at (-2.8,1) {$U_{A}$};
 					
 					% paths
@@ -160,11 +322,12 @@
 					\draw[{Circle[open]}-{latex}](-0.5,0)--(0.85,0); % SIi->Hi
 					\draw[{Circle[open]}-{latex}](-1.6,-0.4)--(-0.5,0); % Ui->SIi
 					\draw[{Circle}-{latex}](-0.45,1)--(-0.45,0.05); % HSi->SIi
+					%\draw[-{latex}](-0.45,0.95)--(-1.90,0.75); % HSi->Ai
 					%\draw[{Circle}-{latex}](-2,1.5)--(-0.5,1.5); % Ei->HSi
 					%\draw[{Circle}-{latex}](1,1.5)--(-0.4,1.5); % PTAi->HSi
 					%\draw[-{latex}](-1.9,1.45)--(-0.47,0.05); % Ei->SIi
 					%\draw[-{latex}](0.9,1.45)--(-0.4,0.05); % PTAi->SIi
-					\draw[{Circle}-{latex}](-2,0.75)--(-0.5,0); % Ai->SIi
+					%\draw[{Circle}-{latex}](-2,0.75)--(-0.5,0); % Ai->SIi
 					%\draw[{Circle[open]}-{latex}](-1.95,2.5)--(-1.95,1.6); % UE->Ei
 					%\draw[{Circle[open]}-{latex}](-0.45,2.5)--(-0.45,1.6); % UHS->HSi
 					%\draw[{Circle[open]}-{latex}](0.95,2.5)--(0.95,1.6); % UP->PTAi
@@ -195,7 +358,7 @@
 					%\node at (-2,2.7) {$U_{E}$};
 					\node at (1.5,1.5) {$PTA_{i}$};
 					%\node at (1,2.7) {$U_{P}$};
-					\node at (-2,1) {$A_{i}$};
+					\node at (-2.1,1) {$A_{i}$};
 					%\node at (-2.8,1) {$U_{A}$};
 					
 					% paths
@@ -204,11 +367,12 @@
 					\draw[{Circle[open]}-{latex}](-0.5,0)--(0.85,0); % SIi->Hi
 					\draw[{Circle[open]}-{latex}](-1.6,-0.4)--(-0.5,0); % Ui->SIi
 					\draw[{Circle}-{latex}](-0.45,1.6)--(-0.45,0.05); % HSi->SIi
+					\draw[-{latex}](-0.45,1.50)--(-1.90,0.75); % HSi->Ai
+					\draw[-{latex}](-0.45,1.5)--(0.9,1.5); % HSi->PTAi
 					\draw[{Circle[color=red]}-{latex}](-2,1.5)--(-0.5,1.5); % Ei->HSi
-					\draw[{Circle[color=red]}-{latex}](1,1.5)--(-0.4,1.5); % PTAi->HSi
 					\draw[-{latex}](-1.9,1.45)--(-0.47,0.05); % Ei->SIi
-					\draw[-{latex}](0.9,1.45)--(-0.4,0.05); % PTAi->SIi
-					\draw[{Circle}-{latex}](-2,0.75)--(-0.5,0); % Ai->SIi
+					\draw[{Circle[color=red]}-{latex}](0.95,1.55)--(-0.4,0.05); % PTAi->SIi
+					\draw[{Circle[color=red]}-{latex}](-2,0.75)--(-0.5,0); % Ai->SIi
 					%\draw[{Circle[open]}-{latex}](-1.95,2.5)--(-1.95,1.6); % UE->Ei
 					%\draw[{Circle[open]}-{latex}](-0.45,2.5)--(-0.45,1.6); % UHS->HSi
 					%\draw[{Circle[open]}-{latex}](0.95,2.5)--(0.95,1.6); % UP->PTAi
@@ -233,7 +397,7 @@
 %
 \begin{frame}
 	{Probabilistic (causal) model}
-	{First form}
+	{Second form}
 	%
 	\begin{columns}
 		%
@@ -242,16 +406,44 @@
 			\begin{equ}
 				%
 				\begin{aligned} 
+					H^{O}_{ik} \leftarrow & \; f(H^{T}_{i}, U_{ik}) \\
 					%
-					H^{O}_{ik} & \sim \; BetapProp( H^{T}_{i}, M_{ik}) \\
+					H^{T}_{i} \leftarrow & \; f(SI_{i}) \\
+					%
+					SI_{i} \leftarrow & \; f(HS_{i}, \textcolor{red}{A_{i}}, \textcolor{red}{E_{i}}, \textcolor{red}{PTA_{i}}, U_{i} ) \\ \\ \\
+					%
+					HS_{i} \leftarrow & \; f(U_{HS}) \\
+					%
+					A_{i} \leftarrow & \; f(U_{A}) \\
+					%
+					E_{i} \leftarrow & \; f(U_{E}) \\
+					%
+					PTA_{i} \leftarrow & \; f(U_{P}) \\
+					%
+					U \sim & \; P(\pmb{U})
+					%
+				\end{aligned}
+				%
+				\caption*{(a) general structural model}
+			\end{equ}
+			%
+		\end{column}
+		%
+		\begin{column}{0.5\textwidth}  
+			%
+			\begin{equ}
+				%
+				\begin{aligned} 
+					%
+					H^{O}_{ik} & \sim \; BetaProp( H^{T}_{i}, M_{ik}) \\
 					%
 					H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
 					%
-					SI_{i} & \sim \; Normal( \mu_{SI}, \sigma_{Ui}) \\
+					SI_{i} & = \; a_{i} + \alpha + \alpha_{HS[i]} + \textcolor{red}{\alpha_{E[i]}} \\ 
 					%
-					& \mu_{SI} = \alpha + \alpha_{HS[i]} + \alpha_{E[i]} \\ 
+					& \quad + \textcolor{red}{ \beta_{A, HS[i]} (A_{i} - \bar{A}) } + \textcolor{red}{\beta_{P} PTA_{i}} \\
 					%
-					& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\
+					a_{i} & \sim \; Normal( 0, \sigma_{Ui}) \\
 					%
 					HS_{i} & \sim \; \text{data} \\
 					%
@@ -266,143 +458,6 @@
 				\end{aligned}
 				%
 				\caption*{(a) general probabilistic model}
-			\end{equ}
-			%
-		\end{column}
-		%
-		\begin{column}{0.5\textwidth}  
-			%
-			\begin{equ}
-				%
-				\begin{aligned} 
-					%
-					H^{O}_{ik} \leftarrow & \; f(H^{T}_{i}, U_{ik}) \\
-					%
-					H^{T}_{i} \leftarrow & \; f(SI_{i}) \\
-					%
-					SI_{i} \leftarrow & \; f(HS_{i}, A_{i}, E_{i}, PTA_{i}, U_{i}) \\ \\ \\
-					%
-					HS_{i} \leftarrow & \; f(U_{HS}) \\
-					%
-					A_{i} \leftarrow & \; f(U_{A}) \\
-					%
-					E_{i} \leftarrow & \; f(U_{E}) \\
-					%
-					PTA_{i} \leftarrow & \; f(U_{P}) \\
-					%
-					U \sim & \; P(\pmb{U})
-					%
-				\end{aligned}
-				%
-				\caption*{(a) general structural model}
-			\end{equ}
-			%
-		\end{column}
-		%
-	\end{columns}
-	%
-\end{frame}
-%
-%
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.38]{BetaProp_dist.pdf}}]
-	{Probabilistic (causal) model}
-	{First form}
-	
-	\begin{equ}
-		%
-		\begin{aligned} 
-			%
-			H^{O}_{ik} & \sim \; \color{red}{ BetapProp( H^{T}_{i}, M_{ik} ) }\\
-			%
-			H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
-			%
-			SI_{i} & \sim \; Normal( \mu_{SI}, \sigma_{Ui}) \\
-			%
-			& \mu_{SI} = \alpha + \alpha_{HS[i]} + \alpha_{E[i]} \\ 
-			%
-			& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\
-			%
-			HS_{i} & \sim \; \text{data} \\
-			%
-			A_{i} & \sim \; \text{data} \\
-			%
-			E_{i} & \sim \; \text{data} \\
-			%
-			PTA_{i} & \sim \; \text{data} \\
-			%
-			U & \sim \; \text{unobservable}
-			%
-		\end{aligned}
-		%
-		\caption*{(a) general probabilistic model}
-	\end{equ}
-	%
-\end{lhframe}
-%
-%
-\begin{frame}
-	{Probabilistic (causal) model}
-	{Second form}
-	%
-	\begin{columns}
-		%
-		\begin{column}{0.5\textwidth}
-			%
-			\begin{equ}
-				%
-				\begin{aligned} 
-					%
-					H^{O}_{ik} & \sim \; BetapProp( H^{T}_{i}, M_{ik}) \\
-					%
-					H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
-					%
-					SI_{i} & = \; a_{i} + \alpha + \alpha_{HS[i]} + \color{red}{\alpha_{E[i]}} \\ 
-					%
-					& \quad + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \color{red}{\beta_{P} PTA_{i}} \\
-					%
-					a_{i} & \sim \; Normal( 0, \sigma_{Ui}) \\
-					%
-					HS_{i} & \sim \; \color{blue}{\text{data}} \\
-					%
-					A_{i} & \sim \; \color{blue}{\text{data}} \\
-					%
-					E_{i} & \sim \; \color{blue}{\text{data}} \\
-					%
-					PTA_{i} & \sim \; \color{blue}{\text{data}} \\
-					%
-					U & \sim \; \color{blue}{\text{unobservable}}
-					%
-				\end{aligned}
-				%
-				\caption*{(a) general probabilistic model}
-			\end{equ}
-			%
-		\end{column}
-		%
-		\begin{column}{0.5\textwidth}  
-			%
-			\begin{equ}
-				%
-				\begin{aligned} 
-					H^{O}_{ik} \leftarrow & \; f(H^{T}_{i}, U_{ik}) \\
-					%
-					H^{T}_{i} \leftarrow & \; f(SI_{i}) \\
-					%
-					SI_{i} \leftarrow & \; f(HS_{i}, A_{i}, E_{i}, PTA_{i}, U_{i}) \\ \\ \\
-					%
-					HS_{i} \leftarrow & \; f(U_{HS}) \\
-					%
-					A_{i} \leftarrow & \; f(U_{A}) \\
-					%
-					E_{i} \leftarrow & \; f(U_{E}) \\
-					%
-					PTA_{i} \leftarrow & \; f(U_{P}) \\
-					%
-					U \sim & \; P(\pmb{U})
-					%
-				\end{aligned}
-				%
-				\caption*{(a) general structural model}
 			\end{equ}
 			%
 		\end{column}

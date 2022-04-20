@@ -8,7 +8,7 @@
 \end{frame}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.7]{sim_code1.png}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.8]{sim_code1.png}}]
 	{Idealized data\footnote{more details in file: \textcolor{blue}{\texttt{1\_2\_E\_sim\_fun.R} }}}
 	
 	Simulation data can serve as \cite{Kruschke_2014, McElreath_2020},
@@ -21,16 +21,20 @@
 			\item power
 		\end{itemize}
 		%
-		\item A (possible) reflection of a population, 
+		\item A reflection of a population, 
 		%
 		\begin{itemize}
-			\item children's group proportion \cite{DeRaeve_2016}
+			\item \citet{DeRaeve_2016}: \\
+			$70$ $HI/CI$, $130$ $HI/HA$
+			%
+			\item Our idealized data: \\
+			$150$ $NH$, $70$ $HI/CI$, $130$ $HI/HA$
 		\end{itemize}
 		%
-		\item A (possible) reflection of a hypothesis,
+		\item A reflection of a hypothesis,
 		%
 		\begin{itemize}
-			\item size of effects \alert{(no previous information)}
+			\item size of effects
 		\end{itemize}
 		%
 	\end{enumerate}
@@ -38,22 +42,23 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.7]{sim_code1.png}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.8]{sim_code1.png}}]
 	{Idealized data}
 	
 	About the size of the effects \\
-	\alert{(in logits, no previous info)},
+	{\small \textcolor{blue}{(in logits, no previous info)} }
 	%
 	\begin{enumerate}
 		%
-		\item $aE=-0.1$, assumes $E$ ordered by severity \alert{(it might not be possible)},
+		\item $aE=0$, ordered by severity \\
+		{\small \textcolor{blue}{($cor(E, HS) \approx 1$, ordering might not be possible)} },
 		%
-		\item $aHS=-0.4$, assumes $0.4$ difference between $NH$ children and $HI/CI$,
+		\item $aHS=-0.4$, difference between $NH$ children and $HI/CI$,
 		%
-		\item $bP=-0.1$, assumes decrease of SI per $PTA$ unit \\
+		\item $bP=-0.1$, per $PTA$ unit \\
 		($+10 \; PTA$ units $\Rightarrow -1$ logit),
 		%
-		\item $bA=-0.15$, assumes decrease of SI per $A$ unit, beyond the minimum \\
+		\item $bA=-0.15$, per $A$ unit, above the minimum \\
 		($+10 \; A$ units $\Rightarrow +1.5$ logits),
 		%
 	\end{enumerate}
@@ -67,21 +72,21 @@
 	\begin{enumerate}
 		%
 		\item variables are generated in a random fashion 
-		\item random effects define the between SI variability
+		\item between children $SI$ variability are defined by the random effects
 		%
 	\end{enumerate}
 	%
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.48]{sim_code3.png}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.47]{sim_code3.png}}]
 	{Idealized data}
 	
 	\begin{enumerate}
 		%
 		\item we use \textcolor{blue}{second form} of the probabilistic model
 		\item ``true' entropy ($Ht$) is inversely related to $SI$
-		\item we simulate measurement error through $M$ from $BetaProp()$ distribution (as previously shown).
+		\item we simulate measurement error through $M$ from $BetaProp()$ distribution.
 		%
 	\end{enumerate}
 	%
@@ -101,11 +106,13 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.45]{data_example.pdf}}]
+\begin{frame}
 	{Example}
-	
-	notice we can simulate any desired relationship, or lack of thereof.
 	%
-\end{lhframe}
+	\begin{figure}
+		\includegraphics[scale=0.46]{data_example.pdf}
+	\end{figure}
+	%
+\end{frame}
 %
 %
