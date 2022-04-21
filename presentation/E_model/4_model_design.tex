@@ -219,7 +219,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{chains1.pdf}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.40]{chains1.pdf}}]
 	{``Health" of MCMC chains}
 	
 	The MCMC chains achieve,
@@ -237,7 +237,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{chains2.pdf}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.40]{chains2.pdf}}]
 	{``Health" of MCMC chains}
 	
 	The MCMC chains achieve,
@@ -255,7 +255,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{chain_stat.pdf}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.38]{chain_stat.pdf}}]
 	{``Health" of MCMC chains}
 	
 	The non-centered parametrization has,
@@ -274,7 +274,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{recovery.pdf}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.37]{recovery.pdf}}]
 	{Parameter recovery}
 	{On idealized data}
 	
@@ -291,7 +291,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.43]{posterior_predictive.pdf}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{posterior_predictive.pdf}}]
 	{Posterior predictive}
 	
 	But how well reproduces the data?,
@@ -410,7 +410,7 @@
 		\item \sout{apply models to simulated data} \\
 		\small{(include priors)}
 		%
-		\item \textcolor{blue}{evaluate desire goals}\footnote{region of practical equivalence (ROPE) \cite{Kruschke_2014}, effect sizes \cite{Cohen_1988, Sawilowsky_2009}}
+		\item \textcolor{blue}{evaluate desire goals}\footnote{use ROPE \cite{Kruschke_2014}, and effect sizes \cite{Cohen_1988, Sawilowsky_2009}}
 		%
 		\begin{itemize}
 			\item reject the null hypothesis
@@ -426,14 +426,93 @@
 \end{lhframe}
 %
 %
-\begin{frame}
-	{Power results}
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.35]{power_result1.pdf}}]
+	{Power results} 
 	
-	\begin{figure}
-		\includegraphics[scale=0.45]{power_process.png}
-		\caption{ Flow of information in a power analysis, in which simulated data come from random hypothetical parameters. Extracted from \citet{Kruschke_2014}. }
-	\end{figure}
+	For this parameter set,
 	%
-\end{frame}
+	\begin{itemize}
+		%
+		\item reject the null hypothesis, \\
+		never achieved in \textcolor{blue}{structural parameters},
+		%
+		\item affirm predicted value, \\
+		in \textcolor{blue}{all} shown parameters
+		%
+		\item achieve precision in estimate, \\
+		in \textcolor{blue}{some} parameters is reached
+		%
+	\end{itemize}
+	
+	Notice,
+	%
+	\begin{itemize}
+		%
+		\item between child $SI$ variability,
+		\item replicates measurement error ($M$),
+		\item not much difference with $2x$ comparisons {\small(except for $M$)}
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.35]{power_result2.pdf}}]
+	{Power results} 
+	
+	For group contrasts,
+	%
+	\begin{itemize}
+		%
+		\item reject the null hypothesis, \\
+		closest for the \textcolor{blue}{largest contrast},
+		%
+		\item affirm predicted value, \\
+		in \textcolor{blue}{all} shown contrasts,
+		%
+		\item achieve precision in estimate, \\
+		\textcolor{blue}{grows} with more children
+		%
+	\end{itemize}
+	
+	Notice,
+	%
+	\begin{itemize}
+		%
+		\item not much difference with $2x$ comparisons
+		\item group contrasts are easier to identify {\small (larger sample size per comparison) }
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.35]{power_result3.pdf}}]
+	{Power results} 
+	
+	For individual contrasts,
+	%
+	\begin{itemize}
+		%
+		\item reject the null hypothesis, \\
+		\textcolor{blue}{depends} on the contrast of interest,
+		%
+		\item affirm predicted value, \\
+		for \textcolor{blue}{some} is achieved,
+		%
+		\item achieve precision in estimate, \\
+		clearly requires more sample size
+		%
+	\end{itemize}
+	
+	Notice,
+	%
+	\begin{itemize}
+		%
+		\item we see a clear difference with $2x$ comparisons {\small (more sample at the appropriate level) }
+		%
+	\end{itemize}
+	%
+\end{lhframe}
 %
 %

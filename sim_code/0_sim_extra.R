@@ -789,12 +789,15 @@ prior_plots = function(precis_obj, var_str, yrange=c(0,1), a=0.2){
 # arguments:
 #     par_object = object generated with parameter_recovery() function
 #     con_object = object generated with contrast_recovery() function
+#     par_plot = parameters to plot
 #
-recovery_plots = function(par_object, cont_object=NULL){
+recovery_plots = function(par_object, cont_object=NULL,
+                          par_plot){
   
   # # test
-  # par_object = par_recovery
-  # cont_object = NULL
+  # par_object=par_recovery_NC 
+  # cont_object=cont_recovery_NC
+  # par_plot=c('m_i','s_i','m_M','a','aHS','aE','bP','bA','SI')
   
   # figure parameters
   opar = par()
@@ -808,24 +811,40 @@ recovery_plots = function(par_object, cont_object=NULL){
                   p6 = 're_j',
                   p7 = 'M',
                   p8 = c('SI','m_SI'),
-                  p9 = 'Ht')
+                  p9 = 'Ht' )
+  
+  
+  # selecting variables to plot
+  for( i in 1:length(par_int) ){
+    idx = par_int[[i]] %in% par_plot
+    par_int[[i]] = par_int[[i]][idx]
+  }
+  idx = sapply(par_int, length)!=0
+  par_int = par_int[idx]
+  
   
   par_mom = list()
   par_row = c()
   
   # identify parameter
-  # i=2;j=1
   for(i in 1:length(par_int)){
     idx = index_detect_par(par_object, est_par=par_int[[i]] )
     par_mom[[i]] = par_object[idx,]
     par_row = c(par_row, nrow(par_mom[[i]]) )     # zero data
   }
   par_mom = par_mom[par_row!=0] # only available data
+  par_n = length(par_mom)
   
   
   # contrast data
   if( !is.null(cont_object) ){
-    par_mom = c( par_mom, list(cont_object) )
+    
+    for(i in 1:length(par_int)){
+      idx = index_detect_par(cont_object, est_par=par_int[[i]] )
+      par_mom[[i+par_n]] = cont_object[idx,]
+      par_row = c(par_row, nrow(par_mom[[i+par_n]]) )     # zero data
+    }
+    par_mom = par_mom[par_row!=0] # only available data
   }
   
   

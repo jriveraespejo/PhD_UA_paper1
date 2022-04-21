@@ -105,7 +105,9 @@ sum(par_recovery_C$precision)/nrow(par_recovery_C)
 
 
 # recovery plot
-recovery_plots(par_object=par_recovery_C, cont_object=NULL)
+recovery_plots(par_object=par_recovery_C, 
+               cont_object=NULL,
+               par_plot=c('a','m_i','s_i','SI'))
 # still not bad recovery of SI and Ht
 
 
@@ -166,7 +168,9 @@ sum(par_recovery_NC$precision)/nrow(par_recovery_NC)
 
 
 # recovery plot
-recovery_plots(par_object=par_recovery_NC, cont_object=NULL)
+recovery_plots(par_object=par_recovery_NC, 
+               cont_object=NULL,
+               par_plot=c('a','m_i','s_i','SI'))
 # still great recovery
 
 
@@ -365,7 +369,8 @@ cont_recovery_C
 
 # recovery plot
 recovery_plots(par_object=par_recovery_C, 
-               cont_object=cont_recovery_C)
+               cont_object=cont_recovery_C,
+               par_plot=c('a','m_i','s_i','m_M','aHS','aE','bP','bA','SI'))
 # not good for random effects
 
 
@@ -412,13 +417,13 @@ par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
 # with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
 sum(par_recovery_NC$sign)/nrow(par_recovery_NC)
-# 93.9% correct sign
+# 93.7% correct sign
 
 sum(par_recovery_NC$reject_null)/nrow(par_recovery_NC)
-# 47.4% reject the null
+# 47.1% reject the null
 
 sum(par_recovery_NC$accept_val)/nrow(par_recovery_NC)
-# 67.6% reject the null
+# 67.7% reject the null
 
 sum(par_recovery_NC$precision)/nrow(par_recovery_NC)
 # 45.1% reject the null
@@ -440,7 +445,8 @@ cont_recovery_NC
 # recovery plot
 # pdf("recovery.pdf")
 recovery_plots(par_object=par_recovery_NC, 
-               cont_object=cont_recovery_NC)
+               cont_object=cont_recovery_NC,
+               par_plot=c('a','m_i','s_i','m_M','aHS','aE','bP','bA','SI'))
 # dev.off()
 # not good recovery of contrasts
 
@@ -608,7 +614,8 @@ cont_recovery_C
 
 # recovery plot
 recovery_plots(par_object=par_recovery_C, 
-               cont_object=cont_recovery_C)
+               cont_object=cont_recovery_C,
+               par_plot=c('m_i','s_i','m_M','a','aHS','aE','bP','bA','SI'))
 # still good recovery
 
 
@@ -682,7 +689,8 @@ cont_recovery_NC
 
 # recovery plot
 recovery_plots(par_object=par_recovery_NC, 
-               cont_object=cont_recovery_NC)
+               cont_object=cont_recovery_NC,
+               par_plot=c('m_i','s_i','m_M','a','aHS','aE','bP','bA','SI'))
 # still good recovery
 
 
@@ -972,7 +980,8 @@ cont_recovery_C
 
 # recovery plot
 recovery_plots(par_object=par_recovery_C, 
-               cont_object=cont_recovery_C)
+               cont_object=cont_recovery_C,
+               par_plot=c('m_i','s_i','m_M','a','aHS','aE','bP','bA','SI'))
 # cannot reject contrasts Ho: bX=0
 
 
@@ -1049,7 +1058,8 @@ cont_recovery_NC
 
 # recovery plot
 recovery_plots(par_object=par_recovery_NC, 
-               cont_object=cont_recovery_NC)
+               cont_object=cont_recovery_NC,
+               par_plot=c('m_i','s_i','m_M','a','aHS','aE','bP','bA','SI'))
 # well enough parameters
 
 

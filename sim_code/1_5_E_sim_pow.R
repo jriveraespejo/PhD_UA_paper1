@@ -43,13 +43,36 @@ source( file.path( getwd(), 'sim_code', '1_2_E_sim_fun.R') )
 
 # load results
 load(file.path( getwd(), 'sim_chain', 'Hbeta_sim2_power.RData'))
-# par_res
+# View( par_res )
+
 
 
 # plot results
-plot_power(d=par_res, exclude='SI', plotN=1)
-plot_power(d=par_res, exclude='SI', plotN=2)
-plot_power(d=par_res, exclude='SI', plotN=3)
+unique(par_res$par_names)
+
+# pdf("power_result1.pdf", width=6, height=10)
+plot_power(d=par_res, # object from Epower() function
+           par_plot=c('bA','bP','s_i','m_M'), # parameters to find power
+           contrast=F, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 1) # number for the set of plot to show)
+# dev.off()
 
 
-  
+# pdf("power_result2.pdf", width=6, height=10)
+plot_power(d=par_res, # object from Epower() function
+           par_plot='aHS', # parameters to find power
+           contrast=T, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 2) # number for the set of plot to show)
+# dev.off()
+
+
+# pdf("power_result3.pdf", width=6, height=10)
+plot_power(d=par_res, # object from Epower() function
+           par_plot='SI', # parameters to find power
+           contrast=T, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 1) # number for the set of plot to show)
+# dev.off()
+
