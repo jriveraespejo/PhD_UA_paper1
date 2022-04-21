@@ -594,5 +594,5 @@ mod$sample( data=mom$dL,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95) #,init=0
-# YES divergent transitions: 30-100 of 4000
+# NO divergent transitions
 
