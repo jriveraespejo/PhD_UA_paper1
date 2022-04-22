@@ -27,9 +27,9 @@ source( file.path( getwd(), 'sim_code', '1_2_E_sim_fun.R') )
 # # run only once
 # #
 # Epower( power_save=file.path(getwd(), 'sim_chain'), # power result dir need to include getwd()
-#         sim_name='Hbeta_sim2_power.RData', # file_save need to include getwd()
+#         sim_name='E_sim2_power.RData', # file_save need to include getwd()
 #         sim_save=file.path(getwd(), 'sim_data'), # file_name need to include '.RData'
-#         model_name='Hbeta_NC_sim2', # model for which we want to calculate power
+#         model_name='E_NC_sim2', # model for which we want to calculate power
 #         model_in=file.path(getwd(), 'sim_models'), # location load models
 #         model_out=file.path(getwd(), 'sim_chain'), # location to save results
 #         Nsim=100, # number of simulation for power
@@ -42,7 +42,7 @@ source( file.path( getwd(), 'sim_code', '1_2_E_sim_fun.R') )
 
 
 # load results
-load(file.path( getwd(), 'sim_chain', 'Hbeta_sim2_power.RData'))
+load(file.path( getwd(), 'sim_chain', 'E_sim2_power.RData'))
 # View( par_res )
 
 

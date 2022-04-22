@@ -8,7 +8,7 @@
 \end{frame}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.8]{sim_code1.png}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.7]{sim_code1.png}}]
 	{Idealized data\footnote{more details in file: \textcolor{blue}{\texttt{1\_2\_E\_sim\_fun.R} }}}
 	
 	Simulation data can serve as \cite{Kruschke_2014, McElreath_2020},
@@ -42,7 +42,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.8]{sim_code1.png}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.7]{sim_code1.png}}]
 	{Idealized data}
 	
 	About the size of the effects \\
@@ -50,16 +50,16 @@
 	%
 	\begin{enumerate}
 		%
-		\item $aE=0$, ordered by severity \\
-		{\small \textcolor{blue}{($cor(E, HS) \approx 1$, ordering might not be possible)} },
+		\item $E$ has a full interaction with $HS$ 
 		%
-		\item $aHS=-0.4$, difference between $NH$ children and $HI/CI$,
+		\item $aHS[j] - aHS[i] \approx -0.4$, \\
+		$NH$ vs $HI/CI$ \textcolor{blue}{(depends on $E$)}
 		%
 		\item $bP=-0.1$, per $PTA$ unit \\
 		($+10 \; PTA$ units $\Rightarrow -1$ logit),
 		%
-		\item $bA=-0.15$, per $A$ unit, above the minimum \\
-		($+10 \; A$ units $\Rightarrow +1.5$ logits),
+		\item $bA \approx 0.15$, per $A$ unit, above the minimum \textcolor{blue}{(depends on $HS$)}\\
+		($+10 \; A$ units $\Rightarrow +1.5$ logits)
 		%
 	\end{enumerate}
 	%
@@ -79,7 +79,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.47]{sim_code3.png}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.5]{sim_code3.png}}]
 	{Idealized data}
 	
 	\begin{enumerate}
@@ -93,7 +93,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.48]{sim_code4.png}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.55]{sim_code4.png}}]
 	{Idealized data}
 	
 	\begin{enumerate}

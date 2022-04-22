@@ -72,11 +72,15 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
                 par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
                           m_M=10, s_M=NULL, # generation of df (M)
                           a=0, 
-                          aE=rep(0,4), 
-                          aHS=c(0.4,0,-0.4), 
-                          bP=-0.1, 
-                          bA=0.15, 
-                          bAHS=rep(0,3) ) ){
+                          bP=-0.1,
+                          aHS=c(0.4,0,-0.4),
+                          bA=0.15,
+                          bAHS=rep(0,3),
+                          aE=rep(0,4),
+                          aEHS=matrix( c( rep(0,4), # NH 
+                                          c(0, seq(0.1,-0.1,length.out=3) ), # HI/CI (1st is E=none)
+                                          c(0, seq(0.1,-0.1,length.out=3) ) ),  # HI/HA (1st is E=none)
+                                       ncol=3, byrow=F) ) ){
   
   # # test
   # sim_name=NULL # file_name need to include '.RData'
@@ -87,12 +91,16 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
   # p=c(0.36, 0.32, 0.32) # children prop. on each group
   # par=list( m_i=0, s_i=0.5, # hyperprior children's random effects
   #           m_M=10, s_M=NULL, # generation of df (M)
-  #           a=0, 
-  #           aE=rep(0,4), 
-  #           aHS=c(0.4,0,-0.4), 
-  #           bP=-0.1, 
-  #           bA=0.15, 
-  #           bAHS=rep(0,3) )
+  #           a=0,
+  #           bP=-0.1,
+  #           aHS=c(0.4,0,-0.4),
+  #           aE=rep(0,4), # (1st is E=none)
+  #           aEHS=matrix( c( rep(0,4), # NH
+  #                           c(0, seq(0.1,-0.1,length.out=3) ), # HI/CI (1st is E=none)
+  #                           c(0, seq(0.1,-0.1,length.out=3) ) ),  # HI/HA (1st is E=none)
+  #                        ncol=3, byrow=F),
+  #           bA=0.15,
+  #           bAHS=c(0.05,0,-0.05) )
 
   
   # packages
@@ -141,10 +149,20 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
   
   
   # linear predictor / SI index
-  dT$SI = with(dT, re_i + par$a + par$aE[E] + par$aHS[HS] +
-                 par$bA*(A - min(A)) +
-                 par$bAHS[HS]*(A - min(A)) + 
-                 par$bP*c( standardize(PTA) ) )
+  dT$SI = NA
+  A_bar = min(dT$A)
+  sPTA = standardize( dT$PTA )
+  for(i in 1:I){
+    dT$SI[i] = with(dT, par$re_i[i] + 
+                      par$a + 
+                      par$bP*sPTA[i] +
+                      par$aHS[ HS[i] ] +
+                      par$aE[ E[i] ] + 
+                      par$aEHS[ E[i], HS[i] ] +
+                      par$bA*( A[i] - A_bar ) +
+                      par$bAHS[ HS[i] ]*( A[i] - A_bar ) )
+  }
+  
   
   # true entropy
   dT$Ht = inv_logit(-dT$SI) # true entropy (SI -> Ht: negative)
@@ -436,34 +454,42 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                    seed=NULL, 
                    I=par_grid[l,1], 
                    K=par_grid[l,2], 
-                   p=p, 
+                   p=p,
                    par=list( m_i=post$m_i[pidx[nsim]], 
                              s_i=post$s_i[pidx[nsim]],
                              m_M=post$m_M[pidx[nsim]], 
                              s_M=NULL,
-                             a=post$a[pidx[nsim]], 
+                             a=post$a[pidx[nsim]],
+                             bP=post$bP[pidx[nsim]],
+                             aHS=post$aHS[pidx[nsim],],
                              aE=rep(0,4), 
-                             aHS=post$aHS[pidx[nsim],], 
-                             bP=post$bP[pidx[nsim]], 
-                             bA=post$bA[pidx[nsim]], 
-                             bAHS=rep(0,3) ) )  
+                             aEHS=matrix( c( rep(0,4),
+                                             rep(0,4),
+                                             rep(0,4) ),
+                                          ncol=3, byrow=F),
+                             bA=post$bA[pidx[nsim]],
+                             bAHS=rep(0,3) ) )
       } else{
         
-        Esim(sim_name=sim_name, 
-             sim_save=sim_save, 
+        Esim(sim_name=NULL, 
+             sim_save=NULL, 
              seed=NULL, 
-             I=par_grid[l,1],
+             I=par_grid[l,1], 
              K=par_grid[l,2], 
-             p=p, 
+             p=p,
              par=list( m_i=post$m_i[pidx[nsim]], 
                        s_i=post$s_i[pidx[nsim]],
                        m_M=post$m_M[pidx[nsim]], 
                        s_M=NULL,
-                       a=post$a[pidx[nsim]], 
+                       a=post$a[pidx[nsim]],
+                       bP=post$bP[pidx[nsim]],
+                       aHS=post$aHS[pidx[nsim],],
                        aE=rep(0,4), 
-                       aHS=post$aHS[pidx[nsim],], 
-                       bP=post$bP[pidx[nsim]], 
-                       bA=post$bA[pidx[nsim]], 
+                       aEHS=matrix( c( rep(0,4),
+                                       rep(0,4),
+                                       rep(0,4) ),
+                                    ncol=3, byrow=F),
+                       bA=post$bA[pidx[nsim]],
                        bAHS=rep(0,3) ) )
         load( file.path(sim_save, sim_name) )
       }

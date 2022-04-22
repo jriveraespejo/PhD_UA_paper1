@@ -55,7 +55,7 @@ data_detect_par = function(d, par_int){
   
   # # test
   # d=mom
-  # par_int=c('a','aHS','bP','bA','m_i','s_i','m_M','re_i','SI','Ht')
+  # par_int=par_est
 
   
   # storage parameters
@@ -63,9 +63,17 @@ data_detect_par = function(d, par_int){
   
   
   # true parameters
-  for(m in 1:length(par_int)){
+  par_ext = which( !(par_int %in% c('SI','Ht')) )
+  # m=3
+  for(m in par_ext){
     idx_par = which( names(d$dS$par) %in% par_int[m] )
-    par_true = c(par_true, unlist( d$dS$par[idx_par] ))
+    par_mom = d$dS$par[[idx_par]]
+    if( is.matrix(par_mom) ){
+      par_true = c(par_true, c( t(par_mom) ) )
+    } else {
+      par_true = c(par_true, par_mom)
+    }
+    
   }
   
   par_ext = which( par_int %in% c('SI','Ht') )
@@ -380,7 +388,7 @@ parameter_recovery = function(stan_object, est_par, true_par,
   
   
   # get the point estimates
-  res_stan = precis(stan_object, depth=4, prob=p) #, pars=est_par
+  res_stan = precis(stan_object, depth=5, prob=p) #, pars=est_par
   names(res_stan)[3:4] = c('CI_lower','CI_upper')
   
   
@@ -398,6 +406,8 @@ parameter_recovery = function(stan_object, est_par, true_par,
   idx = number_detect_par(res_stan, est_par)
   res_stan = res_stan[idx,]
   
+  mom = data.frame(row.names(res_stan))
+  View(mom)
   
   # introduce true parameters
   res_stan$true = true_par
@@ -445,7 +455,7 @@ true_contrast = function(d, par_int){
   
   # # test
   # d = mom
-  # par_int = c('aHS','bAHS')
+  # par_int = c('aHS','aEHS','bAHS')
   
   
   # storage
@@ -457,32 +467,53 @@ true_contrast = function(d, par_int){
   par_1 = which( !( par_int %in% c('SI','Ht') ) )
   if( length(par_1)!=0 ){
     
-    # m=1
+    # m=2
     for(m in par_1){
 
       # identify parameters
       idx_par = which( names(d$dS$par) %in% par_int[m] )
-      par_true = unlist( d$dS$par[idx_par] )
-      par_name = names(par_true)
       
-      # extract par
-      # i=2; j=3
-      for(i in 1:length(par_true)){
-        for(j in 1:length(par_true)){
-          
-          if( j>i ){
-            if( i == 1 & j==2 & m==1){
-              cont_true = par_true[j] - par_true[i] 
-              cont_name = paste( c( par_name[j], par_name[i]), collapse=' - ' )
-            } else{
-              cont_true = cbind(cont_true, 
-                                par_true[j] - par_true[i] ) 
-              cont_name = c(cont_name, 
-                            paste( c( par_name[j], par_name[i]), collapse=' - ' ) )
+      check = is.matrix(d$dS$par[[idx_par]])
+      if(check){
+        par_true = d$dS$par[[idx_par]]
+        
+        # extract par
+        # i=1; j=3
+        for(i in 1:ncol(par_true)){
+          for(j in 1:ncol(par_true)){
+            
+            if( j>i ){
+              if( i == 1 & j==2 & m==1){
+                cont_true = par_true[,j] - par_true[,i] 
+              } else{
+                cont_true = c(cont_true, 
+                              par_true[,j] - par_true[,i] ) 
+              }
             }
           }
         }
+        
+      } else{
+        par_true = d$dS$par[[idx_par]]
+
+        # extract par
+        # i=2; j=3
+        for(i in 1:length(par_true)){
+          for(j in 1:length(par_true)){
+            
+            if( j>i ){
+              if( i == 1 & j==2 & m==1){
+                cont_true = par_true[j] - par_true[i] 
+              } else{
+                cont_true = c(cont_true, 
+                              par_true[j] - par_true[i] ) 
+              }
+            }
+          }
+        }
+        
       }
+      
     }
     
     attr(cont_true, "dimnames") = NULL
@@ -498,8 +529,7 @@ true_contrast = function(d, par_int){
       # identify parameters
       idx_par = which( names(d$dS$dT) %in% par_int[m] )
       par_true = unlist( d$dS$dT[,idx_par] )
-      par_name = paste0( par_int[m], '[', d$dS$dT$child_id, ']' )
-      
+
       # extract par
       # i=2; j=3
       for(i in 1:length(par_true)){
@@ -508,8 +538,6 @@ true_contrast = function(d, par_int){
           if( j>i ){
             cont_true = cbind(cont_true, 
                               par_true[j] - par_true[i] ) 
-            cont_name = c(cont_name, 
-                          paste( c( par_name[j], par_name[i]), collapse=' - ' ) )
           }
         }
       }
@@ -520,7 +548,7 @@ true_contrast = function(d, par_int){
   
 
   # return object
-  return( t(cont_true) )
+  return( c(cont_true) )
 }
 
 
@@ -543,8 +571,8 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
   
   # # test
   # stan_object=res_C
-  # est_diff=c('aHS','bAHS')
-  # true_diff=true_contrast(d=mom, par_int=c('aHS','bAHS'))
+  # est_diff=c('aEHS','bAHS')
+  # true_diff=diff_true
   # p=0.90
   # prec=3
   # seed=1
@@ -564,33 +592,74 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
   
   
   # calculations
-  # k=2
+  # k=1
   for(k in 1:length(est_diff)){
     
-    # selecting parameter
     post_mom = post[[k]]
-    par_name = paste0( est_diff[k], '[', 1:ncol(post_mom), ']' )
     
-    # i=1;j=3
-    for(i in 1:ncol(post_mom)){
-      for(j in 1:ncol(post_mom)){
-        
-        if( j>i ){
-          if( i == 1 & j==2 & k==1 ){
-            cont_post = post_mom[,j] - post_mom[,i] 
-            cont_name = paste( c(par_name[j], par_name[i]), collapse='-' )
-          } else{
-            cont_post = cbind(cont_post, 
-                              post_mom[,j] - post_mom[,i] ) 
-            cont_name = c(cont_name, 
-                          paste( c(par_name[j], par_name[i]), collapse='-' ) )
+    # matrix contrast
+    check = !is.na(dim(post_mom)[3])
+    if( check ){
+      
+      # i=1;j=2
+      for(i in 1:dim(post_mom)[3] ){
+        for(j in 1:dim(post_mom)[3] ){
+          
+          if( j>i ){
+            if( i == 1 & j==2 & k==1 ){
+              
+              cont_post = post_mom[,,j] - post_mom[,,i]
+              cont_name = paste0( est_diff[k], 
+                                  '[', 1:dim(post_mom)[2],
+                                  ',', j,']', 
+                                  '-',
+                                  est_diff[k], 
+                                  '[', 1:dim(post_mom)[2],
+                                  ',',i,']' )
+            } else{
+              cont_post = cbind(cont_post, 
+                                post_mom[,,j] - post_mom[,,i] ) 
+              cont_name = c(cont_name, 
+                            paste0( est_diff[k], 
+                                    '[', 1:dim(post_mom)[2],
+                                    ',', j,']', 
+                                    '-',
+                                    est_diff[k], 
+                                    '[', 1:dim(post_mom)[2],
+                                    ',',i,']' ) )
+            }
           }
         }
       }
+      
+      attr(cont_post, "dimnames")[[2]] = cont_name
+      
+    } else {
+      
+      # selecting parameter
+      par_name = paste0( est_diff[k], '[', 1:ncol(post_mom), ']' )
+      
+      # i=1;j=3
+      for(i in 1:ncol(post_mom)){
+        for(j in 1:ncol(post_mom)){
+          
+          if( j>i ){
+            if( i == 1 & j==2 & k==1 ){
+              cont_post = post_mom[,j] - post_mom[,i] 
+              cont_name = paste( c(par_name[j], par_name[i]), collapse='-' )
+            } else{
+              cont_post = cbind(cont_post, 
+                                post_mom[,j] - post_mom[,i] ) 
+              cont_name = c(cont_name, 
+                            paste( c(par_name[j], par_name[i]), collapse='-' ) )
+            }
+          }
+        }
+      }
+      
+      attr(cont_post, "dimnames")[[2]] = cont_name
+      
     }
-    
-    attr(cont_post, "dimnames")[[2]] = cont_name
-    
   }
   
   # storage
@@ -706,9 +775,10 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
   } 
   
   # making plots
-  if(xdata=='Am' | xdata=='A' | xdata=='PTA' | xdata=='sPTA'){
+  if( xdata=='Am' | xdata=='A' | xdata=='PTA' | xdata=='sPTA' ){
     
     par(mfrow=c(2,2))
+    
     plot(mom_plot[,c(xdata,ydata)], pch=19, col=col.alpha('black', alpha))
     coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
     abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
@@ -731,7 +801,9 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     
     par(mfrow=c(1,1))  
     
-  } else if(xdata=='HS' | xdata=='E'){
+  } else if( xdata=='HS' ){
+    
+    par(mfrow=c(2,2))
     
     cxdata = unique(mom_plot[,c(xdata)])
     plot(mom_plot[,c(xdata,ydata)], pch=19, xaxt="n", col=col.alpha('black', alpha))
@@ -739,6 +811,56 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
     abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    # plot(mom_plot[mom_plot$E==1,c(xdata,ydata)], pch=19, main='E==1', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    # abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$E==2,c(xdata,ydata)], pch=19, main='E==2', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$E==3,c(xdata,ydata)], pch=19, main='E==3', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$E==4,c(xdata,ydata)], pch=19, main='E==4', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    par(mfrow=c(1,1))
+    
+  } else if( xdata=='E' ){
+    
+    par(mfrow=c(2,2))
+    
+    cxdata = unique(mom_plot[,c(xdata)])
+    plot(mom_plot[,c(xdata,ydata)], pch=19, xaxt="n", col=col.alpha('black', alpha))
+    axis(side=1, at=cxdata, labels = T)
+    coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==2,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==3,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    par(mfrow=c(1,1))
     
   }
   
@@ -805,7 +927,7 @@ recovery_plots = function(par_object, cont_object=NULL,
   # parameters of interest
   par_int = list( p1 = c('m_i','s_i','m_M','s_M','m_j','s_j','m_k'),
                   p1 = c('r','s_SI','s_HJ'),
-                  p3 = c('a','aHS','aE','bP','bA','bAHS'),
+                  p3 = c('a','aHS','aE','aEHS','bP','bA','bAHS'),
                   p4 = 'Rho',
                   p5 = 're_i',
                   p6 = 're_j',
@@ -1175,7 +1297,7 @@ distH_plot = function(stan_object, true_data, par_object,
   # stan_object = res_C
   # true_data = data_true
   # par_object = par_recovery_C
-  # M=10
+  # M=NULL
   # rsize=100
   # csize=16
   # seed=1

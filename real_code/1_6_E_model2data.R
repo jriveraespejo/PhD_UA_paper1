@@ -36,7 +36,7 @@ data_name = 'meta_data.csv'
 metadata = read.csv(file.path(data_dir, data_name), 
                         stringsAsFactors=F)
 # names(metadata)
-table(metadata$Type.of.CI)
+# table(metadata$Type.of.CI)
 
 
 # modify data ####
