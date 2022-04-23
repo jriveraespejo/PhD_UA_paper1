@@ -132,8 +132,7 @@ Esim = function(sim_name=NULL, # file_name need to include '.RData'
   dT$A = with(dT, ifelse(A>7, 7, A) )
   
   dT$E = c( rep(1, n[1]), # no way to know true effects
-            sample(2:3, size=n[2], replace=T),
-            sample(3:4, size=n[3], replace=T)) 
+            sample(2:4, size=sum(n[2:3]), replace=T)) 
   
   dT$PTA = c( round(rnorm(n[1], 60, 15)), # first 12 NH 
               round(rnorm(n[2], 90, 15)), # next 10

@@ -406,8 +406,6 @@ parameter_recovery = function(stan_object, est_par, true_par,
   idx = number_detect_par(res_stan, est_par)
   res_stan = res_stan[idx,]
   
-  mom = data.frame(row.names(res_stan))
-  View(mom)
   
   # introduce true parameters
   res_stan$true = true_par
@@ -741,27 +739,27 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
   
   # working data
   if( ydata=='CJD' ){
-    icid = mom$dL$cid1
+    icid = d$dL$cid1
   } else{
-    icid = mom$dL$cid
+    icid = d$dL$cid
   }
-  mom_plot = with(mom, data.frame(cid=icid, 
-                                  HS=dL$HS[icid], 
-                                  E=dL$E[icid],
-                                  Am=dL$Am[icid], 
-                                  A=dS$dT$A[icid],
-                                  PTA=dS$dT$PTA[icid],
-                                  sPTA=dL$sPTA[icid] ) )
+  mom_plot = with(d, data.frame(cid=icid, 
+                                HS=dL$HS[icid], 
+                                E=dL$E[icid],
+                                Am=dL$Am[icid], 
+                                A=dS$dT$A[icid],
+                                PTA=dS$dT$PTA[icid],
+                                sPTA=dL$sPTA[icid] ) )
   if( ydata=='H'){
-    mom_plot[,ydata] = mom$dL[ydata]
+    mom_plot[,ydata] = d$dL[ydata]
   } else if( ydata=='HJ' & !reduce ){
-    mom_plot[,ydata] = mom$dL[ydata]
-    mom_plot$HJo = mom$dS$dO$HJo
+    mom_plot[,ydata] = d$dL[ydata]
+    mom_plot$HJo = d$dS$dO$HJo
   } else if( ydata=='HJ' & reduce ){
-    mom_plot$m_HJ = mom$dL$m_HJ
-    mom_plot$s_HJ = mom$dL$s_HJ
+    mom_plot$m_HJ = d$dL$m_HJ
+    mom_plot$s_HJ = d$dL$s_HJ
   } else if( ydata=='CJD' ){
-    mom_plot[,ydata] = mom$dL[ydata]
+    mom_plot[,ydata] = d$dL[ydata]
     mom_plot = mom_plot %>%
       group_by( cid ) %>%
       summarise( across( everything() , ~mean(.x, na.rm=T))) %>%
@@ -818,18 +816,18 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     # abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$E==2,c(xdata,ydata)], pch=19, main='E==2', col=col.alpha('black', alpha))
-    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
-    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==2, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$E==3,c(xdata,ydata)], pch=19, main='E==3', col=col.alpha('black', alpha))
-    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
-    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==3, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$E==4,c(xdata,ydata)], pch=19, main='E==4', col=col.alpha('black', alpha))
-    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
-    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==4, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     par(mfrow=c(1,1))
@@ -865,6 +863,160 @@ data_plots = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
   }
   
 }
+
+
+
+# function:
+#     data_plots
+# description:  
+#     It plots all relevant data plots (for the real dataset) 
+# arguments:
+#     d = data from simulation
+#     xdata = string identifying data to plot on x axis
+#             options: A, Am, PTA, sPTA, HS, E
+#     ydata = string identifying data to plot on y axis
+#             options: H, HJ, SI
+#     alpha = color parameter
+#     os = plot the original scale (default os=F)
+#           available only for: HJ, CJD, CJO
+#     reduce = reduced data (default reduce=F)
+#           available only for: HJ, CJD, CJO
+#
+data_plots1 = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
+  
+  # # test
+  # d=dlist
+  # xdata='sPTA'
+  # ydata='H'
+  # alpha=0.15
+  # os=F
+  # reduce=T
+  
+  # working data
+  if( ydata=='CJD' ){
+    icid = d$cid1
+  } else{
+    icid = d$cid
+  }
+  mom_plot = with(d, data.frame(cid=icid, 
+                                HS=HS[icid], 
+                                E=E[icid],
+                                Am=Am[icid], 
+                                sPTA=sPTA[icid] ) )
+  if( ydata=='H'){
+    mom_plot[,ydata] = d[ydata]
+  } else if( ydata=='HJ' & !reduce ){
+    mom_plot[,ydata] = d[ydata]
+    mom_plot$HJo = d$HJo
+  } else if( ydata=='HJ' & reduce ){
+    mom_plot$m_HJ = dm_HJ
+    mom_plot$s_HJ = ds_HJ
+  } else if( ydata=='CJD' ){
+    mom_plot[,ydata] = d[ydata]
+    mom_plot = mom_plot %>%
+      group_by( cid ) %>%
+      summarise( across( everything() , ~mean(.x, na.rm=T))) %>%
+      data.frame()
+  }
+  
+  if( ydata=='HJ' & os){
+    ydata='HJo'
+  } else if ( ydata=='HJ' & reduce ){
+    ydata='m_HJ'
+  } 
+  
+  # making plots
+  if( xdata=='Am' | xdata=='A' | xdata=='PTA' | xdata=='sPTA' ){
+    
+    par(mfrow=c(2,2))
+    
+    plot(mom_plot[,c(xdata,ydata)], pch=19, col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==2,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    # plot(mom_plot[mom_plot$HS==3,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    # abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    par(mfrow=c(1,1))  
+    
+  } else if( xdata=='HS' ){
+    
+    par(mfrow=c(2,2))
+    
+    cxdata = unique(mom_plot[,c(xdata)])
+    plot(mom_plot[,c(xdata,ydata)], pch=19, xaxt="n", col=col.alpha('black', alpha))
+    axis(side=1, at=cxdata, labels = T)
+    coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    # plot(mom_plot[mom_plot$E==1,c(xdata,ydata)], pch=19, main='E==1', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    # abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$E==2,c(xdata,ydata)], pch=19, main='E==2', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==2, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$E==3,c(xdata,ydata)], pch=19, main='E==3', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==3, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$E==4,c(xdata,ydata)], pch=19, main='E==4', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==4, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    par(mfrow=c(1,1))
+    
+  } else if( xdata=='E' ){
+    
+    par(mfrow=c(2,2))
+    
+    cxdata = unique(mom_plot[,c(xdata)])
+    plot(mom_plot[,c(xdata,ydata)], pch=19, xaxt="n", col=col.alpha('black', alpha))
+    axis(side=1, at=cxdata, labels = T)
+    coef_mom =coefficients( lm(data=mom_plot[, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    plot(mom_plot[mom_plot$HS==2,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
+    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
+    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    # plot(mom_plot[mom_plot$HS==3,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
+    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==3, c(ydata, xdata)]) )
+    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    # abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
+    
+    par(mfrow=c(1,1))
+    
+  }
+  
+}
+
 
 
 

@@ -6,13 +6,13 @@ This project contains the preliminary version of the first paper produced in ful
 
 
 ## Documents
-The preliminary version of the research proposal can be downloaded from [**HERE**](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/research_proposal/paper1.pdf).
+The preliminary version of the research proposal can be downloaded from [**HERE**](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/#research_proposal/paper1.pdf).
 
 The preliminary version of the submitted paper can be downloaded from [**HERE**]()
 
 
 ## Presentations
-1. Entropy model [(E_model)](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/presentation/E_model/0_presentation.pdf)
+1. Entropy model [(E_model)](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/#presentation/E_model/0_presentation.pdf)
 2. Absolute Holistic judgement [(HJ_model)]()
 3. Comparative judgement dichotomous [(CJD_model)]()
 4. Comparative judgement ordinal [(CJO_model)]()

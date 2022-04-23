@@ -335,7 +335,7 @@ par_recovery_C
 # good samples for the rest (no matter E, HS, or both in model)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for re_i[185] (not the most extreme)
+# maximum RMSE is for SI[140] (not the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
 
@@ -411,7 +411,7 @@ par_recovery_NC
 # great samples for all parameters
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for re_i[185] (not the most extreme)
+# maximum RMSE is for re_i[140] (not the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
@@ -447,7 +447,7 @@ recovery_plots(par_object=par_recovery_NC,
                cont_object=cont_recovery_NC,
                par_plot=c('a','m_i','s_i','m_M','aHS','aE','bP','bA','SI'))
 # dev.off()
-# not good recovery of contrasts
+# great recovery of contrasts
 
 
 # triplot
@@ -581,7 +581,7 @@ par_recovery_C
 #   (no matter E, HS, or both in model)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for M[307] (the most extreme)
+# maximum RMSE is for M[241] (the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(M) == max( abs(M) ) ) )
 
@@ -656,7 +656,7 @@ par_recovery_NC
 #   worst samples for all parameters, when E and HS are in the model
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for M[307] (the most extreme)
+# maximum RMSE is for M[241] (the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(M) == max( abs(M) ) ) )
 
@@ -948,9 +948,9 @@ par_recovery_C
 #   (no matter E, HS, or both in model)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for re_i[103] (not the most extreme)
+# maximum RMSE is for SI[344] (not the most extreme)
 # overestimated
-# with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
+# with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
 
 sum(par_recovery_C$sign)/nrow(par_recovery_C)
 # 89.5% correct sign
@@ -1006,7 +1006,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 distH_plot( stan_object=res_C, true_data=data_true, 
             csize=6, rplot=c(3,2),
             par_object=par_recovery_C, M=exp(1.5))
-# captures well the data
+# might overfit the data
 
 
 
@@ -1029,12 +1029,12 @@ par_recovery_NC
 #   worst samples for all parameters, when E and HS are in the model
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for re_i[103] (the most extreme)
-# underestimated
-# with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
+# maximum RMSE is for SI[344] (the most extreme)
+# overestimated
+# with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
 
 sum(par_recovery_NC$sign)/nrow(par_recovery_NC)
-# 90% correct sign
+# 88.9% correct sign
 
 sum(par_recovery_NC$reject_null)/nrow(par_recovery_NC)
 # 39.4% reject the null
@@ -1087,7 +1087,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 distH_plot( stan_object=res_NC, true_data=data_true, 
             csize=6, rplot=c(3,2),
             par_object=par_recovery_NC, M=exp(1.5))
-# captures well the data
+# might overfit the data
 
 
 
@@ -1098,7 +1098,7 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 # stat_plot(par_recovery_C, par_recovery_NC, pars='M' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
-# better n_eff and Rhat mostly under non-centered
+# better n_eff and Rhat mostly under non-centered (except for SI)
 
 
 
@@ -1201,7 +1201,7 @@ par_recovery_C
 #   (no matter E, HS, or both in model)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for M[307] (the most extreme)
+# maximum RMSE is for M[182] (the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(M) == max( abs(M) ) ) )
 
@@ -1259,7 +1259,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 distH_plot( stan_object=res_C, true_data=data_true, 
             csize=6, rplot=c(3,2),
             par_object=par_recovery_C, M=NULL)
-# captures well the data
+# might overfit the data
 
 
 
@@ -1282,7 +1282,7 @@ par_recovery_NC
 #   worst samples for all parameters, when E and HS are in the model
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for M[214] (the most extreme)
+# maximum RMSE is for M[182] (the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(M) == max( abs(M) ) ) )
 
@@ -1340,7 +1340,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 distH_plot( stan_object=res_NC, true_data=data_true, 
             csize=6, rplot=c(3,2),
             par_object=par_recovery_NC, M=NULL)
-# captures well the data
+# might overfit the data
 
 
 
@@ -1351,4 +1351,4 @@ stat_plot(par_recovery_C, par_recovery_NC, pars='re_i' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='M' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='SI' )
 stat_plot(par_recovery_C, par_recovery_NC, pars='Ht' )
-# better n_eff and Rhat mostly under non-centered
+# better n_eff and Rhat mostly under non-centered (except for SI)
