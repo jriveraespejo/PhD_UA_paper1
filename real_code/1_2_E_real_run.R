@@ -94,6 +94,9 @@ d = d[with(d, order(kind,FRAGMENTNUMMER)),]
 HS = unique(d[,c('kind','hoorstatus')])
 
 E = unique(d[,c('kind','Etiology')])
+# E %>%
+#   group_by(Etiology) %>%
+#   summarise(n=n())
 
 PTA = unique(d[,c('kind','unaided')])
 

@@ -9,8 +9,8 @@ data{
     real H[N];            // replicated entropies
     int cid[N];           // child's id
     int bid[N];           // block id
+    int HS[I];            // hearing status 
     real Am[I];           // hearing age
-    int Am[I];            // hearing age
     int E[I];             // etiology
     real sPTA[I];         // (standardized) pta values
 }

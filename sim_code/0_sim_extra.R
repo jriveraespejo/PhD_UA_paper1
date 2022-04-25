@@ -1446,13 +1446,14 @@ distH_plot = function(stan_object, true_data, par_object,
                       alpha1=0.3, alpha2=0.4){ 
   
   # # test
-  # stan_object = res_C
+  # stan_object = E_NC5b3
   # true_data = data_true
-  # par_object = par_recovery_C
+  # par_object = par_recovery
   # M=NULL
   # rsize=100
   # csize=16
   # seed=1
+  # rplot=c(3,2)
   
   
   # distribution Ht
@@ -1522,6 +1523,106 @@ distH_plot = function(stan_object, true_data, par_object,
   
 }
 
+
+# function:
+#     distH_plot1
+# description:  
+#     plots the estimated density and observed entropies per children
+#     for real data set
+# arguments:
+#     stan_object = object containing a stanfit object (it can be a list also)
+#     true_data = repeated measures for entropy per child
+#     par_object = object generated with parameter_recovery() function
+#     M = shape parameter in dbeta2, default = 10
+#     rsize = number of samples form posterior (default = 100)
+#     csize = number of children sampled (default = 16)
+#     rplot = layout for plot 
+#     model = model for which we made the plot (default=H, entropy)
+#             available models: H, HJ, CJD, CJO
+#     alpha1, alpha2 = color alpha parameters
+#
+distH_plot1 = function(stan_object, true_data, par_object, 
+                      M=10, rsize=100, csize=6, seed=1,
+                      rplot=c(3,2),
+                      alpha1=0.3, alpha2=0.4){ 
+  
+  # # test
+  # stan_object = E_NC5b3
+  # true_data = data_true
+  # par_object = par_recovery
+  # M=6
+  # rsize=100
+  # csize=16
+  # seed=1
+  # rplot=c(3,2)
+  
+  
+  # distribution Ht
+  post = extract.samples(stan_object)
+  
+  # sampling entropy observations
+  nchain= dim(post$SI)
+  set.seed(seed)
+  idx_row = sample(x=1:nchain[1], size=rsize, replace=F)
+  idx_col = sample(x=1:nchain[2], size=csize, replace=F)
+  idx_col = idx_col[order(idx_col)]
+  
+  
+  # extracting info
+  out_mom = post$Ht[idx_row, idx_col]
+  out_mean = colMeans(post$Ht)[idx_col] # mean distribution
+  
+  if( !is.null(M) & length(M)==1 ){
+    M_mom = matrix( rep(M, nrow(out_mom)*ncol(out_mom) ), 
+                    ncol=ncol(out_mom) )
+    M_mean = colMeans(M_mom) # mean distribution
+  } else {
+    M_mom = post$M[idx_row, idx_col]
+    M_mean = colMeans(post$M)[idx_col] # mean distribution
+  }
+  
+  
+  # identify Ht mean values and confidence intervals
+  idx = number_detect_par(par_object, 'Ht')
+  par_object = par_object[idx,]
+  par_object = par_object[idx_col,]
+  
+  
+  # plot
+  par(mfrow=rplot)
+  
+  # i=1
+  for(i in 1:ncol(out_mom) ){ # children
+    
+    # first sample
+    curve( dbeta2(x, out_mom[1,i], M_mom[1,i]), from=0, to=1, ylim=c(0, 6),
+           xlab='Entropy', ylab='Density', col=col.alpha('gray',alpha1) )
+    mtext(paste("child = ", idx_col[i]), 3, adj = 1, cex = 1.1)
+    
+    # rest of samples
+    for(s in 2:nrow(out_mom) ){
+      curve( dbeta2(x, out_mom[s,i], M_mom[s,i]), from=0, to=1, add=T, 
+             xlab='Entropy', ylab='Density', col=col.alpha('gray',alpha1))
+    }
+    
+    # mean distribution
+    curve( dbeta2(x, out_mean[i], M_mean[i]), from=0, to=1, lwd=2.5,
+           xlab='Entropy', ylab='Density', col='black', add=T)
+    
+    
+    # observations
+    points( true_data$H[true_data$child==idx_col[i]], 
+            rep( 0.3, sum(true_data$child==idx_col[i]) ), 
+            pch=19, col=col.alpha('blue', alpha2))
+    points( par_object$mean[i], 0, pch=19, col='red')
+    lines(x=with(par_object[i,], c(`5.5%`, `94.5%`)), 
+          y=rep(0, 2), col='red')
+    
+  }
+  
+  par(mfrow=c(1,1))
+  
+}
 
 
 
