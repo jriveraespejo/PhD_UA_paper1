@@ -12,10 +12,7 @@ The preliminary version of the submitted paper can be downloaded from [**HERE**]
 
 
 ## Presentations
-1. Entropy model [(E_model)](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/#presentation/E_model/0_presentation.pdf)
-2. Absolute Holistic judgement [(HJ_model)]()
-3. Comparative judgement dichotomous [(CJD_model)]()
-4. Comparative judgement ordinal [(CJO_model)]()
+Entropy model [(E_model)](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/#presentation/0_presentation.pdf)
 
 
 ## General information

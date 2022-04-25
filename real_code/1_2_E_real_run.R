@@ -86,14 +86,20 @@ d$Etiology[is.na(d$Etiology)] = 1
 # sort
 d = d[with(d, order(kind,FRAGMENTNUMMER)),]
 # names(d)
+# table(d$kind, d$reeks)
 
 
 
 # convert to list ####
 HS = unique(d[,c('kind','hoorstatus')])
-A = unique(d[,c('kind','hearing.age')])
+
 E = unique(d[,c('kind','Etiology')])
+
 PTA = unique(d[,c('kind','unaided')])
+
+A = unique(d[,c('kind','hearing.age')])
+A$hearing.age = A$hearing.age/12 # in years (easier to spot effects)
+
 
 
 dlist = list(
@@ -101,6 +107,7 @@ dlist = list(
   N = nrow(d), # observations
   I = max(d$kind), # children
   K = max(d$FRAGMENTNUMMER), # utterances
+  B = max(d$reeks),
   
   # category numbers
   cHS = max(d$hoorstatus),
@@ -112,10 +119,12 @@ dlist = list(
   E = E$Etiology,
   sPTA = c( standardize( PTA$unaided ) ),
   
+  
   # observed data
   H = with(d, ifelse(entropiescore==0, 0.0001, 
                      ifelse(entropiescore==1, 0.9999, 
                             entropiescore)) ), # trick
+  bid = d$reeks, # block id
   cid = d$kind,
   uid = d$FRAGMENTNUMMER 
 )
