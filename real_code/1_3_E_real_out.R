@@ -215,9 +215,12 @@ cont = cbind(cont, post$aEHS[,,1] - post$aEHS[,,2])
 attr(cont, "dimnames")[[2]] = c('bAHS[1]-bAHS[2]', 
                                 paste0('aEHS[',1:5,',1]-aEHS[',1:5,',2]'))
 
-
 precis( as_tibble(cont), depth=4, hist=F, prob=0.90)
 
+# Results
+#
+# Variability around parameters does not allow to check if the contrast
+# are significantly different from zero
 
 
 
