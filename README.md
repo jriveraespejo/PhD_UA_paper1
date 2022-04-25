@@ -12,7 +12,7 @@ The preliminary version of the submitted paper can be downloaded from [**HERE**]
 
 
 ## Presentations
-Entropy model [(E_model)](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/#presentation/0_presentation.pdf)
+[(Entropy model)](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/%23presentation/0_presentation.pdf)
 
 
 ## General information
