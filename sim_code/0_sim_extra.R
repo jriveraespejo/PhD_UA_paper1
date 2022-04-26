@@ -375,9 +375,9 @@ parameter_recovery = function(stan_object, est_par, true_par,
                               prec=3, p=0.90){
   
   # # test
-  # stan_object=res_NC
+  # stan_object=E_NC1
   # est_par=par_est
-  # true_par=par_true
+  # true_par=NA
   # p=0.90
   # prec=3
   # seed=1
@@ -393,9 +393,13 @@ parameter_recovery = function(stan_object, est_par, true_par,
   
   
   # get the HPDI
-  hpdi_res = HPDI(stan_object, p=0.95)
-  rem = which( row.names(hpdi_res)=='lp__')
+  hpdi_res = HPDI(stan_object, p=p)
+  rem = which( row.names(hpdi_res) == 'lp__')
   hpdi_res = hpdi_res[-rem,] # remove
+  
+  rem = which( str_detect( row.names(hpdi_res), 'log_lik') )
+  hpdi_res = hpdi_res[-rem,] # remove
+  
   attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
   
   res_stan = cbind(res_stan, hpdi_res) # join info
@@ -406,34 +410,38 @@ parameter_recovery = function(stan_object, est_par, true_par,
   idx = number_detect_par(res_stan, est_par)
   res_stan = res_stan[idx,]
   
+  if( is.null(true_par) ){
+    res_stan = round( res_stan, prec ) # round
+  }
   
-  # introduce true parameters
-  res_stan$true = true_par
-  
-  
-  # rmse
-  res_stan$RMSE = round( rmse_pars(stan_object, est_par, true_par), prec)  
-  
-  
-  # introduce ROPE
-  ROPE = set_rope(true_par)
-  res_stan = cbind(res_stan, ROPE)
-  
-  res_stan = round( res_stan, prec ) # round
-  
-  
-  # same sign?
-  res_stan$sign = with(res_stan, as.integer(sign(true) == sign(mean)) )
-  
-  
-  # ROPE goals
-  res_stan$reject_null = as.integer( 
-    with(res_stan, -0.2>HPDI_upper | 0.2<HPDI_lower ) )
-  res_stan$accept_val = as.integer( 
-    with(res_stan, ROPE_lower<HPDI_lower | ROPE_upper>HPDI_upper ) )
-  res_stan$precision = as.integer( 
-    with(res_stan, (HPDI_upper-HPDI_lower) < ROPE_prec ) )
-  
+  if( !is.null(true_par) ){
+    # introduce true parameters
+    res_stan$true = true_par
+    
+    
+    # rmse
+    res_stan$RMSE = round( rmse_pars(stan_object, est_par, true_par), prec)  
+    
+    
+    # introduce ROPE
+    ROPE = set_rope(true_par)
+    res_stan = cbind(res_stan, ROPE)
+    
+    res_stan = round( res_stan, prec ) # round
+    
+    
+    # same sign?
+    res_stan$sign = with(res_stan, as.integer(sign(true) == sign(mean)) )
+    
+    
+    # ROPE goals
+    res_stan$reject_null = as.integer( 
+      with(res_stan, -0.2>HPDI_upper | 0.2<HPDI_lower ) )
+    res_stan$accept_val = as.integer( 
+      with(res_stan, ROPE_lower<HPDI_lower | ROPE_upper>HPDI_upper ) )
+    res_stan$precision = as.integer( 
+      with(res_stan, (HPDI_upper-HPDI_lower) < ROPE_prec ) )
+  }
   
   # return object
   return(res_stan)
@@ -671,38 +679,46 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
   
   res_stan = cbind(res_stan, hpdi_res) # join info
   
-  # extra lines
-  res_stan$n_eff = NA
-  res_stan$Rhat4 = NA
+  
+  if( is.null(true_diff) ){
+    res_stan = round( res_stan, prec ) # round
+  }
   
   
-  # introduce true parameters
-  res_stan$true = true_diff
-  
-  
-  # rmse
-  res_stan$RMSE = round( rmse_pars(cont_post, est_diff, true_diff), prec)  
-  
-  
-  # introduce ROPE
-  ROPE = set_rope(true_diff)
-  res_stan = cbind(res_stan, ROPE)
-  
-  res_stan = round( res_stan, prec ) # round
-  
-  
-  # same sign?
-  res_stan$sign = with(res_stan, as.integer(sign(true) == sign(mean)) )
-  
-  
-  # ROPE goals
-  res_stan$reject_null = as.integer( 
-    with(res_stan, -0.2>HPDI_upper | 0.2<HPDI_lower ) )
-  res_stan$accept_val = as.integer( 
-    with(res_stan, ROPE_lower<HPDI_lower | ROPE_upper>HPDI_upper ) )
-  res_stan$precision = as.integer( 
-    with(res_stan, (HPDI_upper-HPDI_lower) < ROPE_prec ) )
-  
+  if( !is.null(true_diff) ){
+    
+    # extra lines
+    res_stan$n_eff = NA
+    res_stan$Rhat4 = NA
+    
+    
+    # introduce true parameters
+    res_stan$true = true_diff
+    
+    
+    # rmse
+    res_stan$RMSE = round( rmse_pars(cont_post, est_diff, true_diff), prec)  
+    
+    
+    # introduce ROPE
+    ROPE = set_rope(true_diff)
+    res_stan = cbind(res_stan, ROPE)
+    
+    res_stan = round( res_stan, prec ) # round
+    
+    
+    # same sign?
+    res_stan$sign = with(res_stan, as.integer(sign(true) == sign(mean)) )
+    
+    
+    # ROPE goals
+    res_stan$reject_null = as.integer( 
+      with(res_stan, -0.2>HPDI_upper | 0.2<HPDI_lower ) )
+    res_stan$accept_val = as.integer( 
+      with(res_stan, ROPE_lower<HPDI_lower | ROPE_upper>HPDI_upper ) )
+    res_stan$precision = as.integer( 
+      with(res_stan, (HPDI_upper-HPDI_lower) < ROPE_prec ) )
+  }
   
   # return object
   return(res_stan)
@@ -936,13 +952,19 @@ data_plots1 = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
-    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    check = length( unique( mom_plot[mom_plot$HS==1, xdata] ) ) > 1
+    if( check ){
+      coef_mom = coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+      abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    }
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$HS==2,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
-    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    check = length( unique( mom_plot[mom_plot$HS==2, xdata] ) ) > 1
+    if( check ){
+      coef_mom = coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
+      abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    }
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     # plot(mom_plot[mom_plot$HS==3,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))
@@ -969,18 +991,27 @@ data_plots1 = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     # abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$E==2,c(xdata,ydata)], pch=19, main='E==2', col=col.alpha('black', alpha))
-    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==2, c(ydata, xdata)]) )
-    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    check = length( unique( mom_plot[mom_plot$E==2, xdata] ) ) > 1
+    if( check ){
+      coef_mom = coefficients( lm(data=mom_plot[mom_plot$E==2, c(ydata, xdata)]) )
+      abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    }
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$E==3,c(xdata,ydata)], pch=19, main='E==3', col=col.alpha('black', alpha))
-    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==3, c(ydata, xdata)]) )
-    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    check = length( unique( mom_plot[mom_plot$E==3, xdata] ) ) > 1
+    if( check ){
+      coef_mom = coefficients( lm(data=mom_plot[mom_plot$E==3, c(ydata, xdata)]) )
+      abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    }
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$E==4,c(xdata,ydata)], pch=19, main='E==4', col=col.alpha('black', alpha))
-    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$E==4, c(ydata, xdata)]) )
-    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    check = length( unique( mom_plot[mom_plot$E==4, xdata] ) ) > 1
+    if( check ){
+      coef_mom = coefficients( lm(data=mom_plot[mom_plot$E==4, c(ydata, xdata)]) )
+      abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    }
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     par(mfrow=c(1,1))
@@ -997,13 +1028,19 @@ data_plots1 = function(d, xdata, ydata, alpha=0.15, os=F, reduce=F){
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$HS==1,c(xdata,ydata)], pch=19, main='HS==1', col=col.alpha('black', alpha))
-    # coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
-    # abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    check = length( unique( mom_plot[mom_plot$HS==1, xdata] ) ) > 1
+    if( check ){
+      coef_mom = coefficients( lm(data=mom_plot[mom_plot$HS==1, c(ydata, xdata)]) )
+      abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    }
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     plot(mom_plot[mom_plot$HS==2,c(xdata,ydata)], pch=19, main='HS==2', col=col.alpha('black', alpha))
-    coef_mom =coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
-    abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    check = length( unique( mom_plot[mom_plot$HS==2, xdata] ) ) > 1
+    if( check ){
+      coef_mom = coefficients( lm(data=mom_plot[mom_plot$HS==2, c(ydata, xdata)]) )
+      abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
+    }
     abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
     
     # plot(mom_plot[mom_plot$HS==3,c(xdata,ydata)], pch=19, main='HS==3', col=col.alpha('black', alpha))

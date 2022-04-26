@@ -102,6 +102,7 @@ PTA = unique(d[,c('kind','unaided')])
 
 A = unique(d[,c('kind','hearing.age')])
 A$hearing.age = A$hearing.age/12 # in years (easier to spot effects)
+# min(A$hearing.age)/12
 
 
 

@@ -83,7 +83,7 @@
 				%
 				\item $PTA_{i}=$ pure tone average (standardized)
 				%
-				\item $B_{i}=$ block
+				\item $B_{i}=$ block {\small \textcolor{blue}{(will reduce $\sigma_{U_{ik}}$) } }
 				%
 				\item variables \textcolor{blue}{assumed independent}, beyond the described relationships,
 				\begin{equation*}
@@ -288,8 +288,211 @@
 %
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.59]{models_table.png}}]
 	{Competing models}
-	%
 	
+	We can notice,
+	%
+	\begin{itemize}
+		%
+		\item \textcolor{blue}{No evidence} in favor of models with $M=10$, i.e. $\text{weight}=0$ \\
+		\underline{models:} \texttt{E\_NC1}, \texttt{E\_NC2a}, \texttt{E\_NC5a1}, \texttt{E\_NC5a2}, \texttt{E\_NC5a3}. 
+		%
+		\item \textcolor{blue}{Less evidence} in favor of ``robust" models, i.e. one $M$ per child \\
+		\underline{models:} \texttt{E\_NC6a}, \texttt{E\_NC6b}, \texttt{E\_NC6c}. 
+		%
+		\item \textcolor{blue}{Mild evidence} in favor of ``robust" model without interaction \\
+		(qualifies as ME the lack of explanation at the child level) \\
+		\underline{models:} \texttt{E\_NC3}. 
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.59]{models_table.png}}]
+	{Competing models}
+	
+	further,
+	%
+	\begin{itemize}
+		%
+		\item \textcolor{blue}{Highest evidence} in favor of ``simplest" model, i.e. one $M$, no interaction \\ 
+		\underline{models:} \texttt{E\_NC2b}.
+		%
+		\item However, interaction models are \textcolor{blue}{indistinguishable} from the ``simplest" model \\
+		\underline{models:} \texttt{E\_NC5b1}, \texttt{E\_NC5b2}, \texttt{E\_NC5b3}.
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.70]{select_model1.png}}]
+	{Selecting models}
+	
+	``simplest" model (\texttt{E\_NC2b}) provides (preliminar) evidence that,
+	%
+	\begin{itemize}
+		%
+		\item the higher the unaided $PTA$ the lower the child's $SI$ \\
+		{\small (based on power analysis, \textcolor{blue}{we can be sure} is a small effect) }
+		%
+		\item no significant difference between $NH$ and $HI/CI$ children \\
+		{\small (but this requires a \textcolor{blue}{contrast}) }
+		%
+		\item for each ``hearing" year the $SI$ increases in $0.42$ logits \\
+		{\small (\textcolor{blue}{larger than expected} effect assumed in power analysis) }
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{variability_plot.pdf}}]
+	{Selecting models}
+	
+	in addition,
+	%
+	\begin{itemize}
+		%
+		\item it is hard to determine how the variability is ``explained" just by looking at the parameters \texttt{s\_b}, \texttt{s\_i}, \texttt{m\_M}
+		%
+		\item transforming \texttt{s\_b}, \texttt{s\_i}, \texttt{m\_M} into the $[0,1]$ entropy scale:
+		%
+		\begin{itemize}
+			\item block level (\texttt{s\_b}) has the lowest variability,
+			%
+			\item the individual level (\texttt{s\_i}) follows,
+			%
+			\item the measurement level variability (\texttt{m\_M}) has the highest
+		\end{itemize}
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.65]{select_model2.png}}]
+	{Selecting models}
+	
+	however, the ``interaction" model (\texttt{E\_NC5b3}) provides evidence on,
+	%
+	\begin{itemize}
+		%
+		\item the small effects of the unaided $PTA$ on the child's $SI$ \\
+		{\small (similar to the ``simplest" model)}
+		%
+		\item similar levels of explained variability across levels and blocks,
+		%
+		\item but there is ``mild" evidence that some interactions might be prevalent
+		%
+		\begin{itemize}
+			\item different $SI$ means within $HI/CI$, \\
+			CMV (row 2 of $aEHS$) vs Connexine 26 (row 3 of $aEHS$)
+			%
+			\item different $SI$ evolution between $NH$ vs $HI/CI$ children
+		\end{itemize}
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.50]{contrasts.png}}]
+	{Selecting models}
+	
+	within the ``interaction" model (\texttt{E\_NC5b3}),
+	%
+	\begin{itemize}
+		%
+		\item given the size of the data within groups from combinations of $E$ and $HS$, we cannot reject the null hypothesis
+		%
+		\item similar result is observed with the $A$ slopes contrast \\
+		{\small (but in this case is because the effect is small)}
+		%
+		\item we decide to \textcolor{blue}{keep} the ``interaction" model \textcolor{blue}{(\texttt{E\_NC5b3})}
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.40]{chains_real1.pdf}}]
+	{``Health" of MCMC chains}
+	
+	The MCMC chains achieve,
+	%
+	\begin{itemize}
+		%
+		\item good convergence
+		\item good mixing
+		\item lack of autocorrelation
+		%
+	\end{itemize}
+	
+	same results on the \textcolor{blue}{ \texttt{n\_eff} } and \textcolor{blue}{ \texttt{RHat} } statistics.
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.40]{chains_real2.pdf}}]
+	{``Health" of MCMC chains}
+	
+	The MCMC chains achieve,
+	%
+	\begin{itemize}
+		%
+		\item good convergence
+		\item good mixing
+		\item lack of autocorrelation
+		%
+	\end{itemize}
+	
+	same results on the \textcolor{blue}{ \texttt{n\_eff} } and \textcolor{blue}{ \texttt{RHat} } statistics.
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{posterior_predictive_real.pdf}}]
+	{Posterior predictive}
+	
+	But how well reproduces the data?,
+	%
+	\begin{itemize}
+		%
+		\item captures the variability of the replicates,
+		\item provides a ``true" $H$ and $SI$ measures
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{outliers.pdf}}]
+	{High leverage observations}
+	
+	``interaction" model has two high leverage observations, \\
+	{\small (observations that ``drag" estimation) }
+	%
+	\begin{itemize}
+		%
+		\item the ``drag" is not large ($k<0.7$),
+		%
+		\item correspond to child $10$ and $15$,
+		%
+		\begin{itemize}
+			%
+			\item both cases have $H_{ik}=0$ \\
+			{\small (next minimum value is $\approx 0.01$)}
+			%
+			\item child $10$ is $NH$, with the lowest observed $PTA$ value \\
+			{\small (almost ``perfect" hearing) }
+			%
+			\item child $15$ is $HI/CI$, $Am \approx 0.67$ \\
+			{\small ($min(A)=5 \rightarrow min(Am)=0$)}
+			%
+		\end{itemize}
+		%
+	\end{itemize}
 	%
 \end{lhframe}
 %
