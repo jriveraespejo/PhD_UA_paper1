@@ -6,7 +6,8 @@ Without written permission of the promoters and the authors it is forbidden to r
 A written permission of the promoter is also required to use the methods, products, schematics and programs described in this work for industrial or commercial use, and for submitting this publication in scientific contests.
 
 
-## Raw Summary
+## Project information
+
 ### Entropy (BetaProp) model for Speech Inteligibility
 
 Intelligible speech can be defined as the extent to which the elements in an speaker’s acoustic signal, e.g. phonemes or words, can be correctly recovered by a listener [31, 62, 57, 22]. 
@@ -62,14 +63,14 @@ The preliminary presentations of the analysis can be downloaded from [**(HERE)**
 **_In progress_**
 
 
-## Additional information
-
 ### Technology
 The computational implementation of the method will be developed in **Stan** and **R**.
+
 
 ### Supervisors
 * [Steven Gillis](https://www.uantwerpen.be/nl/personeel/steven-gillis/)
 * [Sven de Maeyer](https://www.uantwerpen.be/nl/personeel/sven-demaeyer/)
+
 
 ### Contact
 [Jose Manuel Rivera Espejo](http://linkedin.com/in/jriveraespejo)
