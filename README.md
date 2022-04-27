@@ -1,6 +1,10 @@
 ## Project page 
 This project page contains the code, presentations and preliminary versions of the documents produced in fulfillment of the requirements for the degree of **_Doctor of Philosophy in Education Sciences_** at the [University of Antwerp](https://www.uantwerpen.be/en/research/phd/).
 
+Without written permission of the promoters and the authors it is forbidden to reproduce or adapt in any form or by any means any part of this publication. Requests for obtaining the right to reproduce or utilize parts of this publication should be addressed to University of Antwerp, [Faculteit Sociale Wetenschappen](https://www.uantwerpen.be/nl/overuantwerpen/faculteiten/faculteit-sociale-wetenschappen/).
+
+A written permission of the promoter is also required to use the methods, products, schematics and programs described in this work for industrial or commercial use, and for submitting this publication in scientific contests.
+
 
 ## Raw Summary
 ### Entropy (BetaProp) model for Speech Inteligibility
@@ -25,15 +29,25 @@ The current document proposed a novel modeling method using the BetaProp() distr
 
 ### References
 [6] Boonen, N., Kloots, H. and Gillis, S. [2020]. Rating the overall speech quality of hearing- impaired children by means of comparative judgements, Journal of Communication Dis- orders 83: 1675–1687. doi: https://doi.org/10.1016/j.jcomdis.2019.105969.
+
 [7] Boonen, N., Kloots, H., Nurzia, P. and Gillis, S. [2021]. Spontaneous speech intelligibility: early cochlear implanted children versus their normally hearing peers at seven years of age, Journal of Child Language pp. 1–26. doi: https://doi.org/10.1017/S0305000921000714.
+
 [14] Chin, S., Bergeson, T. and Phan, J. [2012]. Speech intelligibility and prosody production in children with cochlear implants, Journal of Communication Disorders 45: 355–366. doi: https://doi.org/10.1016/j.jcomdis.2012.05.003.
+
 [17] Ertmer, D. [2011]. Assessing speech intelligibility in children with hearing loss: Toward revitalizing a valuable clinical tool, Language, Speech, and Hearing Services in Schools 42(1): 52–58. doi: https://doi.org/10.1044/0161-1461(2010/09-0081).
+
 [21] Flipsen, P. [2006]. Measuring the intelligibility of conversational speech in children, Clin- ical Linguistics and Phonetics 20(4): 303–312. doi: https://doi.org/10.1080/02699200400024863.
+
 [22] Freeman, V., Pisoni, D., Kronenberger, W. and Castellanos, I. [2017]. Speech intelligibility and psychosocial functioning in deaf children and teens with cochlear implants, Journal of Deaf Studies and Deaf Education 22(3): 278–289. doi: https://doi.org/10.1093/deafed/enx001.
+
 [26] Hustad, K., Mahr, T., Natzke, P. and Rathouz, P. [2020]. Development of speech intelligi- bility between 30 and 47 months in typically developing children: A cross-sectional study of growth, Journal of Speech, Language, and Hearing Research 63: 1675–1687. doi: https://doi.org/10.1044/2020J SLHR − 20 − 00008.
+
 [31] Kent, R., Weismer, G., Kent, J. and Rosenbek, J. [1989]. Toward phonetic intelligibility testing in dysarthria, Journal of Speech and Hearing Disorders 54(4): 482–499. doi: https://doi.org/10.1044/jshd.5404.482.
+
 [49] Rowe, B. and Levine, D. [2018]. A Concise Introduction to Linguistics, Routledge.
+
 [57] van Heuven, V. [2008]. Making sense of strange sounds: (mutual) intelligibility of related language varieties. a review, International Journal of Humanities and Arts Computing 2(1- 2): 39–62. doi: https://doi.org/10.3366/E1753854809000305
+
 [62] Whitehill, T. and Chau, C. [2004]. Single-word intelligibility in speakers with repaired cleft palate, Clinical Linguistics and Phonetics 18: 341–355. doi: https://doi.org/10.1080/02699200410001663344.
 
 
