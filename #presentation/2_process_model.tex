@@ -452,11 +452,11 @@
 					%
 					H^{T}_{i} & = \; \text{inv\_logit}( -SI_{i} ) \\
 					%
-					SI_{i} & = \; a_{i} + \alpha + \alpha_{E[i],HS[i]} + \textcolor{red}{\beta_{P} PTA_{i}} \\ 
+					SI_{i} & = \; \textcolor{blue}{a_{i}} + \alpha + \alpha_{E[i],HS[i]} + \textcolor{red}{\beta_{P} PTA_{i}} \\ 
 					%
 					& \quad + \textcolor{red}{\beta_{A, HS[i]} (A_{i} - \bar{A})} \\
 					%
-					a_{i} & \sim \; Normal( 0, \sigma_{Ui}) \\
+					\textcolor{blue}{a_{i}} & \sim \; Normal( 0, \sigma_{Ui}) \\
 					%
 					HS_{i} & \sim \; \text{data} \\
 					%

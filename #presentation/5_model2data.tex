@@ -83,14 +83,14 @@
 				%
 				\item $PTA_{i}=$ pure tone average (standardized)
 				%
-				\item $B_{i}=$ block {\small \textcolor{blue}{(will reduce $\sigma_{U_{ik}}$) } }
+				\item $B_{bk}=$ block {\small \textcolor{blue}{(will reduce $\sigma_{U_{ik}}$) } }
 				%
 				\item variables \textcolor{blue}{assumed independent}, beyond the described relationships,
 				\begin{equation*}
 					%
 					\begin{aligned} 
-						P(\pmb{U}) & = P(U_{ik}, U_{i}, U_{A}, U_{E}, U_{HS}, U_{P}, U_{B}) \\ 
-						& = P(U_{ik}) P(U_{i}) P(U_{A}) P(U_{E}) P(U_{HS}) P(U_{P}) P(U_{B})
+						P(\pmb{U}) & = P(U_{ik}, U_{i}, U_{A}, U_{E}, U_{HS}, U_{P}, B_{bk}) \\ 
+						& = P(U_{ik}) P(U_{i}) P(U_{A}) P(U_{E}) P(U_{HS}) P(U_{P}) P(B_{bk})
 					\end{aligned}
 					%
 				\end{equation*}
@@ -118,7 +118,7 @@
 					\node at (1,2.7) {$U_{P}$};
 					\node at (-2.1,1) {$A_{i}$};
 					\node at (-2.8,1) {$U_{A}$};
-					\node at (2,0.7) {$B_{i}$};
+					\node at (2,0.7) {$B_{bk}$};
 					
 					% paths
 					\draw[{Circle[open]}-{latex}](0.85,0)--(2.6,0); % Hi->Hik
@@ -177,7 +177,9 @@
 				%
 				\item to do the last, we stratify for all variables that explain variability, ergo, use a \textcolor{blue}{direct effects} model
 				%
-				\item two levels: replicates ($k$), children ($i$), denoted by discontinuous squares
+				\item \underline{three levels:} \\
+				replicates ($k$), children ($i$), blocks ($b$), \\
+				{\small \textcolor{blue}{(denoted by discontinuous squares)}}
 				%
 			\end{enumerate}
 			%
@@ -202,7 +204,7 @@
 					%\node at (1,2.7) {$U_{P}$};
 					%\node at (-2,1) {$A_{i}$};
 					%\node at (-2.8,1) {$U_{A}$};
-					\node at (2,0.7) {$B_{i}$};
+					\node at (2,0.7) {$B_{bk}$};
 					
 					% paths
 					\draw[{Circle[open]}-{latex}](0.85,0)--(2.6,0); % Hi->Hik
@@ -249,7 +251,7 @@
 					%\node at (1,2.7) {$U_{P}$};
 					\node at (-2.1,1) {$A_{i}$};
 					%\node at (-2.8,1) {$U_{A}$};
-					\node at (2,0.7) {$B_{i}$};
+					\node at (2,0.7) {$B_{bk}$};
 					
 					% paths
 					\draw[{Circle[open]}-{latex}](0.85,0)--(2.6,0); % Hi->Hik
@@ -350,7 +352,7 @@
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{variability_plot.pdf}}]
 	{Selecting models}
 	
-	in addition,
+	in addition in the ``simplest" model,
 	%
 	\begin{itemize}
 		%
@@ -379,17 +381,19 @@
 	\begin{itemize}
 		%
 		\item the small effects of the unaided $PTA$ on the child's $SI$ \\
-		{\small (similar to the ``simplest" model)}
+		{\small \textcolor{blue}{(similar to the ``simplest" model)}}
 		%
-		\item similar levels of explained variability across levels and blocks,
+		\item similar explained variability across levels and blocks \\
+		{\small \textcolor{blue}{(similar to the ``simplest" model)}}
 		%
-		\item but there is ``mild" evidence that some interactions might be prevalent
+		\item but ``mild" evidence of prevalent interactions,
 		%
 		\begin{itemize}
-			\item different $SI$ means within $HI/CI$, \\
-			CMV (row 2 of $aEHS$) vs Connexine 26 (row 3 of $aEHS$)
+			\item $SI$ means for $HI/CI$ per $E$, \\
+			$aEHS[2,2]$ (CMV) vs \\
+			$aEHS[3,2]$ (Connexine 26)
 			%
-			\item different $SI$ evolution between $NH$ vs $HI/CI$ children
+			\item different $SI$ evolution per unit $A$ ($bAHS$), between $NH$ vs $HI/CI$ children
 		\end{itemize}
 		%
 	\end{itemize}
@@ -400,16 +404,16 @@
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.50]{contrasts.png}}]
 	{Selecting models}
 	
-	within the ``interaction" model (\texttt{E\_NC5b3}),
+	within the ``interaction" model,
 	%
 	\begin{itemize}
 		%
-		\item given the size of the data within groups from combinations of $E$ and $HS$, we cannot reject the null hypothesis
+		\item the \textcolor{blue}{size of the data within groups} from combinations of $E$ and $HS$, does not allow to reject the contrasts' null hypothesis,
 		%
-		\item similar result is observed with the $A$ slopes contrast \\
-		{\small (but in this case is because the effect is small)}
+		\item similar result is observed on the $bAHS$ contrast \\
+		{\small (because the effect is small, compared to children's variability)}
 		%
-		\item we decide to \textcolor{blue}{keep} the ``interaction" model \textcolor{blue}{(\texttt{E\_NC5b3})}
+		\item still we decide to \textcolor{blue}{keep} the \textcolor{blue}{(\texttt{E\_NC5b3})} model 
 		%
 	\end{itemize}
 	%
@@ -460,7 +464,8 @@
 	\begin{itemize}
 		%
 		\item captures the variability of the replicates,
-		\item provides a ``true" $H$ and $SI$ measures
+		\item provides a ``true" $H$ (entropy) and $SI$ measures
+		\item we can also make contrast of $SI$ measures per child
 		%
 	\end{itemize}
 	%
@@ -471,7 +476,7 @@
 	{High leverage observations}
 	
 	``interaction" model has two high leverage observations, \\
-	{\small (observations that ``drag" estimation) }
+	{\small \textcolor{blue}{(observations that ``drag" estimation)} }
 	%
 	\begin{itemize}
 		%
@@ -485,12 +490,32 @@
 			{\small (next minimum value is $\approx 0.01$)}
 			%
 			\item child $10$ is $NH$, with the lowest observed $PTA$ value \\
-			{\small (almost ``perfect" hearing) }
+			{\small (``best" hearing in sample) }
 			%
-			\item child $15$ is $HI/CI$, $Am \approx 0.67$ \\
-			{\small ($min(A)=5 \rightarrow min(Am)=0$)}
+			\item child $15$ is $HI/CI$, $Am \approx 0.67$, $min(A)=5 \rightarrow min(Am)=0$ \\
+			{\small (the youngest $HI/CI$ child with ``perfect" $H_{ik}$)} \\
 			%
 		\end{itemize}
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{outliers.pdf}}]
+	{High leverage observations}
+	
+	``interaction" model has two high leverage observations, \\
+	{\small \textcolor{blue}{(observations that ``drag" estimation)} } \\ 
+	
+	both observations ``make sense",
+	\begin{itemize}
+		%
+		\item 1st hears ``better" than the rest \\
+		{\small (which impacts in $SI$ development) }
+		%
+		\item 2nd have multiple scenarios, \\
+		{\small (e.g. the utterance is a well developed word, for him/her)}
 		%
 	\end{itemize}
 	%
