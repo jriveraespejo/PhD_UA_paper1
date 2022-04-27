@@ -223,7 +223,7 @@ tri_plot(stan_object=E_NC5b3, pars=c('m_i','s_i','m_b','s_b','m_M'))
 # dev.off()
 
 # pdf("chains_real2.pdf")
-tri_plot(stan_object=E_NC5b3, pars=c('a','bP','bAHS[1]','bAHS[2]') )
+tri_plot(stan_object=E_NC5b3, pars=c('a','bP[2]','bAHS[1]','bAHS[2]') )
 # dev.off()
 
 tri_plot(stan_object=E_NC5b3, pars=paste0('aEHS[',1:5,',1]') )
@@ -241,27 +241,31 @@ PSIS_E = PSIS(E_NC5b3, pointwise=TRUE)
 
 
 # pdf("outliers.pdf")
-plot( PSIS_E$k , WAIC_E$penalty, col=rangi2 , lwd=2 , 
+plot( PSIS_E$k, WAIC_E$penalty, col=rangi2, lwd=2, xlim=c(0,0.8),
       xlab="PSIS Pareto k", ylab="WAIC penalty"  )
 abline(v=0.5, lty=2)
 abline(v=0.7, lty=2, lwd=2)
-identify( x=PSIS_E$k , y=WAIC_E$penalty, labels=dlist$cid )
+identify( x=PSIS_E$k , y=WAIC_E$penalty, labels=paste0(dlist$cid, ',', dlist$uid) )
 # two observations are outlying
 # dev.off()
 
 
 
+
 PSIS_E[PSIS_E$k>=0.5,]
-dlist$cid[c(95,141)] # zero values (fixed with trick)
+obs_out = as.integer( rownames(PSIS_E[PSIS_E$k>=0.5,]) )
+child_out = dlist$cid[obs_out] # zero values (fixed with trick)
+utt_out = dlist$uid[obs_out] # zero values (fixed with trick)
 
-dlist$H[c(95,141)]; psych::describe( dlist$H[!(dlist$H==0.0001)] ) 
-dlist$HS[c(10,15)]; psych::describe( dlist$HS[-c(10,15)] ) 
-dlist$E[c(10,15)]; psych::describe( dlist$E[-c(10,15)] ) 
-dlist$Am[c(10,15)]; psych::describe( dlist$Am[-c(10,15)] ) 
-dlist$sPTA[c(10,15)]; psych::describe( dlist$sPTA[-c(10,15)] ) 
+dlist$H[obs_out]; psych::describe( dlist$H[!(dlist$H==0.0001)] ) 
+dlist$HS[child_out] 
+dlist$E[child_out] 
+dlist$A[child_out]; psych::describe( dlist$A[-child_out] ) 
+dlist$PTA[child_out]; psych::describe( dlist$PTA[-child_out] ) 
 
-idx = dlist$cid %in% c(10,15)
+idx = dlist$cid %in% child_out #& dlist$uid %in% utt_out
 data.frame(cid=dlist$cid[idx], uid=dlist$uid[idx], H=dlist$H[idx])
+child_out; utt_out
 # it is because they have H=0 (perfect SI)
 
 

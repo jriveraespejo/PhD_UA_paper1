@@ -101,7 +101,7 @@ idx_sample = sample(1:length(post$a), size=n)
 
 mean_val = c(0.2,0.5,0.8)
 
-pdf('variability_plot.pdf')
+# pdf('variability_plot.pdf')
 
 par(mfrow=c(3,1))
 
@@ -166,4 +166,4 @@ for(p in 1:length(mean_val) ){
 
 par(mfrow=c(1,1))
 
-dev.off()
+# dev.off()

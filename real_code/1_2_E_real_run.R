@@ -44,11 +44,9 @@ metadata = read.csv(file.path(data_dir, data_name),
 # modify data ####
 # select appropriate info
 d = data_entropy[,c(2:5,8,11,13,15)]
-# table(d$reeks,d$kind) 
 
 # merge etiology
 d = merge(d, metadata[,c(1,27)], by.x='kind', by.y='ï..CI', all.x=T)
-# table(d$Etiology, d$hoorstatus)
 
 
 # children id
@@ -86,7 +84,9 @@ d$Etiology[is.na(d$Etiology)] = 1
 # sort
 d = d[with(d, order(kind,FRAGMENTNUMMER)),]
 # names(d)
-# table(d$kind, d$reeks)
+
+
+
 
 
 
@@ -99,6 +99,8 @@ E = unique(d[,c('kind','Etiology')])
 #   summarise(n=n())
 
 PTA = unique(d[,c('kind','unaided')])
+PTA$sPTA = PTA$unaided
+PTA$sPTA[!(PTA$unaided==0)] = c( standardize( PTA$sPTA[!(PTA$unaided==0)] ) )
 
 A = unique(d[,c('kind','hearing.age')])
 A$hearing.age = A$hearing.age/12 # in years (easier to spot effects)
@@ -119,8 +121,13 @@ dlist = list(
   
   # child's data
   HS = HS$hoorstatus,
+  
+  A = A$hearing.age,
   Am = A$hearing.age - min(A$hearing.age), # centered at minimum
+  
   E = E$Etiology,
+  
+  PTA = PTA$unaided, 
   sPTA = c( standardize( PTA$unaided ) ),
   
   
@@ -153,7 +160,7 @@ mod$sample( data=dlist,
             output_basename = str_replace(model_nam, '.stan', ''),
             chains=4, parallel_chains=4,
             max_treedepth=20, adapt_delta=0.95) #,init=0
-# NO divergent transitions
+# YES divergent transitions: 41/4000
 
 
 

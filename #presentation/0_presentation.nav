@@ -138,20 +138,18 @@
 \headcommand {\beamer@framepages {60}{60}}
 \headcommand {\slideentry {2}{4}{15}{61/61}{Apply statistical model to data}{0}}
 \headcommand {\beamer@framepages {61}{61}}
-\headcommand {\slideentry {2}{4}{16}{62/62}{Apply statistical model to data}{0}}
+\headcommand {\beamer@sectionpages {11}{61}}
+\headcommand {\beamer@subsectionpages {47}{61}}
+\headcommand {\sectionentry {3}{References}{62}{References}{0}}
+\headcommand {\slideentry {3}{0}{1}{62/62}{}{0}}
 \headcommand {\beamer@framepages {62}{62}}
-\headcommand {\beamer@sectionpages {11}{62}}
-\headcommand {\beamer@subsectionpages {47}{62}}
-\headcommand {\sectionentry {3}{References}{63}{References}{0}}
-\headcommand {\slideentry {3}{0}{1}{63/63}{}{0}}
+\headcommand {\slideentry {3}{0}{2}{63/63}{}{0}}
 \headcommand {\beamer@framepages {63}{63}}
-\headcommand {\slideentry {3}{0}{2}{64/64}{}{0}}
-\headcommand {\beamer@framepages {64}{64}}
-\headcommand {\beamer@sectionpages {63}{64}}
-\headcommand {\beamer@subsectionpages {63}{64}}
-\headcommand {\sectionentry {4}{References}{65}{References}{0}}
-\headcommand {\beamer@partpages {1}{67}}
-\headcommand {\beamer@subsectionpages {63}{67}}
-\headcommand {\beamer@sectionpages {63}{67}}
-\headcommand {\beamer@documentpages {67}}
-\headcommand {\gdef \inserttotalframenumber {64}}
+\headcommand {\beamer@sectionpages {62}{63}}
+\headcommand {\beamer@subsectionpages {62}{63}}
+\headcommand {\sectionentry {4}{References}{64}{References}{0}}
+\headcommand {\beamer@partpages {1}{66}}
+\headcommand {\beamer@subsectionpages {62}{66}}
+\headcommand {\beamer@sectionpages {62}{66}}
+\headcommand {\beamer@documentpages {66}}
+\headcommand {\gdef \inserttotalframenumber {63}}

@@ -144,7 +144,7 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     real bA;              // fixed slope (A - A_min)
@@ -168,11 +168,7 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP[HS[i]]*sPTA[i];
     }
     
     // average entropy (SI -> Ht: negative)
@@ -241,7 +237,7 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     real bA;              // fixed slope (A - A_min)
@@ -265,11 +261,7 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP[HS[i]]*sPTA[i];
     }
     
     // average entropy (SI -> Ht: negative)
@@ -369,7 +361,7 @@ data{
 }
 parameters{
     real a;               // fixed intercept
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     real bA;              // fixed slope (A - A_min)
@@ -398,11 +390,7 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + aHS[HS[i]] + bA*Am[i] + bP*sPTA[i];
-      // multicollinearity between E and HS
+      SI[i] = re_i[i] + a + aHS[HS[i]] + bA*Am[i] + bP[HS[i]]*sPTA[i];
     }
 
     // average entropy (SI -> Ht: negative)
@@ -506,7 +494,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     //matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -533,15 +521,9 @@ transformed parameters{
 
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aHS[HS[i]] +
               bAHS[HS[i]]*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aHS[HS[i]] +
-      //        bAHS[HS[i]]*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -613,7 +595,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     //vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -640,15 +622,9 @@ transformed parameters{
 
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aEHS[E[i], HS[i]] +
               bA*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aEHS[E[i], HS[i]] +
-      //        bA*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -721,7 +697,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     //vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -748,15 +724,9 @@ transformed parameters{
 
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aEHS[E[i], HS[i]] +
               bAHS[HS[i]]*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aEHS[E[i], HS[i]] +
-      //        bAHS[HS[i]]*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -829,7 +799,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     //matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -856,15 +826,9 @@ transformed parameters{
 
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aHS[HS[i]] +
               bAHS[HS[i]]*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aHS[HS[i]] +
-      //        bAHS[HS[i]]*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -936,7 +900,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     //vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -963,15 +927,9 @@ transformed parameters{
 
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aEHS[E[i], HS[i]] +
               bA*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aEHS[E[i], HS[i]] +
-      //        bA*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -1044,7 +1002,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     //vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -1071,15 +1029,9 @@ transformed parameters{
 
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aEHS[E[i], HS[i]] +
               bAHS[HS[i]]*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aEHS[E[i], HS[i]] +
-      //        bAHS[HS[i]]*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -1184,7 +1136,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     //matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -1215,15 +1167,9 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aHS[HS[i]] +
               bAHS[HS[i]]*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aHS[HS[i]] +
-      //        bAHS[HS[i]]*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -1297,7 +1243,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     //vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -1328,15 +1274,9 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aEHS[E[i], HS[i]] +
               bA*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aEHS[E[i], HS[i]] +
-      //        bA*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)
@@ -1411,7 +1351,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     //vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -1442,15 +1382,9 @@ transformed parameters{
     
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aEHS[E[i], HS[i]] +
               bAHS[HS[i]]*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aEHS[E[i], HS[i]] +
-      //        bAHS[HS[i]]*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)

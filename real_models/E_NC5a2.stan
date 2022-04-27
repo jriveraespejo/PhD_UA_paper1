@@ -16,7 +16,7 @@ data{
 }
 parameters{
     real a;               // fixed intercepts
-    real bP;              // fixed slope standardized PTA
+    vector[cHS] bP;       // fixed slope standardized PTA (different per HS)
     //vector[cHS] aHS;      // fixed intercept (per HS)
     //vector[cE] aE;        // fixed intercept (per E)
     matrix[cE, cHS] aEHS; // fixed interaction E*HS
@@ -43,15 +43,9 @@ transformed parameters{
 
     // linear predictor
     for(i in 1:I){
-      SI[i] = re_i[i] + a + bP*sPTA[i] + 
+      SI[i] = re_i[i] + a + bP[HS[i]]*sPTA[i] + 
               aEHS[E[i], HS[i]] +
               bA*Am[i];
-      // no multicollinearity between E and HS
-      
-      //SI[i] = re_i[i] + a + aE[E[i]] + bP*sPTA[i] + 
-      //        aEHS[E[i], HS[i]] +
-      //        bA*Am[i];
-      // multicollinearity between E and HS
     }
 
     // average entropy (SI -> Ht: negative)

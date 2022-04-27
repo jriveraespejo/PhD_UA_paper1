@@ -302,8 +302,8 @@
 		\underline{models:} \texttt{E\_NC6a}, \texttt{E\_NC6b}, \texttt{E\_NC6c}. 
 		%
 		\item \textcolor{blue}{Mild evidence} in favor of ``robust" model without interaction \\
-		(qualifies as ME the lack of explanation at the child level) \\
-		\underline{models:} \texttt{E\_NC3}. 
+		\underline{models:} \texttt{E\_NC3}. \\
+		{\small (qualifies as ME the lack of explanation at the child level)} \\
 		%
 	\end{itemize}
 	%
@@ -331,17 +331,17 @@
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.70]{select_model1.png}}]
 	{Selecting models}
 	
-	``simplest" model (\texttt{E\_NC2b}) provides (preliminar) evidence that,
+	``simplest" model (\texttt{E\_NC2b}) provides (preliminar) evidence on,
 	%
 	\begin{itemize}
 		%
-		\item the higher the unaided $PTA$ the lower the child's $SI$ \\
+		\item the higher the unaided $PTA$ the lower the child's $SI$ ($bP[2]$)\\
 		{\small (based on power analysis, \textcolor{blue}{we can be sure} is a small effect) }
 		%
-		\item no significant difference between $NH$ and $HI/CI$ children \\
+		\item no statistical difference between $NH$ and $HI/CI$ children \\
 		{\small (but this requires a \textcolor{blue}{contrast}) }
 		%
-		\item for each ``hearing" year the $SI$ increases in $0.42$ logits \\
+		\item for each ``hearing" year the $SI$ increases in $\approx 0.40$ logits \\
 		{\small (\textcolor{blue}{larger than expected} effect assumed in power analysis) }
 		%
 	\end{itemize}
@@ -358,7 +358,7 @@
 		%
 		\item it is hard to determine how the variability is ``explained" just by looking at the parameters \texttt{s\_b}, \texttt{s\_i}, \texttt{m\_M}
 		%
-		\item transforming \texttt{s\_b}, \texttt{s\_i}, \texttt{m\_M} into the $[0,1]$ entropy scale:
+		\item transforming the parameters into $[0,1]$ entropy scale:
 		%
 		\begin{itemize}
 			\item block level (\texttt{s\_b}) has the lowest variability,
@@ -380,8 +380,7 @@
 	%
 	\begin{itemize}
 		%
-		\item the small effects of the unaided $PTA$ on the child's $SI$ \\
-		{\small \textcolor{blue}{(similar to the ``simplest" model)}}
+		\item effects of the unaided $PTA$ on the child's $SI$ still non-significant
 		%
 		\item similar explained variability across levels and blocks \\
 		{\small \textcolor{blue}{(similar to the ``simplest" model)}}
@@ -393,7 +392,7 @@
 			$aEHS[2,2]$ (CMV) vs \\
 			$aEHS[3,2]$ (Connexine 26)
 			%
-			\item different $SI$ evolution per unit $A$ ($bAHS$), between $NH$ vs $HI/CI$ children
+			\item different $SI$ evolution per unit $A$ ($bAHS$), $NH$ vs $HI/CI$ children
 		\end{itemize}
 		%
 	\end{itemize}
@@ -475,47 +474,27 @@
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{outliers.pdf}}]
 	{High leverage observations}
 	
-	``interaction" model has two high leverage observations, \\
-	{\small \textcolor{blue}{(observations that ``drag" estimation)} }
+	``interaction" model has five (5) ``high" leverage observations, \\
+	{\small \textcolor{blue}{(observations that ``drag" the estimation)} }
 	%
 	\begin{itemize}
 		%
 		\item the ``drag" is not large ($k<0.7$),
 		%
-		\item correspond to child $10$ and $15$,
+		\item pair \textcolor{blue}{$(child, utterance)$} reveals,
 		%
 		\begin{itemize}
 			%
-			\item both cases have $H_{ik}=0$ \\
+			\item all cases cases have $H_{ik}=0$ \\
 			{\small (next minimum value is $\approx 0.01$)}
 			%
-			\item child $10$ is $NH$, with the lowest observed $PTA$ value \\
-			{\small (``best" hearing in sample) }
-			%
-			\item child $15$ is $HI/CI$, $Am \approx 0.67$, $min(A)=5 \rightarrow min(Am)=0$ \\
+			\item child $25$ is $HI/CI$, with $A \approx 6.17$, \\
 			{\small (the youngest $HI/CI$ child with ``perfect" $H_{ik}$)} \\
+			{\small (the utterance is a well developed word, for him/her?)}
+			%
+			\item no other relationship among them
 			%
 		\end{itemize}
-		%
-	\end{itemize}
-	%
-\end{lhframe}
-%
-%
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{outliers.pdf}}]
-	{High leverage observations}
-	
-	``interaction" model has two high leverage observations, \\
-	{\small \textcolor{blue}{(observations that ``drag" estimation)} } \\ 
-	
-	both observations ``make sense",
-	\begin{itemize}
-		%
-		\item 1st hears ``better" than the rest \\
-		{\small (which impacts in $SI$ development) }
-		%
-		\item 2nd have multiple scenarios, \\
-		{\small (e.g. the utterance is a well developed word, for him/her)}
 		%
 	\end{itemize}
 	%
