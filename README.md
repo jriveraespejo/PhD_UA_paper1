@@ -52,17 +52,14 @@ The current document proposed a novel modeling method using the BetaProp() distr
 
 
 
-## Status
-**In progress**
-
-
-## Documents
-### Preliminary paper
+### Documents
 The preliminary version of the submitted paper can be downloaded from [**(NOT AVAILABLE YET)**]()
 
-### Presentation
 The preliminary presentations of the analysis can be downloaded from [**(HERE)**](https://github.com/jriveraespejo/PhD_UA_paper1/raw/master/%23presentation/0_presentation.pdf)
 
+
+### Status
+**_In progress_**
 
 
 ## Additional information
