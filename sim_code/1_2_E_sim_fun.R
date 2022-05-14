@@ -377,6 +377,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                   model_in = file.path(getwd(), 'sim_models'), # location load models
                   model_out = file.path(getwd(), 'sim_chain'), # location to save results
                   Nsim=100, # number of simulation for power
+                  prob=0.9, # significance
                   I_grid, # experimental units (children) 
                   K_grid, # replicates (utterances)
                   par_int, # parameter to analyze power
@@ -386,14 +387,15 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
   
   # # test
   # power_save=file.path(getwd(), 'sim_chain') # power result dir need to include getwd()
-  # sim_name='Hbeta_sim2_power.RData' # file_save need to include getwd()
+  # sim_name='E_sim2_power2.RData' # file_save need to include getwd()
   # sim_save=file.path(getwd(), 'sim_data') # file_name need to include '.RData'
-  # model_name='Hbeta_NC_sim2' # model for which we want to calculate power
+  # model_name='E_NC_sim2' # model for which we want to calculate power
   # model_in=file.path(getwd(), 'sim_models') # location load models
   # model_out=file.path(getwd(), 'sim_chain') # location to save results
   # Nsim=2 # number of simulation for power
+  # prob=0.9 # significance
   # I_grid = c(48, 60) # experimental units (children)
-  # K_grid = c(20) # replicates (utterances)
+  # K_grid = c(10, 20) # replicates (utterances)
   # p=c(0.34, 0.33, 0.33) # children prop. on each group
   # par_int=c('aHS','bP','bA','m_i','s_i','m_M','SI') # parameter to analyze power
   # par_cont=c('aHS','SI') # parameters to contrast
@@ -446,7 +448,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
       
       
       # 3. data simulation ####
-      if( is.null(sim_name)| is.null(sim_save) ){
+      if( is.null(sim_name) | is.null(sim_save) ){
         
         mom = Esim(sim_name=NULL, 
                    sim_save=NULL, 
@@ -470,8 +472,8 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                              bAHS=rep(0,3) ) )
       } else{
         
-        Esim(sim_name=NULL, 
-             sim_save=NULL, 
+        Esim(sim_name=sim_name, 
+             sim_save=sim_save, 
              seed=NULL, 
              I=par_grid[l,1], 
              K=par_grid[l,2], 
@@ -511,7 +513,8 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
       par_true = data_detect_par(d=mom, par_int=par_int)
       par_recovery = parameter_recovery( stan_object = res,
                                          est_par = par_int,
-                                         true_par = par_true )
+                                         true_par = par_true,
+                                         p=prob)
       
       
       # 6. contrast comparison ####
@@ -519,7 +522,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
       cont_recovery = contrast_recovery( stan_object=res, 
                                          est_diff = par_cont, 
                                          true_diff = diff_true, 
-                                         p=0.90)
+                                         p=prob)
       
       
       # 7. storage simulations ####
@@ -540,7 +543,7 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
       
       
       # 8. intermediate storage ####
-      par_mom = par_comparison %>%
+      par_mom1 = par_comparison %>%
         group_by(par_names) %>%
         summarize(true_mean=mean(true, na.rm=T), 
                   sim_mean=mean(mean, na.rm=T),  
@@ -551,24 +554,29 @@ Epower = function(power_save=NULL, # file_save need to include getwd()
                   pAccept=mean(accept_val, na.rm=T), 
                   pPrecision=mean(precision, na.rm=T))
       
+      
       if(l==1){
         par_res = data.frame(I=par_grid[l,1], 
                              K=par_grid[l,2], 
                              Nsim=nsim,
-                             par_mom)
+                             par_mom1)
       } else{
         if(nsim==1){
           par_res = rbind(par_res,
                           data.frame(I=par_grid[l,1], 
                                      K=par_grid[l,2], 
                                      Nsim=nsim,
-                                     par_mom) )
+                                     par_mom1) )
         } else{
-          start = nrow(par_res) - nrow(par_mom) + 1
+          start = nrow(par_res) - nrow(par_mom1) + 1
           end = nrow(par_res)
-          par_res[start:end, ] = par_mom
+          par_res[start:end, ] = data.frame(I=par_grid[l,1], 
+                                            K=par_grid[l,2], 
+                                            Nsim=nsim,
+                                            par_mom1)
         }
       }
+      # View(par_res)
       
       
       # counting
@@ -602,8 +610,8 @@ plot_power = function(d, # object from Epower() function
   
   # # test
   # d=par_res # object from Epower() function
-  # par_plot=c('aHS','bA','bP','m_i','m_M','s_i') # parameters to find power
-  # contrast=F # plot contrast only
+  # par_plot=c('aHS') # parameters to find power
+  # contrast=T # plot contrast only
   # Nprop = 0.33 # for x axis in plot
   # plotN = 2 # number for the set of plot to show
   

@@ -375,9 +375,9 @@ parameter_recovery = function(stan_object, est_par, true_par,
                               prec=3, p=0.90){
   
   # # test
-  # stan_object=E_NC1
-  # est_par=par_est
-  # true_par=NA
+  # stan_object = res
+  # est_par = par_int
+  # true_par = par_true
   # p=0.90
   # prec=3
   # seed=1
@@ -398,7 +398,9 @@ parameter_recovery = function(stan_object, est_par, true_par,
   hpdi_res = hpdi_res[-rem,] # remove
   
   rem = which( str_detect( row.names(hpdi_res), 'log_lik') )
-  hpdi_res = hpdi_res[-rem,] # remove
+  if( length(rem)!=0 ){
+    hpdi_res = hpdi_res[-rem,] # remove
+  }
   
   attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
   
@@ -461,7 +463,7 @@ true_contrast = function(d, par_int){
   
   # # test
   # d = mom
-  # par_int = c('aHS','aEHS','bAHS')
+  # par_int = par_cont
   
   
   # storage
@@ -473,7 +475,7 @@ true_contrast = function(d, par_int){
   par_1 = which( !( par_int %in% c('SI','Ht') ) )
   if( length(par_1)!=0 ){
     
-    # m=2
+    # m=1
     for(m in par_1){
 
       # identify parameters
@@ -503,7 +505,7 @@ true_contrast = function(d, par_int){
         par_true = d$dS$par[[idx_par]]
 
         # extract par
-        # i=2; j=3
+        # i=1; j=2
         for(i in 1:length(par_true)){
           for(j in 1:length(par_true)){
             
@@ -530,6 +532,7 @@ true_contrast = function(d, par_int){
   par_2 = which( par_int %in% c('SI','Ht') )
   if( length(par_2)!=0 ){
     
+    # m=2
     for(m in par_2){
       
       # identify parameters
@@ -542,8 +545,8 @@ true_contrast = function(d, par_int){
         for(j in 1:length(par_true)){
           
           if( j>i ){
-            cont_true = cbind(cont_true, 
-                              par_true[j] - par_true[i] ) 
+            cont_true = c(cont_true, 
+                          par_true[j] - par_true[i] ) 
           }
         }
       }
@@ -551,7 +554,7 @@ true_contrast = function(d, par_int){
     
     attr(cont_true, "dimnames") = NULL
   }
-  
+  # View(cont_true)
 
   # return object
   return( c(cont_true) )
@@ -576,9 +579,9 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
                              p=0.90, prec=3, seed=1){
   
   # # test
-  # stan_object=res_C
-  # est_diff=c('aEHS','bAHS')
-  # true_diff=diff_true
+  # stan_object=res 
+  # est_diff = par_cont
+  # true_diff = diff_true
   # p=0.90
   # prec=3
   # seed=1
@@ -598,7 +601,7 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
   
   
   # calculations
-  # k=1
+  # k=2
   for(k in 1:length(est_diff)){
     
     post_mom = post[[k]]
@@ -645,7 +648,7 @@ contrast_recovery = function(stan_object, est_diff, true_diff,
       # selecting parameter
       par_name = paste0( est_diff[k], '[', 1:ncol(post_mom), ']' )
       
-      # i=1;j=3
+      # i=1;j=2
       for(i in 1:ncol(post_mom)){
         for(j in 1:ncol(post_mom)){
           

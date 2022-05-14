@@ -25,14 +25,14 @@ source( file.path( getwd(), 'sim_code', '1_2_E_sim_fun.R') )
 
 # # testing power ####
 # # run only once
-# #
 # Epower( power_save=file.path(getwd(), 'sim_chain'), # power result dir need to include getwd()
-#         sim_name='E_sim2_power.RData', # file_save need to include getwd()
+#         sim_name='E_sim2_power2.RData', # file_save need to include getwd()
 #         sim_save=file.path(getwd(), 'sim_data'), # file_name need to include '.RData'
 #         model_name='E_NC_sim2', # model for which we want to calculate power
 #         model_in=file.path(getwd(), 'sim_models'), # location load models
 #         model_out=file.path(getwd(), 'sim_chain'), # location to save results
 #         Nsim=100, # number of simulation for power
+#         prob=0.9, # significance
 #         I_grid = c(48, 60), # experimental units (children)
 #         K_grid = c(10, 20), # replicates (utterances)
 #         p=c(0.34, 0.33, 0.33), # children prop. on each group
@@ -42,7 +42,7 @@ source( file.path( getwd(), 'sim_code', '1_2_E_sim_fun.R') )
 
 
 # load results
-load(file.path( getwd(), 'sim_chain', 'E_sim2_power.RData'))
+load(file.path( getwd(), 'sim_chain', 'E_sim2_power2.RData'))
 # View( par_res )
 
 
@@ -52,12 +52,19 @@ unique(par_res$par_names)
 
 # pdf("power_result1.pdf", width=6, height=10)
 plot_power(d=par_res, # object from Epower() function
-           par_plot=c('bA','bP','s_i','m_M'), # parameters to find power
+           par_plot=c('bA','bP'), # parameters to find power
            contrast=F, # plot contrast only
            Nprop = 0.33, # for x axis in plot
            plotN = 1) # number for the set of plot to show)
 # dev.off()
 
+# pdf("power_result1.pdf", width=6, height=10)
+plot_power(d=par_res, # object from Epower() function
+           par_plot=c('s_i','m_M'), # parameters to find power
+           contrast=F, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 1) # number for the set of plot to show)
+# dev.off()
 
 # pdf("power_result2.pdf", width=6, height=10)
 plot_power(d=par_res, # object from Epower() function

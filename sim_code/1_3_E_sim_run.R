@@ -191,7 +191,7 @@ Esim(sim_name='E_sim2.RData', # file_name need to include '.RData'
                m_M=10, s_M=NULL, # generation of df (M)
                a=0,
                bP=-0.1,
-               aHS=c(0.4,0,-0.4),
+               aHS=c(0.15,0,-0.15),
                bA=0.15,
                bAHS=rep(0,3),
                aE=rep(0,4), # (1st is E=none)
@@ -234,7 +234,7 @@ Esim(sim_name='E_sim2.RData', # file_name need to include '.RData'
                m_M=10, s_M=NULL, # generation of df (M)
                a=0,
                bP=-0.1,
-               aHS=c(0.4,0,-0.4),
+               aHS=c(0.15,0,-0.15),
                bA=0.15,
                bAHS=rep(0,3),
                aE=rep(0,4), # (1st is E=none)
@@ -323,7 +323,7 @@ Esim(sim_name='E_sim3.RData', # file_name need to include '.RData'
                m_M=1.5, s_M=0.5, # generation of df (M)
                a=0,
                bP=-0.1,
-               aHS=c(0.4,0,-0.4),
+               aHS=c(0.15,0,-0.15),
                bA=0.15,
                bAHS=rep(0,3),
                aE=rep(0,4), # (1st is E=none)
@@ -364,7 +364,7 @@ Esim(sim_name='E_sim3.RData', # file_name need to include '.RData'
                m_M=1.5, s_M=0.5, # generation of df (M)
                a=0,
                bP=-0.1,
-               aHS=c(0.4,0,-0.4),
+               aHS=c(0.15,0,-0.15),
                bA=0.15,
                bAHS=rep(0,3),
                aE=rep(0,4), # (1st is E=none)
@@ -543,11 +543,11 @@ Esim(sim_name='E_sim5.RData', # file_name need to include '.RData'
                bP=-0.1,
                aHS=rep(0,3),
                bA=0,
-               bAHS=c(0.20,0.15,0.10),
+               bAHS=c(0.4,0.2,0),
                aE=rep(0,4), # (1st is E=none)
-               aEHS=matrix( c( c(0.4, rep(0,3) ), # NH
-                               c(0, seq(0.1,-0.1,length.out=3) ), # HI/CI (1st is E=none)
-                               c(0, seq(-0.3,-0.5,length.out=3) ) ),  # HI/HA (1st is E=none)
+               aEHS=matrix( c( c(0.2, rep(0,3) ), # NH
+                               c(0, 0.2, 0.05, 0 ), # HI/CI (1st is E=none)
+                               c(0, seq(0,-0.2,length.out=3) ) ),  # HI/HA (1st is E=none)
                             ncol=3, byrow=F) ) )
 
 
@@ -586,11 +586,11 @@ Esim(sim_name='E_sim5.RData', # file_name need to include '.RData'
                bP=-0.1,
                aHS=rep(0,3),
                bA=0,
-               bAHS=c(0.20,0.15,0.10),
+               bAHS=c(0.4,0.2,0),
                aE=rep(0,4), # (1st is E=none)
-               aEHS=matrix( c( c(0.4, rep(0,3) ), # NH
-                               c(0, seq(0.1,-0.1,length.out=3) ), # HI/CI (1st is E=none)
-                               c(0, seq(-0.3,-0.5,length.out=3) ) ),  # HI/HA (1st is E=none)
+               aEHS=matrix( c( c(0.2, rep(0,3) ), # NH
+                               c(0, 0.2, 0.05, 0 ), # HI/CI (1st is E=none)
+                               c(0, seq(0,-0.2,length.out=3) ) ),  # HI/HA (1st is E=none)
                             ncol=3, byrow=F) ) )
 
 
@@ -680,11 +680,11 @@ Esim(sim_name='E_sim5.RData', # file_name need to include '.RData'
                bP=-0.1,
                aHS=rep(0,3),
                bA=0,
-               bAHS=c(0.20,0.15,0.10),
+               bAHS=c(0.4,0.2,0),
                aE=rep(0,4), # (1st is E=none)
-               aEHS=matrix( c( c(0.4, rep(0,3) ), # NH
-                               c(0, seq(0.1,-0.1,length.out=3) ), # HI/CI (1st is E=none)
-                               c(0, seq(-0.3,-0.5,length.out=3) ) ),  # HI/HA (1st is E=none)
+               aEHS=matrix( c( c(0.2, rep(0,3) ), # NH
+                               c(0, 0.2, 0.05, 0 ), # HI/CI (1st is E=none)
+                               c(0, seq(0,-0.2,length.out=3) ) ),  # HI/HA (1st is E=none)
                             ncol=3, byrow=F) ) )
 
 
@@ -723,11 +723,11 @@ Esim(sim_name='E_sim5.RData', # file_name need to include '.RData'
                bP=-0.1,
                aHS=rep(0,3),
                bA=0,
-               bAHS=c(0.20,0.15,0.10),
+               bAHS=c(0.4,0.2,0),
                aE=rep(0,4), # (1st is E=none)
-               aEHS=matrix( c( c(0.4, rep(0,3) ), # NH
-                               c(0, seq(0.1,-0.1,length.out=3) ), # HI/CI (1st is E=none)
-                               c(0, seq(-0.3,-0.5,length.out=3) ) ),  # HI/HA (1st is E=none)
+               aEHS=matrix( c( c(0.2, rep(0,3) ), # NH
+                               c(0, 0.2, 0.05, 0 ), # HI/CI (1st is E=none)
+                               c(0, seq(0,-0.2,length.out=3) ) ),  # HI/HA (1st is E=none)
                             ncol=3, byrow=F) ) )
 
 

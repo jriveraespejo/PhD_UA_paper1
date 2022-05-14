@@ -1,0 +1,138 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOCUMENT CONFIGURATIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------
+% DOCUMENT TYPE
+%----------------------------------------
+\documentclass[
+10pt, % Main document font size
+a4paper, % Paper type, use 'letterpaper' for US Letter paper
+oneside, % One page layout (no page indentation)
+%twoside, % Two page layout (page indentation for binding and different headers)
+headinclude,footinclude, % Extra spacing for the header and footer
+BCOR5mm, % Binding correction
+]{scrartcl}
+
+%----------------------------------------
+% PACKAGES DOCUMENT CONFIGURATIONS
+%----------------------------------------
+\usepackage[square,numbers]{natbib} % bibliography with brackets and numbers
+\usepackage[hidelinks]{hyperref} % black hyperlinks
+\usepackage[toc]{appendix} % includes appendix in the TOC
+\usepackage[nottoc,notlot,notlof]{tocbibind} % TOC
+\usepackage{comment} % comment out some parts of the document
+\usepackage{csquotes} % to insert quotes
+\usepackage{color, colortbl} % defines colors and table colors
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc} % Required for including letters with accents
+\usepackage{graphicx} % Required for including images
+\usepackage{enumitem} % Required for manipulating the whitespace between and within lists
+%\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{subfig} % Required for creating figures with multiple parts (subfigures)
+\usepackage{amsmath,amssymb,amsthm} % For including math equations, theorems, symbols, etc
+\usepackage{varioref} % More descriptive referencing
+\usepackage{authblk} % authors affiliation
+
+
+%----------------------------------------
+% ADDITIONAL CONFIGURATIONS
+%----------------------------------------
+\graphicspath{{figures/}} % Set the default folder for images
+
+\hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
+
+% THEOREM DEFINITION
+\theoremstyle{definition} % Define theorem styles here based on the definition style (used for definitions and examples)
+\newtheorem{definition}{Definition}
+\theoremstyle{plain} % Define theorem styles here based on the plain style (used for theorems, lemmas, propositions)
+\newtheorem{theorem}{Theorem}
+\theoremstyle{remark} % Define theorem styles here based on the remark style (used for remarks and notes)
+
+% define color for the rows of the table
+\definecolor{gray}{gray}{0.95}
+
+% HYPERLINKS
+\hypersetup{
+	%draft, % Uncomment to remove all links (useful for printing in black and white)
+	colorlinks=true, breaklinks=true, bookmarks=true, bookmarksnumbered,
+	urlcolor=webbrown, linkcolor=RoyalBlue, citecolor=webgreen, % Link colors
+	pdftitle={}, % PDF title
+	pdfauthor={\textcopyright}, % PDF Author
+	pdfsubject={}, % PDF Subject
+	pdfkeywords={}, % PDF Keywords
+	pdfcreator={pdfLaTeX}, % PDF Creator
+	pdfproducer={LaTeX with hyperref and ClassicThesis} % PDF producer
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOCUMENT PRODUCTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------
+% TITLE AND AUTHOR(S)
+%----------------------------------------
+
+\title{Speech intelligibility measurement} % The article title
+\subtitle{A latent variable approach} % subtitle
+\author[1]{Jose Rivera}
+\affil[1]{ {\small Department of Training and Education Sciences, \authorcr
+	University of Antwerp, Antwerp, Belgium  \authorcr
+	E-mail: JoseManuel.RiveraEspejo@uantwerpen.be \authorcr
+	(corresponding author) } }
+\author[2]{Sven de Maeyer}
+\affil[2]{ {\small Department of Training and Education Sciences, \authorcr
+		University of Antwerp, Antwerp, Belgium  \authorcr
+		E-mail: sven.demaeyer@uantwerpen.be \authorcr } }
+\author[3]{Steven Gillis}
+\affil[3]{ {\small Computational Linguistics, \& Psycholinguistics Research Centre \authorcr 
+		University of Antwerp, Antwerp, Belgium \authorcr
+		E-mail: steven.gillis@uantwerpen.be \authorcr } } 
+
+\date{\today} % An optional date to appear under the author(s)
+
+
+
+\begin{document}
+
+
+%----------------------------------------
+% TOC & LISTS OF FIGURES AND TABLES
+%----------------------------------------
+\maketitle % Print the title/author/date block
+\setcounter{tocdepth}{2} % Set the depth of the table of contents to show sections and subsections only
+
+\newpage
+\tableofcontents % Print the table of contents
+
+\newpage
+\listoffigures % Print the list of figures
+
+\newpage
+\listoftables % Print the list of tables
+
+
+%----------------------------------------
+% DOCUMENT BODY
+%----------------------------------------
+\newpage
+\input 1_abstract
+\input 2_introduction
+\input 3_methods
+\input 4_results
+\input 5_discussion
+\input 6_additionals
+\appendix
+\include{A_supplementary}
+
+%----------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------
+
+\renewcommand{\refname}{\spacedlowsmallcaps{References}} % For modifying the bibliography heading
+\newpage
+\bibliographystyle{dcu}
+\bibliography{bibliography.bib}
+
+\end{document}
