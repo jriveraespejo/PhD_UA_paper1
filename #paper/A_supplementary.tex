@@ -2,28 +2,139 @@
 \section{Supplementary}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%-------------------------------
+%###############################
 \subsection{About Speech Intelligibility}
-%-------------------------------
-As it was specified in the document Speech Intelligibility is defined as the extent to which the elements in an speaker's acoustic signal can be correctly recovered by a listener. In the context of the , 
+%###############################
+%
+As it was specified in the document Intelligible speech can be defined as the extent to which the elements in an speaker's acoustic signal, e.g. phonemes or words, can be correctly recovered by a listener \citep{Kent_et_al_1989, Whitehill_et_al_2004, vanHeuven_2008, Freeman_et_al_2017}. More specifically, in the context of the transcription task, speech intelligibility refers to the extent a transcriber can identify the words contained in an utterance \cite{Boonen_et_al_2021}.
 
+\begin{comment}
 is interpreted here as a latent trait of individuals which underlies the probability of answering the questions in the sample correctly. Henceforth, statements such ‘knowledge is influenced by’ can be read as ‘the probability of correctly answering the questions in the sample is influenced by’. Despite this practical approach, we did our best to improve the construct validity of our study, by both developing the questionnaire and managing the resulting data in collaboration with informants sharing language and culture with the interviewees. We then expect knowledge, as measured by our model, to reflect the general ecological knowledge possessed by individuals, but do not deal with general epistemological considerations on the connection between the two.
-
-
-\subsubsection{Definition}
-
-
-
+\end{comment}
+%
+%
 %-------------------------------
+\subsubsection{Transcription task} \label{appA:transcription}
+%-------------------------------
+%
+The experimental settings for the transcription task followed the next steps \citep{Boonen_et_al_2020, Boonen_et_al_2021}:
+%
+\begin{enumerate} \itemsep1pt
+	\item the listener took a seat in front of a computer screen, located at his(her) home, workplace, or the experimental laboratory.
+	%
+	\item the listener opened Comproved\footnote{software developed by the University of Antwerp designed to perform comparative judgments: \url{https://comproved.com/en/a}.} and select the transcription task.
+	%
+	\item the listener read two set of instructions presented on the computer screen about:
+	\begin{enumerate}
+		\item how to perform the task, and
+		\item the aspects not to consider for the task.
+	\end{enumerate}
+	%
+	\item the listener hear the stimuli through high quality headphones, set at a comfortable volume.
+	%
+	\item the listener wrote the orthographic transcriptions of the utterances, in a free text field in the Comproved environment.
+	%
+\end{enumerate}
+%
+%
+%-------------------------------
+\subsubsection{Entropy calculation} \label{appA:entropy} 
+%-------------------------------
+%
+The outcome from the transcription task was obtained following a two step procedure \citep{Boonen_et_al_2021}. First, we aligned the participant's orthographic transcriptions, at the utterance level, in a column-like grid structure similar to the one presented in Table \ref{tab:align_example}. This step was repeated for every one of the $6400$ transcriptions. Lastly, we computed the entropy measure of the aligned transcriptions as in \citet{Shannon_1948}: 
+%
+\begin{equation} \label{eq:entropy}
+	H = H(\pmb{p}) = \frac{-\sum_{i=1}^{n} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(N)}
+\end{equation}
+%
+where $H$ is bounded in the continuum $[0,1]$, $n$ denotes the number of word occurrences within each utterance, $p_{i}$ the probability of such word occurrence, and $N$ the total number of aligned transcriptions per utterance.
+%
+\begin{comment}
+under DoE literature, the design corresponds to $32$ experimental units with $10$ replicates each, making a total of $320$ experimental runs. Moreover, we register $20$ duplicates (transcriptions) for each run, making a total of $6400$ transcriptions.
+\end{comment}
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{| c | ccccc | } 
+		\hline
+		Transcription & \multicolumn{5}{c |}{Utterance} \\ [0.5ex]
+		\cline{2-6}
+		number & 1 & 2 & 3 & 4 & 5 \\ [0.5ex] 
+		\hline\hline
+		1 & de & jongen & ziet & een & kikker \\ 
+		& the & boy & see & a & frog \\ 
+		\hline
+		2 & de & jongen & ziet & de & [X] \\
+		& the & boy & sees & the & [X] \\ 
+		\hline
+		3 & de & jongen & zag & [B] & kokkin \\
+		& the & boy & saw & [B] & cook \\ 
+		\hline
+		4 & de & jongen & zag & geen & kikkers \\
+		& the & boy & saw & no & frogs \\ 
+		\hline
+		5 & de & hond & zoekt & een & [X] \\
+		& the & dog & searches & a & [X] \\ 
+		\hline\hline
+		Entropy & $0$ & $0.3109$ & $0.6555$ & $0.8277$ & $1$ \\
+		\hline
+		\multicolumn{4}{l}{\footnotesize{[B] = blank space, [X] = unidentifiable word}}
+	\end{tabular}
+	\caption{Example of five aligned transcriptions and its corresponding entropy calculations. Extracted from \citet{Boonen_et_al_2021}, and slightly modified with illustrative purposes.}
+	\label{tab:align_example}
+\end{table}
+%
+
+Entropy was used as an objective measure of SI, i.e. a quantification of (dis)agreement between listeners' transcriptions. Utterances yielding a high degree of agreement between transcribers were considered highly intelligible, and therefore registered a lower entropy $\left( H \rightarrow 0 \right)$. In contrast, utterances yielding a low degree of agreement were considered as exhibiting low intelligibility, and therefore registered a higher entropy $\left( H \rightarrow 1 \right)$ \citep{Boonen_et_al_2021, Faes_et_al_2021}. 
+
+Using Table \ref{tab:align_example}, we exemplify the entropy calculation for utterances $2$, $4$ and $5$, which represent relevant scenarios for the procedure. Notice that every calculation considers five transcriptions in total ($N=5$). 
+
+For the second utterance, we observe that four transcriptions identify it with the word \textit{jongen}, while the last with the word \textit{hond}. Therefore, we registered two word occurrences ($n=2$), with probabilities $\pmb{p} = (p_{1}, p_{2}) = (4/5, 1/5)$, and entropy measure equal to:
+%
+\begin{align*}
+	H &= \frac{-\sum_{i=1}^{2} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
+	%
+	&= \frac{- \left[ 0.8 \log_{2}(0.8) + 0.2 \log_{2}(0.2) \right] }{\log_{2}(5)} \\
+	%
+	&\approx 0.3109
+\end{align*} 
+%
+For the fourth utterance, we observe that two transcriptions identify it with the word \textit{een}, one with \textit{de}, one with \textit{geen}, and one with a blank space [B]. Notice the blank space was not expected in such position, therefore, it was considered as a different word occurrence. As a result, the scenario had four word occurrences ($n=4$), with probabilities $\pmb{p} = (p_{1}, p_{2}, p_{3}, p_{4}) = (2/5, 1/5, 1/5, 1/5)$, and entropy measure equal to:
+%
+\begin{align*}
+	H &= \frac{-\sum_{i=1}^{4} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
+	%
+	&= \frac{- \left[ 0.4 \log_{2}(0.4) + 3 \cdot 0.2 \log_{2}(0.2) \right] }{\log_{2}(5)} \\
+	%
+	&\approx 0.8277
+\end{align*} 
+%
+Finally, for the fifth utterance, we observe that all of the  transcriptions identify it with different words. Notice we consider the unidentifiable word [X] in the second transcription, as being different from the one in the last. This is done to avoid the artificial reduction of the entropy measure, as [X] values already indicate the lack of intelligibility of the word. Therefore, we registered five word occurrences ($n=5$), with probabilities $\pmb{p} = (p_{1}, \dots, p_{5}) = (1/5, \dots, 1/5)$, and entropy measure equal to:
+%
+\begin{align*}
+	H &= \frac{-\sum_{i=1}^{5} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
+	%
+	&= \frac{- 5 \cdot 0.2 \log_{2}(0.2) }{\log_{2}(5)} \\
+	%
+	&= 1
+\end{align*} 
+%
+%
+%###############################
 \subsection{Sampling bias}
-%-------------------------------
+%###############################
+%
+Second, due to the nature of the sample selection procedure, we cannot ensure the HI/CI and HI/HA, nor the NH group, are representative of their respective populations. Therefore, inferences beyond this particular set of children must be taken with care.
+%
+%
 
-
-
-
-%-------------------------------
+%###############################
 \subsection{Children characteristics} \label{appA:char}
-%-------------------------------
+%###############################
+%
+The table includes all the variables used for the matching procedure in Section \ref{s_sect:children}, and additionally, shows the child's etiology, i.e. the cause of their hearing impairment, and their post-implant pure tone average (PTA), i.e. the child's subjective hearing sensitivity, aided and unaided by their hearing apparatus. No other variables are included, as no known additional comorbidities, beside their hearing impairment, is suspected.
+
+From the table, \textcolor{red}{describe summaries from the table.}
 %
 \begin{table}[h!]
 	\centering
@@ -93,15 +204,10 @@ is interpreted here as a latent trait of individuals which underlies the probabi
 \end{table}
 
 
-%-------------------------------
+%###############################
 \subsection{DAG: factors influencing Intelligibility}
-%-------------------------------
+%###############################
 %
-The characteristics of the selected children is detailed in Table \ref{tab:children_char} from Appendix \ref{appA:char}. The table includes all the variables used for the matching procedure in Section \ref{s_sect:children}, and additionally, shows the child's etiology, i.e. the cause of their hearing impairment, and their post-implant pure tone average (PTA), i.e. the child's subjective hearing sensitivity, aided and unaided by their hearing apparatus. No other variables are included, as no known additional comorbidities, beside their hearing impairment, is suspected.
-
-From the table, \textcolor{red}{describe summaries from the table.}
-
-
 Many factors have been shown to contribute to the success of spoken language development of children with CI, including: (1) audiology related factors, such as the age at implantation, the duration of device use, bilateral (or contralateral) cochlear implantation and the children’s preoperative and postoperative hearing levels; (2) child related factors, such as the cause of the hearing impairment (genetic, infections), gender, additional disabilities (mental retardation, speech motor problems); and (3) environmental factors, such as communication modality. An overview is provided in Boons, Brokx, Dhooge, Frijns, Peeraer, Vermeulen, Wouters, and van Wieringen, 2012, Fagan,
 Eisenberg, and Johnson, 2020, Gillis, 2018 and Niparko, Tobey, Thal, Eisenberg, Wang,
 Quittner, and Fink, 2010. A factor of particular importance here is age. Studies have shown
@@ -111,37 +217,19 @@ Khwaileh, \& Flipsen, 2010). Hearing age was found to be a significant predictor
 
 
 
-%-------------------------------
+%###############################
 \subsection{Model details}
-%-------------------------------
+%###############################
 
+%-------------------------------
 \subsubsection{Definition}
+%-------------------------------
 %
 Previous research already used hierarchical models with the replicated entropy measures as outcomes \citep{Boonen_et_al_2021, Faes_et_al_2021}. Hierarchical models are powerful to control for heterogeneity in the data, and also to avoid pre-aggregating procedures that could be pernicious for a proper statistical inference \citep{McElreath_2020}. 
 
 These claims are easier to understand using a though experiment within our research. Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the entropy's heterogeneity across the $10$ utterances also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility.
 
 The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}, and it is what justify our use of a hierarchical model. More specifically, we will use a Hierarchical (Mixed) Beta Regression model \citep{Figueroa-Zuniga_et_al_2013}, for which we argue, its implementation is rather trivial under the bayesian framework, and we present it in the following lines.
-%
-\begin{figure}[h]
-	\centering
-	\begin{subfigure}{0.35\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{entropy_DAG2.png}
-		\caption{}
-	\end{subfigure}
-	\hspace{0.1\textwidth}
-	\begin{subfigure}{0.425\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{entropy_DAG1.png}
-		\caption{}
-	\end{subfigure}
-	%
-	\caption[DAG for the hierarchical beta regression model for entropy.]%
-	{DAG for the hierarchical beta regression model for entropy. (a) \textit{total effects} of hearing status, (b) \textit{direct effects} of hearing apparatus. Circles represent latent variables, squares observed values or covariates, and large discontinuous squares the nesting within specific units.}
-	\label{fig:entropy_ME}
-\end{figure}
-%
 
 First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. For the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple realizations of a child's \textit{true} entropy $H^{T}_{i}$, measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children.
 
@@ -155,34 +243,41 @@ Lastly, we proceed to use probabilistic programming to declare the algebraic str
 %
 \begin{align}
 	%
-	\text{Likelihood:} & \nonumber \\
+	H^{O}_{bik} & \sim \text{BetaProp} \left( P_{bi}, M_{ik} \right) \\ 
 	%
-	H^{O}_{ik} & \sim \text{BetaProp} \left( H^{T}_{i}, M_{i} \right) \\ 
-	%
-	\nonumber \\
-	%
-	%
-	\text{Transformed parameters:} & \nonumber \\
+	P_{bi} &= \alpha_{b} + H^{T}_{i} \\
 	%
 	H^{T}_{i} &= \text{logit}^{-1}( -SI_{i} ) \\
 	%
-	\nonumber \\
+	SI_{i} & = a_{i} + \alpha + \alpha_{E[i],HS[i]} + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\ 
 	%
-	%
-	\text{Linear predictor:} & \nonumber \\
-	SI_{i} & = a_{i} + \alpha + \alpha_{HS[i]} + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \alpha_{E[i]} + \beta_{P} PTA_{i} \\ 
-	%
-	\nonumber \\
-	%
-	%
-	\text{Priors:} & \nonumber \\
+\end{align}
+%
+where $\text{logit}(x) = \log \left[ x / ( 1 - x ) \right]$, and $\text{logit}^{-1}(x) = \exp(x) / ( 1 + \exp(x) ) $. Additionally, a $\text{BetaProp}(\mu, \theta)$ distribution is equal to a $\text{Beta}(\alpha, \beta)$ distribution, with $\alpha=\mu \theta$, $\beta=(1-\mu)\theta$. For our purposes, $\mu = H^{T}_{i}$ and $\theta = M_{i}$, the latter denoting the ``sample size" of the distribution. Moreover, $a_{i}$ denote the children's random effects, $\alpha$ the fixed effects' intercept, $\alpha_{HS[i]}$ and $\beta_{A, HS[i]}$ the intercept and slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, and $\beta_{P}$ the slope for the standardized PTA levels. 
+
+Three important things need to be noticed from the previous algebraic structure. First, all the parameters are estimated in the logit scale and centered at $PTA_{i}=0$ and $\bar{A}$, which denotes the minimum hearing age in the sample. Second, instead of a latent measurement error $U_{ik}$, we use the latent ``sample size" parameter $M_{ik}$ to model the heterogeneity/variability of the duplicate entropies. This effectively works as a measurement error model for the replicates, as the parameter defines the shape of the distribution. Third, if we do not consider etiology and PTA values in equation (4), we obtain the panel (a) model.
+%
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{BetaProp_dist.pdf}
+	\caption{Variability in a Beta-Proportional distribution}
+	\label{fig:BetaProp}
+\end{figure}
+%
+%
+%-------------------------------
+\subsubsection{Priors}
+%-------------------------------
+%
+\begin{align}
 	%
 	M_{i} & \sim \text{LN}( \mu_{M}, \sigma_{M}) \\
 	%
 	a_{i} & \sim \text{N}(\mu_{a}, \sigma_{a}) \\
 	%
-	\alpha & \sim \text{N}(0, 0.5) \\
-	\alpha_{HS[i]} & \sim \text{N}(0, 0.5) \\
+	\alpha & \sim \text{N}(0, 0.3) \\
+	%
+	\alpha_{HS[i]} & \sim \text{N}(0, 0.3) \\
 	%
 	\beta_{A, HS[i]} & \sim \text{N}(0 , 0.3) \\
 	%
@@ -190,31 +285,33 @@ Lastly, we proceed to use probabilistic programming to declare the algebraic str
 	%
 	\beta_{P} & \sim \text{N}(0, 0.3) \\
 	%
-	\nonumber \\
-	%
-	%
-	\text{Hyper-priors:} & \nonumber \\
-	%
 	\mu_{M} & \sim \text{N}(0, 5) \\
+	%
 	\sigma_{M} & \sim \text{Exp}(1) \\
+	%
 	\mu_{a} & \sim \text{N}(0, 0.5) \\
+	%
 	\sigma_{a} & \sim \text{Exp}(1)\\
 	%
 \end{align}
+Third, we use mildly informative priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\linewidth]{prior_predictive.pdf}
+	\caption{Variability in a Beta-Proportional distribution}
+	\label{fig:priors}
+\end{figure}
 %
-where $\text{logit}(x) = \log \left[ x / ( 1 - x ) \right]$, and $\text{logit}^{-1}(x) = \exp(x) / ( 1 + \exp(x) ) $. Additionally, a $\text{BetaProp}(\mu, \theta)$ distribution is equal to a $\text{Beta}(\alpha, \beta)$ distribution, with $\alpha=\mu \theta$, $\beta=(1-\mu)\theta$. For our purposes, $\mu = H^{T}_{i}$ and $\theta = M_{i}$, the latter denoting the ``sample size" of the distribution. Moreover, $a_{i}$ denote the children's random effects, $\alpha$ the fixed effects' intercept, $\alpha_{HS[i]}$ and $\beta_{A, HS[i]}$ the intercept and slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, and $\beta_{P}$ the slope for the standardized PTA levels. 
-
-Four important things need to be noticed from the previous algebraic structure. First, all the parameters are estimated in the logit scale and centered at $PTA_{i}=0$ and $\bar{A}$, which denotes the minimum hearing age in the sample. Second, instead of a latent measurement error $e_i$, we use the latent ``sample size" parameter $M_{i}$ to model the heterogeneity/variability of the duplicate entropies. This effectively works as a measurement error model for the duplicates, as the parameter defines the shape of the distribution. Third, we use mildly informative priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. Fourth, if we do not consider etiology and PTA values in equation (4), we obtain the panel (a) model.
 %
-%
-
-\subsubsection{Priors}
-
+%-------------------------------
 \subsubsection{Estimation}
+%-------------------------------
 The models proposed in sections \ref{s_sect:evaluation} and \ref{s_sect:models} will be estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we will use the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012}. \texttt{Stan} \citep{Stan_2020} will be the software package that will provide us with the No-U-Turn HMC machinery, while \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020}, the software that will allow us to analyze its outputs.
-
-
+%
+%
+%-------------------------------
 \subsubsection{Pre-processing} \label{ss_sect:preproc}
+%-------------------------------
 %
 Besides the exclusion of corrupted observations, e.g. no available rating, no other experimental run nor duplicate was eliminated before the modeling process. This decision departs from what it is observed in previous research, e.g. \citet{Boonen_et_al_2020} decided to eliminate "outlying" observations based on misfit analysis \citep{Lesterhuis_2018}, while \citet{vanDaal_2020} and \citet{Boonen_et_al_2021} did the same based on univariate outlier analysis. 
 
@@ -223,13 +320,11 @@ For the case of misfit analysis, we argue that such procedures cannot be used wi
 On the other hand, for the case of univariate outlier analysis, we argue that outlying observations are interesting cases to analyze \citep{McElreath_2020}, and usually they cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. 
 
 Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather make the model robust against their influence, playing on the strengths of the bayesian framework, than to eliminate the observations. 
-
-
-
-
-%-------------------------------
+%
+%
+%###############################
 \subsection{Simulation}
-%-------------------------------
+%###############################
 Preliminary to the data collection, we simulated data in silico to test the models and inform data collection procedure. The simulation code is available in the GitHub repository. Several functional correlation between age and knowledge have been simulated, and the model used in the analysis - which includes age as a ordinal categorical predictor of knowledge with monotonically increasing effect - has been able to recover the different shapes. Causal effect of activities, family composition and schooling have been simulated and tested.
 
 The simulated data have been used -albeit in a previous version- to estimate the minimum number of interviewees necessary to recover the parameter values. If individuals were to name a maximum of 300 items in the freelist, 50 interviewees would have been suffcient to obtain reliable estimates of the parameters. Given that data collection in vivo is much less regular and less controllable than in silico, we roughly doubled the number of interviewees and that of questions.

@@ -10,7 +10,7 @@
 a4paper, % Paper type, use 'letterpaper' for US Letter paper
 oneside, % One page layout (no page indentation)
 %twoside, % Two page layout (page indentation for binding and different headers)
-headinclude,footinclude, % Extra spacing for the header and footer
+%headinclude,footinclude, % Extra spacing for the header and footer
 BCOR5mm, % Binding correction
 ]{scrartcl}
 
@@ -33,7 +33,8 @@ BCOR5mm, % Binding correction
 \usepackage{amsmath,amssymb,amsthm} % For including math equations, theorems, symbols, etc
 \usepackage{varioref} % More descriptive referencing
 \usepackage{authblk} % authors affiliation
-
+\usepackage{tikz} % to generate DAGs
+\usetikzlibrary{arrows.meta}
 
 %----------------------------------------
 % ADDITIONAL CONFIGURATIONS
@@ -108,8 +109,6 @@ BCOR5mm, % Binding correction
 
 \newpage
 \listoffigures % Print the list of figures
-
-\newpage
 \listoftables % Print the list of tables
 
 
