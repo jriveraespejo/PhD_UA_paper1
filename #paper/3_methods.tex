@@ -2,36 +2,25 @@
 \section{Materials and Methods}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%###############################
-\subsection{Experimental setup}
-%###############################
+We set up an experiment where speech samples were transcribed by a group of listeners. The current section succinctly describes the participating children, the stimuli used, and the experimental setup, while also delve into the causal and statistical framework of analysis.
 %
-For the transcription task, $100$ transcribers participated in the experiment. The participants and stimuli were divided into five groups, where each group of $20$ students ($100/5$) transcribed $64$ stimuli on their series ($320/5$), resulting in $20$ transcriptions per utterance ($64 \times 100 / 320$). In total we registered $6400$ transcriptions. The transcription task followed the steps detailed in section \ref{appA:transcription}. 
-
-On the other hand, the calculation of the entropy measures followed the procedure detailed in section \ref{appA:entropy}.
 %
 %###############################
 \subsection{Children}
 %###############################
 %
-Thirty two ($32$) children were selected using a large corpus of \textit{spontaneously spoken speech}, collected by the Computational Linguistics, Psycholinguistics and Sociolinguistics research center (CLiPS). The selection followed a two step procedure\footnote{similar to one outlined in \citet{Faes_et_al_2021}}. First, a \textcolor{blue}{convenient sample} of hearing impaired children was selected based on the quality of their registered stimuli (utterances). And second, a \textcolor{blue}{matched sample} of normal hearing children was also selected.
+Thirty two children were selected using a large corpus of \textit{spontaneously spoken speech}, collected by the Computational Linguistics, Psycholinguistics and Sociolinguistics research center (CLiPS). The selection followed a two step procedure\footnote{similar to one outlined in \citet{Faes_et_al_2021}}. First, a sample of sixteen hearing-impaired children (ten boys, six girls) was selected based on the quality of their registered stimuli (utterances). Second, an additional \textcolor{blue}{matched sample} of sixteen normal hearing children was also selected (ten girls, six boys), and served as a comparison group.
 
-For the first step, a sample of $16$ hearing impaired children with cochlear implant (HI/CI) was selected. All children in the sample were native speakers of Belgian Dutch, living in Flanders, the Dutch speaking area of Belgium. They were all raised in monolingual Dutch with a limited support of signs, and all were screened as hearing impaired by the Universal Neonatal Hearing Screening (UNHS) using automated Auditory Brainstem Response hearing tests for newborns. 
+For the first group, all the hearing-impaired children with cochlear implants (HI/CI) in the sample were native speakers of Belgian Dutch, living in Flanders, the Dutch speaking area of Belgium. They were all raised orally using monolingual Dutch, with a limited support of signs. All of the children were screened as hearing-impaired by the Universal Neonatal Hearing Screening (UNHS), using automated Auditory Brainstem Response hearing tests for newborns, and receive the cochlear implantation before the age of two. Their medical and audiological records did not ascertain any additional health or developmental issue. Hence, no known additional comorbidities were though present. Finally, at the date of the measurement, they were all enrolled in the mainstream education system.
 
-For the second step, $12$ normal hearing children (NH) were matched on gender, age, and regional background, to the groups selected in the previous step. The matching procedure was \textcolor{blue}{manual}, \textcolor{red}{explain the appropriate procedure}.
+For the second group, the sixteen normal hearing children (NH) were \textcolor{blue}{manually matched} on gender, age, and regional background to the HI/CI group selected in the previous step. All of them were also native speakers of Belgian Dutch, and enrolled in the mainstream education system. None reported hearing loss or additional disabilities, judged from the UNHS screening procedure and their respective parental report.
 
-Finally, the researcher considers important to highlight two relevant points from the children's selection process. First, while the matching procedure for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement. 
+Lastly, it is important to highlight that for the matching procedure we used two measures as a proxy for the amount of time a child has been developing his(her) language: (i) \textit{chronological age} for the NH group, and (ii) \textit{device length of use} as a proxy of \textit{hearing age} in the HI/CI group \citep{Faes_et_al_2021}.
 
-The characteristics of the selected children is detailed in Table \ref{tab:children_char} at the supplementary section. 
+The characteristics of the selected children is detailed in Table \ref{tab:children_char}, in the supplementary section. 
 %
 \begin{comment}
-\textbf{for the experimenter:} Based on \citet{Faes_et_al_2021} we depict the procedure for the experimenter:
-%
-\begin{enumerate}
-	\item 1. matching procedure 
-	\item selection of suitable stimuli
-	\item determine the number of stimuli per judge 
-\end{enumerate}	
+for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement. 
 \end{comment}
 %
 %
@@ -39,29 +28,65 @@ The characteristics of the selected children is detailed in Table \ref{tab:child
 \subsection{Stimuli} \label{ss:stimuli}
 %###############################
 %
-The stimuli consisted of the children's utterances, i.e. sentences of similar length, recovered from previously mentioned CLiPS corpus. More specifically, we use a portion of the corpus that consisted of $10$ utterances recordings, for each of the $32$ selected children. The stimuli were documented when the child was telling a story cued by the picture book ``Frog, where are you'' \citep{Mayer_1969} to a caregiver ``who does not know the story''. The quality of the stimuli was ensured by selecting utterances with no syntactically ill-formed or incomplete sentences, any background noise, cross-talk, long hesitations, revisions or non-words \citep{Boonen_et_al_2021}. 
+The stimuli consisted of the children's utterances, i.e. sentences of similar length, recovered from previously mentioned CLiPS corpus. More specifically, we use a portion of the corpus that consisted of ten utterances recordings, for each of the thirty two selected children. The stimuli were documented when the child was telling a story cued by the picture book ``Frog, where are you'' \citep{Mayer_1969} to a caregiver ``who does not know the story''. 
 
-As a result, the data set consisted in a total of $320$ utterances presented to the listeners in a random order, based on the adaptive pairing algorithm \citep{Pollitt_2012b} implemented in Comproved\footnote{similar designs were used by \citet{Boonen_et_al_2020} and \citet{Faes_et_al_2021}.}.
+The recordings were orthographically transcribed with the CLAN editor in CHAT format \cite{MacWhinney_2020}. The transcriptions were only used in the selection process of the stimuli for the experiment. The quality of the stimuli was ensured by selecting utterances with no syntactically ill-formed or incomplete sentences, any background noise, cross-talk, long hesitations, revisions or non-words \citep{Boonen_et_al_2021}. 
 
+As a result, the data set consisted in a total of $320$ stimuli presented to the listeners in a random order, based on the \textcolor{}{adaptive pairing algorithm} \citep{Pollitt_2012b} implemented in Qualtrics \citet{Qualtrics_2005}.
+%
 \begin{comment}
 under the Design of Experiments (DoE) literature, we would say we have $32$ experimental units with $10$ replicate runs each, making a total of $320$ experimental runs. As it is defined in \citet{Lawson_2015}, an experimental unit is the item under study upon which something is changed, while a replicate run is the experiment conducted with the same factor settings, but using different experimental units. 
 \end{comment}
-
+%
 \begin{comment}
 evidence suggest that the number of comparisons and pairing algorithm impacts the reliability, validity and efficiency of the procedure \citep{Bramley_2015, Bramley_et_al_2018, Lesterhuis_2018, Verhavert_et_al_2019}. However, this is not investigated in the current research.
 \end{comment}
-
+%
 \begin{comment}
 Similar designs were used by \citet{Boonen_et_al_2020} and \citet{Faes_et_al_2021}. However, in the former case the number of samples were low, while in the latter, the design was unbalanced and not conducive to appropriate inferences from the pairwise comparisons.
 \end{comment}
+%
+\begin{comment}
+	\textbf{for the experimenter:} Based on \citet{Faes_et_al_2021} we depict the procedure for the experimenter:
+	%
+	\begin{enumerate}
+		\item 1. matching procedure 
+		\item selection of suitable stimuli
+		\item determine the number of stimuli per judge 
+	\end{enumerate}	
+\end{comment}
+%
+%
+%###############################
+\subsection{Experimental setup}
+%###############################
+%
+The experiment was setup to perform a transcription task, where $100$ language students from the University of Antwerp participated. The participants were native speakers of Belgian Dutch without any particular experience with the speech of hearing-impaired children.
+
+The participants and stimuli were divided into five groups, where each group of $20$ students transcribed $64$ stimuli on their series, resulting in $20$ transcriptions per utterance. In total this amounted to $6400$ transcriptions, i.e. $20$ transcription times $320$ utterances. The steps that comprised the task are detailed in section \ref{appA:transcription}. 
+
+The data resulting from the transcription task was then processed and converted into entropy measures ($H$), which served as our outcome variable. 
+
+The entropy of utterances ($H$) is a measure bounded in the continuum $[0,1]$, and it was used as a quantification of (dis)agreement between listeners' transcriptions, where utterances yielding a high degree of agreement between transcribers were considered highly intelligible, and therefore registered a lower entropy $\left( H \rightarrow 0 \right)$. In contrast, utterances yielding a low degree of agreement were considered as exhibiting low intelligibility, and therefore registered a higher entropy $\left( H \rightarrow 1 \right)$ \citep{Boonen_et_al_2021, Faes_et_al_2021}. The procedure followed to calculate the entropies is detailed in section \ref{appA:entropy}.
 %
 %
 %###############################
 \subsection{Causal framework} 
 %###############################
 %
+Where $H_{ik}$ denoted the (observed) entropy replicates, $H_{i}$ the (latent) ``true'' entropy, $SI_{i}$ the (latent) speech intelligibility score (inversely related to $H^{T}_{i}$). Moreover, $A_{i}$ denoted the ``hearing" age (substracted the minimum age), $E_{i}$ the etiology of disease that led to the hearing impairment, $HS_{i}$ the hearing status and focus of our research, $PTA_{i}$ the pure tone average (standardized). And Finally, $B_{b}$ the block (will reduce $\sigma_{U_{ik}}$). The variables are assumed independent, beyond the described relationships, i.e. 
 %
-\begin{figure}
+\begin{equation*}
+	%
+	\begin{aligned} 
+		P(\pmb{U}) & = P(U_{ik}, U_{i}, U_{A}, U_{E}, U_{HS}, U_{P}, B_{bk}) \\ 
+		& = P(U_{ik}) P(U_{i}) P(U_{A}) P(U_{E}) P(U_{HS}) P(U_{P}) P(B_{bk})
+	\end{aligned}
+	%
+\end{equation*}
+%
+%
+\begin{figure}[h!]
 	%
 	\centering
 	\begin{tikzpicture}
@@ -110,20 +135,8 @@ Similar designs were used by \citet{Boonen_et_al_2020} and \citet{Faes_et_al_202
 		%\node at (4.5,1.8) {\small $b=1,\dots,B$};
 	\end{tikzpicture}
 	%
-	\caption{Structural diagram describing the relationships among the variables}
+	\caption[DAG: Structural diagram]{DAG: structural diagram describing the relationships among the analyzed variables}
 \end{figure}
-
-Where $H_{ik}$ denoted the (observed) entropy replicates, $H_{i}$ the (latent) ``true" entropy, $SI_{i}$ the (latent) speech intelligibility score (inversely related to $H^{T}_{i}$). Moreover, $A_{i}$ denoted the ``hearing" age (substracted the minimum age), $E_{i}$ the etiology of disease that led to the hearing impairment, $HS_{i}$ the hearing status and focus of our research, $PTA_{i}$ the pure tone average (standardized). And Finally, $B_{b}$ the block (will reduce $\sigma_{U_{ik}}$). The variables are assumed independent, beyond the described relationships, i.e. 
-\begin{equation*}
-	%
-	\begin{aligned} 
-		P(\pmb{U}) & = P(U_{ik}, U_{i}, U_{A}, U_{E}, U_{HS}, U_{P}, B_{bk}) \\ 
-		& = P(U_{ik}) P(U_{i}) P(U_{A}) P(U_{E}) P(U_{HS}) P(U_{P}) P(B_{bk})
-	\end{aligned}
-	%
-\end{equation*}
-%
-%
 %
 %
 %###############################
