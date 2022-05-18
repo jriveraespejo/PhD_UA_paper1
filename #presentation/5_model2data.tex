@@ -384,12 +384,12 @@
 		\item \textcolor{blue}{No evidence} in favor of models with $M=10$, i.e. $\text{weight}=0$ \\
 		\underline{models:} \texttt{E\_NC1}, \texttt{E\_NC2a}, \texttt{E\_NC5a1}, \texttt{E\_NC5a2}, \texttt{E\_NC5a3}. 
 		%
-		\item \textcolor{blue}{Less evidence} in favor of ``robust" models, i.e. one $M$ per child \\
+		\item \textcolor{blue}{Small evidence} in favor of ``robust" models, i.e. one $M$ per child \\
 		\underline{models:} \texttt{E\_NC6a}, \texttt{E\_NC6b}, \texttt{E\_NC6c}. 
 		%
-		\item \textcolor{blue}{Mild evidence} in favor of ``robust" model without interaction \\
+		\item \textcolor{blue}{Small evidence} in favor of ``robust" model without interaction \\
 		\underline{models:} \texttt{E\_NC3}. \\
-		{\small (qualifies as ME the lack of explanation at the child level)} \\
+		{\small (it might assess as ME the lack of explanation at the child level)} \\
 		%
 	\end{itemize}
 	%
@@ -403,11 +403,12 @@
 	%
 	\begin{itemize}
 		%
-		\item \textcolor{blue}{Highest evidence} in favor of ``simplest" model, i.e. one $M$, no interaction \\ 
+		\item \textcolor{blue}{Highest evidence} in favor of ``simplest" model, i.e. one global $M$ and no interaction, \\
 		\underline{models:} \texttt{E\_NC2b}.
 		%
-		\item However, interaction models are \textcolor{blue}{indistinguishable} from the ``simplest" model \\
-		\underline{models:} \texttt{E\_NC5b1}, \texttt{E\_NC5b2}, \texttt{E\_NC5b3}.
+		\item However, is \textcolor{blue}{indistinguishable} from the interaction models \\
+		especially \texttt{E\_NC5b3} \\ 
+		\underline{models:} \texttt{E\_NC5b1}, \texttt{E\_NC5b2}.
 		%
 	\end{itemize}
 	%
@@ -424,11 +425,11 @@
 		\item the higher the unaided $PTA$ the lower the child's $SI$ ($bP[2]$)\\
 		{\small (based on power analysis, \textcolor{blue}{we can be sure} is a small effect) }
 		%
-		\item no statistical difference between $NH$ and $HI/CI$ children \\
-		{\small (but this requires a \textcolor{blue}{contrast}) }
+		\item no apparent \textcolor{blue}{statistical} difference between $NH$ and $HI/CI$ children \\
+		{\small (\textcolor{blue}{but this requires a CONTRAST}) }
 		%
-		\item for each ``hearing" year the $SI$ increases in $\approx 0.40$ logits \\
-		{\small (\textcolor{blue}{larger than expected} effect assumed in power analysis) }
+		\item for each ``hearing" year, the $SI$ increases in $\approx 0.40$ logits \\
+		{\small (effect \textcolor{blue}{larger than the assumed} in power analysis) }
 		%
 	\end{itemize}
 	%
@@ -438,7 +439,7 @@
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{variability_plot.pdf}}]
 	{Selecting models}
 	
-	in addition in the ``simplest" model,
+	additionally the ``simplest" model tells us that,
 	%
 	\begin{itemize}
 		%
@@ -462,11 +463,11 @@
 \begin{lhframe}[rhgraphic={\includegraphics[scale=0.65]{select_model2.png}}]
 	{Selecting models}
 	
-	however, the ``interaction" model (\texttt{E\_NC5b3}) provides evidence on,
+	however, the ``interaction" model (\texttt{E\_NC5b3}) shows similar results on,
 	%
 	\begin{itemize}
 		%
-		\item effects of the unaided $PTA$ on the child's $SI$ still non-significant
+		\item the small (still non-significant) effects of the unaided $PTA$ on the child's $SI$ 
 		%
 		\item similar explained variability across levels and blocks \\
 		{\small \textcolor{blue}{(similar to the ``simplest" model)}}
@@ -475,10 +476,10 @@
 		%
 		\begin{itemize}
 			\item $SI$ means for $HI/CI$ per $E$, \\
-			$aEHS[2,2]$ (CMV) vs \\
-			$aEHS[3,2]$ (Connexine 26)
+			$aEHS[2,2]$ (Genetic) vs \\
+			$aEHS[3,2]$ (CMV)
 			%
-			\item different $SI$ evolution per unit $A$ ($bAHS$), $NH$ vs $HI/CI$ children
+			\item different $SI$ evolution for $NH$ vs $HI/CI$ children, per unit $A$ ($bAHS$), 
 		\end{itemize}
 		%
 	\end{itemize}
@@ -498,7 +499,9 @@
 		\item similar result is observed on the $bAHS$ contrast \\
 		{\small (because the effect is small, compared to children's variability)}
 		%
-		\item still we decide to \textcolor{blue}{keep} the \textcolor{blue}{(\texttt{E\_NC5b3})} model 
+		\item but we still observe differences between NH and HI/CI, and even within HI/CI by E,
+		%
+		\item therefore we decide to \textcolor{blue}{keep} the \textcolor{blue}{(\texttt{E\_NC5b3})} model 
 		%
 	\end{itemize}
 	%
@@ -541,7 +544,7 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{posterior_predictive_real.pdf}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{posterior_predictive_real1.pdf}}]
 	{Posterior predictive}
 	
 	But how well reproduces the data?,
@@ -549,6 +552,19 @@
 	\begin{itemize}
 		%
 		\item captures the variability of the replicates,
+		%
+	\end{itemize}
+	%
+\end{lhframe}
+%
+%
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.38]{posterior_predictive_real2.pdf}}]
+	{Posterior predictive}
+	
+	and besides,
+	%
+	\begin{itemize}
+		%
 		\item provides a ``true" $H$ (entropy) and $SI$ measures
 		\item we can also make contrast of $SI$ measures per child
 		%
@@ -557,27 +573,27 @@
 \end{lhframe}
 %
 %
-\begin{lhframe}[rhgraphic={\includegraphics[scale=0.36]{outliers.pdf}}]
+\begin{lhframe}[rhgraphic={\includegraphics[scale=0.31]{outliers.pdf}}]
 	{High leverage observations}
 	
-	``interaction" model has five (5) ``high" leverage observations, \\
+	``interaction" model has three (3) ``high" leverage observations, \\
 	{\small \textcolor{blue}{(observations that ``drag" the estimation)} }
 	%
 	\begin{itemize}
 		%
-		\item the ``drag" is not large ($k<0.7$),
+		\item one has a high ``drag" ($k>0.7$),
 		%
-		\item pair \textcolor{blue}{$(child, utterance)$} reveals,
+		\item the \textcolor{blue}{pair $(child, utterance)$} reveals,
 		%
 		\begin{itemize}
 			%
-			\item all cases cases have $H_{ik}=0$ \\
+			\item (almost) all cases cases have $H_{ik}=0$ \\
 			{\small (next minimum value is $\approx 0.01$)}
 			%
-			\item child $25$ is $HI/CI$, with $A \approx 6.17$, \\
-			{\small (the youngest $HI/CI$ child with ``perfect" $H_{ik}$, the utterance is a well developed word, for him/her?)}
+			\item child $15$ is ``young" $HI/CI$ with ``perfect" $H_{bik}$, \\
+			{\small (the utterance is a well developed word, for him/her?)}
 			%
-			\item no other relationship among them
+			\item no other apparent relationship among them
 			%
 		\end{itemize}
 		%

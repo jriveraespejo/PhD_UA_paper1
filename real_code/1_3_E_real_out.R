@@ -44,7 +44,6 @@ data_plots1(d=dlist, xdata='E', ydata='H', alpha=0.05, os=F)
 
 # model load ####
 
-
 ## NC1 ####
 model_nam = "E_NC1"
 model_out = file.path(getwd(), 'real_chain')
@@ -204,11 +203,45 @@ parameter_recovery( stan_object= E_NC5b3, true_par = NULL, p=0.95,
 
 
 
-
 ## contrasts ####
-contrast_recovery( stan_object = E_NC5b3, true_diff = NULL, p=0.90,
-                   est_diff=c('aEHS','bAHS') )
+post = extract.samples( E_NC5b3 )
 
+# levels
+cont_post = post$aEHS[,2,2] - post$aEHS[,1,1]
+cont_post = cbind(cont_post, 
+                  post$aEHS[,3,2] - post$aEHS[,1,1])
+cont_post = cbind(cont_post, 
+                  post$aEHS[,4,2] - post$aEHS[,1,1])
+cont_post = cbind(cont_post, 
+                  post$aEHS[,3,2] - post$aEHS[,2,2])
+cont_post = cbind(cont_post, 
+                  post$aEHS[,4,2] - post$aEHS[,2,2])
+cont_post = cbind(cont_post, 
+                  post$aEHS[,4,2] - post$aEHS[,3,2])
+
+# slopes
+cont_post = cbind(cont_post,
+                  post$bAHS[,2] - post$bAHS[,1])
+
+# adding names
+attr(cont_post, "dimnames")[[2]] = c('aEHS[2,2] - aEHS[1,1]',
+                                     'aEHS[3,2] - aEHS[1,1]',
+                                     'aEHS[4,2] - aEHS[1,1]',
+                                     'aEHS[3,2] - aEHS[2,2]',
+                                     'aEHS[4,2] - aEHS[2,2]',
+                                     'aEHS[4,2] - aEHS[3,2]',
+                                     'bAHS[2] - bAHS[1]')
+
+# storage
+res_stan = precis( as_tibble(cont_post), depth=4, hist=F, prob=0.95 )
+names(res_stan)[3:4] = c('CI_lower','CI_upper')
+
+# get the HPDI
+hpdi_res = HPDinterval( as.mcmc(cont_post), prob=0.95)
+attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
+
+res_stan = cbind(res_stan, hpdi_res) # join info
+res_stan = round( res_stan, 3 ) # round
 # Results
 #
 # Variability around parameters does not allow to check if the contrast
@@ -246,9 +279,8 @@ plot( PSIS_E$k, WAIC_E$penalty, col=rangi2, lwd=2, xlim=c(0,0.8),
 abline(v=0.5, lty=2)
 abline(v=0.7, lty=2, lwd=2)
 identify( x=PSIS_E$k , y=WAIC_E$penalty, labels=paste0(dlist$cid, ',', dlist$uid) )
-# two observations are outlying
 # dev.off()
-
+# 4 observations are outlying
 
 
 
@@ -276,10 +308,57 @@ child_out; utt_out
 data_true = with(dlist, data.frame(H=H, child=cid))
 par_recovery = precis(E_NC5b3, depth=4)
 
-# pdf("posterior_predictive_real.pdf")
+# pdf("posterior_predictive_real1.pdf")
 distH_plot1( stan_object=E_NC5b3, 
              true_data=data_true, 
              csize=6, rplot=c(3,2),
              par_object=par_recovery, M=6)
+# dev.off()
 # well enough capture of the data
+
+
+
+
+## SI plots ####
+par_E_NC5b3 = parameter_recovery( stan_object= E_NC5b3, true_par = NULL, p=0.95,
+                                  est_par=c('SI','Ht') )
+
+
+# pdf("posterior_predictive_real2.pdf")
+par(mfrow=c(2,1))
+
+idx = str_detect( rownames(par_E_NC5b3), '^Ht')
+sc = par_E_NC5b3[idx,]
+sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
+sc$HS = dlist$HS
+idx_order = with(sc, order(HS, mean) )
+sc = sc[idx_order,]
+
+plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
+      ylim=c(0,1), xaxt='n', xlab="", ylab=" 'true' entropy (Ht)")
+axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
+for(i in 1:nrow(sc)){
+  lines( x=rep(i, 2), 
+         y=sc[i, c('HPDI_lower','HPDI_upper')],
+         col=rethink_palette[sc$HS[i]] )
+}
+legend('topleft',legend=c('NH','HI/CI'), col=rethink_palette[1:2], bty='n', pch=19, lty=1)
+
+
+idx = str_detect( rownames(par_E_NC5b3), '^SI')
+sc = par_E_NC5b3[idx,]
+sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
+sc$HS = dlist$HS
+sc = sc[ idx_order,]
+
+plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
+      ylim=c(-2,3.5), xaxt='n', xlab="children", ylab=" speech intelligibility (SI)")
+axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
+for(i in 1:nrow(sc)){
+  lines( x=rep(i, 2), 
+         y=sc[i, c('HPDI_lower','HPDI_upper')],
+         col=rethink_palette[sc$HS[i]] )
+}
+
+par(mfrow=c(1,1))
 # dev.off()
