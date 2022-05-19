@@ -9,17 +9,11 @@ We set up an experiment where speech samples were transcribed by a group of list
 \subsection{Children}
 %###############################
 %
-Thirty two children were selected using a large corpus of \textit{spontaneously spoken speech}, collected by the Computational Linguistics, Psycholinguistics and Sociolinguistics research center (CLiPS). The selection followed a two step procedure\footnote{similar to one outlined in \citet{Faes_et_al_2021}}. First, a sample of sixteen hearing-impaired children (ten boys, six girls) was selected based on the quality of their registered stimuli (utterances). Second, an additional \textcolor{blue}{matched sample} of sixteen normal hearing children was also selected (ten girls, six boys), and served as a comparison group.
+Thirty two children were selected using a large corpus of \textit{spontaneously spoken speech}, collected by the Computational Linguistics, Psycholinguistics and Sociolinguistics research center (CLiPS). The selection followed a two step procedure\footnote{similar to one outlined in \citet{Faes_et_al_2021}}. First, a sample of sixteen hearing-impaired children (ten boys, six girls) was selected based on the quality of their registered stimuli (utterances). Second, an additional matched sample of sixteen normal hearing children was also selected (six boys, ten girls), and served as a comparison group.
 
-For the first group, all the hearing-impaired children with cochlear implants (HI/CI) in the sample were native speakers of Belgian Dutch, living in Flanders, the Dutch speaking area of Belgium. They were all raised orally using monolingual Dutch, with a limited support of signs. All of the children were screened as hearing-impaired by the Universal Neonatal Hearing Screening (UNHS), using automated Auditory Brainstem Response hearing tests for newborns, and receive the cochlear implantation before the age of two. Their medical and audiological records did not ascertain any additional health or developmental issue. Hence, no known additional comorbidities were though present. Finally, at the date of the measurement, they were all enrolled in the mainstream education system.
+For the first group, all the hearing-impaired children with cochlear implants (HI/CI) were native speakers of Belgian Dutch, living in Flanders, the Dutch speaking area of Belgium. They were all raised orally using monolingual Dutch, with a limited support of signs. All of the children were screened as hearing-impaired by the Universal Neonatal Hearing Screening (UNHS), using automated Auditory Brainstem Response hearing tests for newborns, and receive the cochlear implantation before the age of two. Their medical and audiological records did not ascertain any additional health or developmental issue. Hence, no known additional comorbidities were though present. Finally, at the date of the measurement, they were all enrolled in the mainstream educational system.
 
-For the second group, the sixteen normal hearing children (NH) were \textcolor{blue}{manually matched} on gender, age and regional background to the HI/CI group. All children were also native speakers of Belgian Dutch, and enrolled in the mainstream education system. None reported hearing loss or additional disabilities, judged from the UNHS screening procedure and their respective parental report.
-
-Lastly, it is important to highlight that for the matching procedure two measures were used as a proxy of \textit{hearing age}, i.e. amount of time a child has been actively hearing and developing his(her) language. First, the NH group we used \textit{chronological age}. Finally, for the HI/CI group  we use the \textit{device's length of use} \citep{Faes_et_al_2021}.
-%
-\begin{comment}
-	for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement. 
-\end{comment}
+For the second group, the sixteen normal hearing children (NH) were as closely matched to the HI/CI group based on chronological age. All children were also native speakers of Belgian Dutch, and enrolled in the mainstream educational system. None reported hearing loss or additional disabilities, judged from the UNHS screening procedure and their respective parental report.
 
 The characteristics of the selected children is detailed in Table \ref{tab:children_char}, at the supplementary section \ref{appA:characteristics}. 
 
@@ -138,12 +132,35 @@ Where $H_{ik}$ denoted the (observed) entropy replicates, $H_{i}$ the (latent) `
 	%
 	\caption[DAG: Structural diagram]{DAG: structural diagram describing the relationships among the analyzed variables}
 \end{figure}
-%
-%
-%###############################
-\subsection{Analysis} 
-%###############################
-%
 
+\begin{comment}
+158 Data collection and analysis were informed by preliminary work aimed at describing the causal and
+159 non-causal factors inﬂuencing the association between age and knowledge. Speciﬁcally, we described
+160 all the aspects of individuals that are expected to inﬂuence knowledge in a Direct Acyclic Graph
+161 (DAG) and later in a full structural causal model that we used to validate the analysis code (see ﬁgure
+162 3 and Supplementary section 9.5). A DAG is a heuristic generative model that allows derivation
+163 of a causal estimand (Pearl, 1995). Each causal query may require a diﬀerent statistical procedure
+164 that includes diﬀerent variables.
+165 We relied on the DAG described above to plan data collection, so that all the variables would
+166 be recorded, as well as to deﬁne the analyses described below. The analysis can be divided in a
+167 descriptive and a causal section. The ﬁrst illustrates how knowledge changes with age; the causal
+168 section, instead, describes the eﬀect of sex, activities, family and schooling on the development of
+169 knowledge.
+170 Of course it is possible that unobserved confounds exist along any edge in our DAG. We encourage
+171 the perspective that any estimated eﬀects are possibly partially due to such confounding. This is true
+172 in all observational, anthropological investigations. The additional transparency of our approach,
+173 and its ability to logically derive statistical procedures from causal assumptions, is its strength.
+\end{comment}
+%
+%
+%###############################
+\subsection{Statistical analysis} 
+%###############################
+%
+Lastly, it is important to highlight that we composed a proxy measures of \textit{hearing age}, i.e. amount of time a child has been actively hearing and developing his(her) language. First, for the NH group we used the \textit{chronological age}. Finally, for the HI/CI group  we use the \textit{device's length of use} \citep{Faes_et_al_2021}.
+%
+\begin{comment}
+	for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement. 
+\end{comment}
 %
 %
