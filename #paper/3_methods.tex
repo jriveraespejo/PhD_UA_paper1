@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Materials and Methods}
+\section{Materials and Methods} \label{S:materials_methods}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 We set up an experiment where speech samples were transcribed by a group of listeners. The current section succinctly describes the participating children, the stimuli used, and the experimental setup, while also delve into the causal and statistical framework of analysis.
 %
 %
 %###############################
-\subsection{Children}
+\subsection{Children} \label{sS:children}
 %###############################
 %
 Thirty two children were selected using a large corpus of \textit{spontaneously spoken speech}, collected by the Computational Linguistics, Psycholinguistics and Sociolinguistics research center (CLiPS). The selection followed a two step procedure\footnote{similar to one outlined in \citet{Faes_et_al_2021}}. First, a sample of sixteen hearing-impaired children (ten boys, six girls) was selected based on the quality of their registered stimuli (utterances). Second, an additional matched sample of sixteen normal hearing children was also selected (six boys, ten girls), and served as a comparison group.
@@ -15,12 +15,11 @@ For the first group, all the hearing-impaired children with cochlear implants (H
 
 For the second group, the sixteen normal hearing children (NH) were as closely matched to the HI/CI group based on chronological age. All children were also native speakers of Belgian Dutch, and enrolled in the mainstream educational system. None reported hearing loss or additional disabilities, judged from the UNHS screening procedure and their respective parental report.
 
-The characteristics of the selected children is detailed in Table \ref{tab:children_char}, at the supplementary section \ref{appA:characteristics}. 
-
+The characteristics of the selected children is detailed in Table \ref{tab:characteristics}, at the supplementary section \ref{sSA:characteristics}. 
 %
 %
 %###############################
-\subsection{Stimuli} \label{ss:stimuli}
+\subsection{Stimuli} \label{sS:stimuli}
 %###############################
 %
 The stimuli consisted of the children's utterances, i.e. sentences of similar length, recovered from previously mentioned CLiPS corpus. More specifically, we use a portion of the corpus that consisted of ten utterances recordings, for each of the thirty two selected children. The stimuli were documented when the child was telling a story cued by the picture book ``Frog, where are you'' \citep{Mayer_1969} to a caregiver ``who does not know the story''. 
@@ -53,33 +52,23 @@ Similar designs were used by \citet{Boonen_et_al_2020} and \citet{Faes_et_al_202
 %
 %
 %###############################
-\subsection{Experimental setup}
+\subsection{Experimental setup} \label{sS:setup}
 %###############################
 %
 The experiment was setup to perform a transcription task, where $100$ language students from the University of Antwerp participated. The participants were native speakers of Belgian Dutch without any particular experience with the speech of hearing-impaired children.
 
-The participants and stimuli were divided into five groups, where each group of $20$ students transcribed $64$ stimuli on their series, resulting in $20$ transcriptions per utterance. In total this amounted to $6400$ transcriptions, i.e. $20$ transcription times $320$ utterances. The steps that comprised the task are detailed in section \ref{appA:transcription}. 
+The participants and stimuli were divided into five groups, where each group of $20$ students transcribed $64$ stimuli on their series, resulting in $20$ transcriptions per utterance. In total this amounted to $6400$ transcriptions, i.e. $20$ transcription times $320$ utterances. The steps that comprised the task are detailed in section \ref{ssSA:transcription}. 
 
 The data resulting from the transcription task was then processed and converted into entropy measures ($H$), which served as our outcome variable. 
 
-The entropy of utterances ($H$) is a measure bounded in the continuum $[0,1]$, and it was used as a quantification of (dis)agreement between listeners' transcriptions, where utterances yielding a high degree of agreement between transcribers were considered highly intelligible, and therefore registered a lower entropy $\left( H \rightarrow 0 \right)$. In contrast, utterances yielding a low degree of agreement were considered as exhibiting low intelligibility, and therefore registered a higher entropy $\left( H \rightarrow 1 \right)$ \citep{Boonen_et_al_2021, Faes_et_al_2021}. The procedure followed to calculate the entropies is detailed in section \ref{appA:entropy}.
+The entropy of utterances ($H$) is a measure bounded in the continuum $[0,1]$, and it was used as a quantification of (dis)agreement between listeners' transcriptions, where utterances yielding a high degree of agreement between transcribers were considered highly intelligible, and therefore registered a lower entropy $\left( H \rightarrow 0 \right)$. In contrast, utterances yielding a low degree of agreement were considered as exhibiting low intelligibility, and therefore registered a higher entropy $\left( H \rightarrow 1 \right)$ \citep{Boonen_et_al_2021, Faes_et_al_2021}. The procedure followed to calculate the entropies is detailed in section \ref{ssSA:entropy}.
 %
 %
 %###############################
-\subsection{Causal framework} 
+\subsection{Causal framework} \label{sS:causal_frame}
 %###############################
 %
-Where $H_{ik}$ denoted the (observed) entropy replicates, $H_{i}$ the (latent) ``true'' entropy, $SI_{i}$ the (latent) speech intelligibility score (inversely related to $H^{T}_{i}$). Moreover, $A_{i}$ denoted the ``hearing" age (substracted the minimum age), $E_{i}$ the etiology of disease that led to the hearing impairment, $HS_{i}$ the hearing status and focus of our research, $PTA_{i}$ the pure tone average (standardized). And Finally, $B_{b}$ the block (will reduce $\sigma_{U_{ik}}$). The variables are assumed independent, beyond the described relationships, i.e. 
-%
-\begin{equation*}
-	%
-	\begin{aligned} 
-		P(\pmb{U}) & = P(U_{ik}, U_{i}, U_{A}, U_{E}, U_{HS}, U_{P}, B_{bk}) \\ 
-		& = P(U_{ik}) P(U_{i}) P(U_{A}) P(U_{E}) P(U_{HS}) P(U_{P}) P(B_{bk})
-	\end{aligned}
-	%
-\end{equation*}
-%
+The analysis was informed by a preliminary work aimed at describing the causal and non-causal factors influencing speech intelligibility. More specifically, the current research uses a Directed Acyclic Graph (DAG) to describe all the relevant variables though to influence intelligibility. A DAG is a type of \textit{structural causal model} that can be represented, among other ways, by a \textit{causal diagram} \cite{Pearl_2009, Cinelli_et_al_2021}. 
 %
 \begin{figure}[h!]
 	%
@@ -131,33 +120,72 @@ Where $H_{ik}$ denoted the (observed) entropy replicates, $H_{i}$ the (latent) `
 	\end{tikzpicture}
 	%
 	\caption[DAG: Structural diagram]{DAG: structural diagram describing the relationships among the analyzed variables}
+	\label{fig:DAG}
 \end{figure}
 
+Figure \ref{fig:DAG} shows the \textit{causal diagram} for our research hypothesis. In the figure, $H^{O}_{bik}$ denote the \textit{observed} entropy replicates nested within children and experimental blocks, where $k=1,\dots,10$ utterances, $i=1,\dots,32$ children, and $b=1,\dots,5$ blocks. Moreover, $H^{T}_{i}$ denotes the ``true'' entropy, while $SI_{i}$ the speech intelligibility score. In addition, $A_{i}$ denotes the children's \textit{hearing age}, $E_{i}$ the etiology of disease that led to the hearing impairment, $HS_{i}$ the NH or HI/CI hearing status group, and $PTA_{i}$ the post-implant pure tone average.
+
+Several features can be emphasized from the figure. First, the children's speech intelligibility and ``true'' entropy scores are thought to be latent (unobservable) variables \cite{Everitt_1984}, and therefore, are drawn with open circles. See section \ref{sSA:SI} on the appropriate interpretations of the scores. The figure also shows the scores are thought to be inferable from the (observed) entropy replicates, and that the intelligibility score is inversely related to the ``true'' entropy, i.e. the lower the intelligibility the higher the entropy and vice versa, as expected from our the theory.
+
+Second, the figure reflects the expected hierarchy of variability in our data. This is particularly important as failing to account for the appropriate dependencies, we could be ``manufacturing'' false confidence in the parameter's estimates, leading us to incorrect inferences \cite{McElreath_2020}. Based on the experimental setup in section \ref{sS:setup}, we anticipated that the ten utterances, originated from each of the thirty two children, were also observed within a group of transcribers (series) assigned to the observation. Therefore, we expect variability at the children, replicates and block levels ($U_{i}$, $U_{ik}$ and $U_{b}$, respectively). 
+
+We did not have any particular expectations for the different levels of variability, except that, if the experiment was set up right, the block effects should explain a small amount of variability in the data.
+
+Third, the figure shows the assumed relationship among the relevant variables and how these influence the children's intelligibility of speech. Furthermore, it also shows, the variables are assumed independent beyond the described relationships.
+
+\textbf{\textit{Hearing age}} is expected to increase the speech intelligibility, for both of the hearing status groups. \textit{Hearing age} is a composite variable, that tries to approximate the amount of time a child has been actively hearing and developing his(her) language. The variable is constructed by combining the \textit{chronological age} for the NH group, and the \textit{device length of use} for the HI/CI group \citep{Faes_et_al_2021}. Several studies provide evidence that intelligibility increases with chronological age for the NH children \cite{Baudonck_et_al_2009, Bowen_2011, Chin_et_al_2001, Chin_et_al_2003, Flipsen_2006, Flipsen_2008, Hustad_et_al_2020}. Similar evidence can be found for the HI/CI children. However, part of the evidence seem to indicate the HI/CI children catch up with their NH counterparts \cite{Wie_2010, Habib_et_al_2010, Boons_et_al_2013, Geers_et_al_2013, Bruijnzeel_et_al_2016, Dettman_et_al_2016, Wie_et_al_2020}, while others indicate they do not catch up with the NH group \cite{Nicholas_et_al_2007, Castellanos_et_al_2014, Chin_et_al_2014, Geers_et_al_2016, Freeman_et_al_2017, Duchesne_et_al_2019, Grandon_et_al_2020}. Since the latter evidence is not clear, the current research can add more evidence on the matter.
+
+\textcolor{blue}{It is important to pint out, that using other measures similar to the one described in the previous paragraph, would only cause a problem known as multicollinearity}. 
+
 \begin{comment}
-158 Data collection and analysis were informed by preliminary work aimed at describing the causal and
-159 non-causal factors inﬂuencing the association between age and knowledge. Speciﬁcally, we described
-160 all the aspects of individuals that are expected to inﬂuence knowledge in a Direct Acyclic Graph
-161 (DAG) and later in a full structural causal model that we used to validate the analysis code (see ﬁgure
-162 3 and Supplementary section 9.5). A DAG is a heuristic generative model that allows derivation
-163 of a causal estimand (Pearl, 1995). Each causal query may require a diﬀerent statistical procedure
-164 that includes diﬀerent variables.
-165 We relied on the DAG described above to plan data collection, so that all the variables would
-166 be recorded, as well as to deﬁne the analyses described below. The analysis can be divided in a
-167 descriptive and a causal section. The ﬁrst illustrates how knowledge changes with age; the causal
-168 section, instead, describes the eﬀect of sex, activities, family and schooling on the development of
-169 knowledge.
-170 Of course it is possible that unobserved confounds exist along any edge in our DAG. We encourage
-171 the perspective that any estimated eﬀects are possibly partially due to such confounding. This is true
-172 in all observational, anthropological investigations. The additional transparency of our approach,
-173 and its ability to logically derive statistical procedures from causal assumptions, is its strength.
+the previous analysis, the best fitting model contained the variable Chronological Age. Adding other variables to the model, including Hearing Age, Age at Implantation, Gender, Etiology, (Un)aided PTA, or Bilateral versus Monolateral implants, did not ameliorate the model fit, and hence did not explain a significant portion of the variance.
+\end{comment}
+
+\textbf{\textit{Pure tone average}} the child's subjective hearing sensitivity, aided and unaided by their hearing apparatus
+
+\textbf{\textit{Hearing status}}
+
+\textbf{\textit{Etiology}}. the cause of the children's hearing impairment
+
+\textbf{\textit{Gender}} and its conspicuous absence in the DAG is due to 
+
+\begin{comment}
+Age Knowledge changes as individual get older. We expect to observe an increase with age,
+840 with individual diﬀerences that can emerge as a result of several factors. Age has a direct eﬀect
+841 on knowledge, as it stands for increasing cognitive abilities of human brains that allow to store and
+842 manage information (Age → Knowledge). But also, and maybe more importantly, the total eﬀect
+843 of Age include paths passing through the other factors: as individuals get older, other traits change,
+844 which have an eﬀect on knowledge. As individuals age, the time they spend performing speciﬁc
+845 activities varies (Age → Activities), they start or stop going to school (Age → Schooling), or their
+846 family situation changes (e.g. new siblings are born, Age → Family).
+847 Sex We do not expect a direct eﬀect of sex of individuals on knowledge. Rather, we think of
+848 gender diﬀerences as inﬂuencing both the probability at which activities are performed, some tasks
+849 being typically done by girls and other by boys, as well as, potentially, school attendance (Sex →
+850 Activities and Sex → Schooling).
+\end{comment}
+
+
+As expected, it is possible that other unobserved confounds are not accounted by our assumptions, and therefore, our causal diagram. This is true for any type of social, behavioral and educational research. However, we argue that the additional transparency of our approach,
+and its ability to derive statistical procedures from causal assumptions, is its main strength.
+
+\begin{comment}
+Many factors have been shown to contribute to the success of spoken language development of children with CI, including: (1) audiology related factors, such as the age at implantation, the duration of device use, bilateral (or contralateral) cochlear implantation and the children’s preoperative and postoperative hearing levels; (2) child related factors, such as the cause of the hearing impairment (genetic, infections), gender, additional disabilities (mental retardation, speech motor problems); and (3) environmental factors, such as communication modality. An overview is provided in Boons, Brokx, Dhooge, Frijns, Peeraer, Vermeulen, Wouters, and van Wieringen, 2012, Fagan,
+Eisenberg, and Johnson, 2020, Gillis, 2018 and Niparko, Tobey, Thal, Eisenberg, Wang,
+Quittner, and Fink, 2010.
+
+
+A factor of particular importance here is age. Studies have shown
+that chronological age is an important factor for intelligibility: as they grow older, children’s intelligibility increases irrespective of their hearing status (Grandon et al., 2020). But in the case of children with CI, age is a complicated factor, since it can not only refer to children’s chronological age (as is the case for children with NH), but also to the children’s so-called hearing age, which is the amount of time between the activation of their device and their chronological age. For instance, a child implanted at the age of 1;0 has a hearing age of two years at the age of 3;0. In addition, the age at implantation has been shown to play a critical role in children’s spoken language achievements. In general, earlier implantation appears to lead to better results than later implantation in several domains (Boons et al., 2012; Niparko et al., 2010). But the research findings with respect to the effect of the variable age on children with CI’s intelligibility are not unequivocal. In some studies, a significant effect of chronological age on children’s intelligibility was found (i.a., Flipsen, \& Colvard, 2006;
+Grandon et al., 2020; Habib, Waltzman, Tajudeen, \& Svirsky, 2010) but not in others (e.g.,
+Khwaileh, \& Flipsen, 2010). Hearing age was found to be a significant predictor of intelligibility by i.a., Flipsen and Colvard (2006), but hearing age was not always considered as a predictor. Age at implantation predicted children’s intelligibility in a considerable number of studies (i.a., Grandon et al., 2020; Habib et al., 2010; Montag, AuBuchon, Pisoni, \& Kronenberger, 2014; Svirsky, Chin, \& Jester, 2007) but this was not the case in other studies (i.a., Flipsen, \& Colvard, 2006; Khwaileh, \& Flipsen, 2010). Nevertheless, a general finding appears to be that earlier implantation leads to better results in speech and language development and in intelligibility. At present there is consistent evidence that implantation in the first two years of life leads to consistently better results in spoken language development in comparison to later implantation, and even (inconclusive) evidence for even better outcomes of implantation in the first year of life (Bruijnzeel et al., 2016; Dettman et al., 2016).
 \end{comment}
 %
 %
 %###############################
-\subsection{Statistical analysis} 
+\subsection{Statistical analysis} \label{sS:stat_analysis}
 %###############################
 %
-Lastly, it is important to highlight that we composed a proxy measures of \textit{hearing age}, i.e. amount of time a child has been actively hearing and developing his(her) language. First, for the NH group we used the \textit{chronological age}. Finally, for the HI/CI group  we use the \textit{device's length of use} \citep{Faes_et_al_2021}.
+Using the DAG described in previous section, we produced a full structural causal model though the use of probabilistic programming \cite{Jaynes_2003}, that we later used to validate our models of analysis and code. 
 %
 \begin{comment}
 	for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement. 
