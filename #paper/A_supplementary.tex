@@ -195,15 +195,6 @@ Finally, for the fifth utterance, we observe that all of the  transcriptions ide
 %
 %
 %###############################
-\subsection{Sampling bias} \label{sSA:sampling_bias}
-%###############################
-%
-As it happens in most observational, and some experimental studies, ours can also be a potential victim of sampling bias. While stratifying on the selection variables can help to balance the samples, and even ``correct'' the estimates \cite{Cinelli_et_al_2021, Deffner_et_al_2022}, given the sample's selection and matching procedures, we cannot ensure the HI/CI nor the NH groups are representative of their respective populations. 
-
-Nevertheless, we argue that by controlling for other relevant confounders, the qualitative results presented in this study holds. However, we cannot discard the presence of unobservable variables that could bias our results, and in that sense, inferences beyond this particular set of children must be taken with care.
-%
-%
-%###############################
 \subsection{About speech intelligibility} \label{sSA:SI}
 %###############################
 %
@@ -214,6 +205,44 @@ Therefore in this paper, through the implementation of our proposed model, \text
 Despite this practical approach, we emphasize we did our best to ensure the construct validity of our study, by ensuring the transcription task was well understood and appropriately performed by the transcribers.
 
 We then expect speech intelligibility, as measured by our model, to reflect the (general) intelligibility of speech possessed by individuals, but do not deal with general epistemological considerations on the connection between the two.
+%
+%
+%###############################
+\subsection{Causal framework details} \label{sSA:causal_details}
+%###############################
+%
+In this section we make explicit some of the assumptions that guided our causal framework, and later, our statistical analysis.
+
+For \textbf{\textit{hearing age}}, and its relevance in our research hypothesis, we describe how the variable is constructed and its inherent assumptions. 
+
+\textit{Hearing age} is a composite variable constructed by combining the \textit{chronological age} for the NH group, and the \textit{device length of use} for the HI/CI group \citep{Faes_et_al_2021} (see Table \ref{tab:characteristics}). The variable tries to approximate the amount of time a child has been actively hearing and developing his(her) language. However, no short of evidence has been presented in favor of using others surrogate measures, like \textit{chronological age} \cite{Flipsen_et_al_2006, Habib_et_al_2010, Grandon_et_al_2020} or \textit{age at implantation} \cite{Niparko_et_al_2010, Boons_et_al_2012, Bruijnzeel_et_al_2016, Dettman_et_al_2016}. We argue that the feasibility of using any proxy measure, largely depends on the assumed reliability of the surrogate to approximate the variable of interest. In that sense, although we recognize \textit{hearing age} is not a ``perfect'' proxy \cite{Faes_et_al_2021}, we argue is the most appropriate to test our hypothesis, based on the relevant literature review and its assumed reliability to capture children's language development (although the latter has not been tested). Moreover, the variable serve two additional purposes: (i) control for sampling bias (see section \ref{sSA:sampling_bias}), and (ii) de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
+
+Finally, it is important to highlight that using more than one of the aforementioned proxies in tandem, for modeling purposes, might not be a good idea. It is apparent from the previous description, the three surrogate measures share high similarities. This in turn might cause problems in the modeling procedure, as including variables that provide ``similar information'' might lead to a problem known as multicollinearity, in which our estimates would be biased and less precise \cite{Farrar_et_al_1967}.
+
+Regarding \textbf{\textit{hearing status}}, it is clear that its inclusion directly corresponds with the main purpose of the current research endeavor. i.e. compare the levels of speech intelligibility among NH and HI/CI children.
+
+In the case of \textbf{\textit{pure tone average}}, the variable was included for two reasons. First, given that previous modeling efforts did not capture the full hierarchy of variability, it is possible that the effects of PTA on speech intelligibility has been largely overlooked. As one can infer, it might be sensible to think that HI/CI children with severe hearing loss, as accounted by the variable, might develop their language at a slower rate. This is especially true, if we consider the signal provided by the cochlear implant is still degraded compared to the signal in normal hearing scenarios \cite{Drennan_et_al_2008}. Finally, as with \textit{hearing age}, the variable might be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
+
+For \textbf{\textit{etiology}}, it is possible that its effects on speech intelligibility has also been largely overlooked, due to the lack of control on the full hierarchy of variability. A similar case to \textit{pure tone average}. Moreover, as its predecessors, the variable might also be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}, assuming our DAG is appropriate.
+
+Finally, it is important to highlight the absence of other variables in our causal hypothesis, and why there are not present.
+
+For the \textbf{\textit{type of cochlear implantation}}, i.e. bilateral or contralateral, the variable was not included because we did not expect it to be related to other variables in the DAG, i.e. the decision on receiving one or the other is solely based on the intelligibility outcome, no matter how it is measured. This in turn means that no confounding of our estimates was expected. Additionally, given that most of the children underwent though sequential bilateral implantation (eleven), we anticipated the effect of variable already permeates the sample, therefore, if we wanted to investigate its effect, a larger sample size would be required.
+
+For the case of \textbf{\textit{additional disabilities}}, e.g. mental retardation or speech motor problems, there was no need to consider it, as no additional comorbidities were reported.
+
+In the case of \textbf{\textit{environmental factors}}, such as communication modality, the current sample of HI/CI children were raised orally using monolingual Dutch, with a limited support of signs, a scenario similar to the NH group (see section \ref{sS:children}).
+
+Last but not least, \textbf{\textit{gender}} was not included in our hypothesis as no theoretical nor empirical evidence have been found on its effects \cite{Boonen_et_al_2021}.
+%
+%
+%###############################
+\subsection{Sampling bias} \label{sSA:sampling_bias}
+%###############################
+%
+As it happens in most observational, and some experimental studies, ours can also be a potential victim of sampling bias. While stratifying on the selection variables can help to balance the samples, and even ``correct'' the estimates \cite{Cinelli_et_al_2021, Deffner_et_al_2022}, as we do here by controlling for \textit{hearing age}; given the sample's selection and matching procedures, we cannot ensure the HI/CI nor the NH groups are representative of their respective populations. 
+
+Nevertheless, we argue that by controlling for other relevant confounders, the qualitative results presented in this study holds. However, we cannot discard the presence of unobservable variables that could bias our results, and in that sense, inferences beyond this particular set of children must be taken with care.
 %
 %
 %###############################
@@ -324,9 +353,12 @@ Considering the previous, if we still manage to identify outlying observations w
 %-------------------------------
 \subsubsection{Simulation} \label{ssSA:model_simulation}
 %-------------------------------
-Preliminary to the data collection, we simulated data in silico to test the models and inform data collection procedure. The simulation code is available in the GitHub repository. Several functional correlation between age and knowledge have been simulated, and the model used in the analysis - which includes age as a ordinal categorical predictor of knowledge with monotonically increasing effect - has been able to recover the different shapes. Causal effect of activities, family composition and schooling have been simulated and tested.
+Preliminary to the data collection, we simulated data in silico to test the models and inform data collection procedure. The simulation code is available in the GitHub repository. \cite{Fogarty_et_al_2022}
+\begin{comment}
+Several functional correlation between age and knowledge have been simulated, and the model used in the analysis - which includes age as a ordinal categorical predictor of knowledge with monotonically increasing effect - has been able to recover the different shapes. Causal effect of activities, family composition and schooling have been simulated and tested.
 
 The simulated data have been used -albeit in a previous version- to estimate the minimum number of interviewees necessary to recover the parameter values. If individuals were to name a maximum of 300 items in the freelist, 50 interviewees would have been suffcient to obtain reliable estimates of the parameters. Given that data collection in vivo is much less regular and less controllable than in silico, we roughly doubled the number of interviewees and that of questions.
+\end{comment}
 %
 %
 %-------------------------------
