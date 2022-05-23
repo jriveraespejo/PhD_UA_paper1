@@ -199,9 +199,9 @@ Finally, for the fifth utterance, we observe that all of the  transcriptions ide
 \subsection{About speech intelligibility} \label{sSA:SI}
 %###############################
 %
-Intelligible speech can be defined as the extent to which the elements in an speaker's acoustic signal, e.g. phonemes or words, can be correctly recovered by a listener \citep{Kent_et_al_1989, Whitehill_et_al_2004, vanHeuven_2008, Freeman_et_al_2017}. More specifically, in the context of the transcription task, speech intelligibility can be inferred from the extent a set of transcribers can identify the words contained in an utterance \cite{Boonen_et_al_2021}.
+As described in the introduction, intelligible speech can be defined as the extent to which the elements in an speaker's acoustic signal, e.g. phonemes or words, can be correctly recovered by a listener \citep{Kent_et_al_1989, Whitehill_et_al_2004, vanHeuven_2008, Freeman_et_al_2017}. More specifically, in the context of the transcription task, speech intelligibility can be inferred from the extent a set of transcribers can identify the words contained in an utterance \cite{Boonen_et_al_2021}.
 
-Therefore in this paper, through the implementation of our proposed model, \textit{speech intelligibility} is interpreted as a latent trait of individuals (hypothetical construct), which underlies the probability of observing a set of entropy replicates, that in turns, describes the ability of transcribers to identify the words in an utterance. Henceforth, statements such \textit{`speech intelligibility is influenced by'} can be read as \textit{`the probability of observing a set of entropy replicates for each individual in the sample is influenced by'}. Similar interpretation can be extended to the (latent) ``true'' entropy measures.
+Therefore in this paper, through the implementation of our proposed model, \textit{speech intelligibility} is interpreted as a latent trait of individuals (hypothetical construct), which underlies the probability of observing a set of entropy replicates; that in turns, describes the ability of transcribers to identify the words in an utterance. Henceforth, statements such \textit{`speech intelligibility is influenced by'} can be read as \textit{`the probability of observing a set of entropy replicates for each individual in the sample is influenced by'}. Similar interpretation can be extended to the (latent) ``true'' entropy measures.
 
 Despite this practical approach, we emphasize we did our best to ensure the construct validity of our study, by ensuring the transcription task was well understood and appropriately performed by the transcribers.
 
@@ -218,7 +218,7 @@ For \textbf{\textit{hearing age}}, and its relevance in our research hypothesis,
 
 \textit{Hearing age} is a composite variable constructed by combining the \textit{chronological age} for the NH group, and the \textit{device length of use} for the HI/CI group \citep{Faes_et_al_2021} (see Table \ref{tab:characteristics}). The variable tries to approximate the amount of time a child has been actively hearing and developing his(her) language. However, no short of evidence has been presented in favor of using others surrogate measures, like \textit{chronological age} \cite{Flipsen_et_al_2006, Habib_et_al_2010, Grandon_et_al_2020} or \textit{age at implantation} \cite{Niparko_et_al_2010, Boons_et_al_2012, Bruijnzeel_et_al_2016, Dettman_et_al_2016}. We argue that the feasibility of using any proxy measure, largely depends on the assumed reliability of the surrogate to approximate the variable of interest. In that sense, although we recognize \textit{hearing age} is not a ``perfect'' proxy \cite{Faes_et_al_2021}, we argue is the most appropriate to test our hypothesis, based on the relevant literature review and its assumed reliability to capture children's language development (although the latter has not been tested). Moreover, the variable serve two additional purposes: (i) control for sampling bias (see section \ref{sSA:sampling_bias}), and (ii) de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
 
-Finally, it is important to highlight that using more than one of the aforementioned proxies in tandem for modeling purposes is not recommended. It is apparent from the previous description, the three surrogate measures share high similarities in their data construction. This in turn might cause problems in the modeling procedure, as including variables that provide ``similar information'' might lead to a problem known as multicollinearity, in which our estimates would be biased and less precise \cite{Farrar_et_al_1967}, leading us to wrong conclusions.
+Finally, it is important to highlight that for modeling purposes, using more than one of the aforementioned proxies in tandem is not recommended. It is apparent from the previous description, the three surrogate measures share high similarities in their data construction. This in turn might cause problems in the modeling procedure, as including variables that provide ``similar information'' might lead to a problem known as multicollinearity, in which our estimates would be biased and less precise \cite{Farrar_et_al_1967}, leading us to wrong conclusions.
 %
 \begin{comment}
 	for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement.
@@ -245,7 +245,7 @@ Last but not least, \textbf{\textit{gender}} was not included in our hypothesis 
 \subsection{Sampling bias} \label{sSA:sampling_bias}
 %###############################
 %
-As it happens in most observational, and some experimental studies, ours can also be a potential victim of sampling bias. While stratifying on the selection variables can help to balance the samples, and even ``correct'' the estimates \cite{Cinelli_et_al_2021, Deffner_et_al_2022}, as we do here by controlling for \textit{hearing age}; given the sample's selection and matching procedures, we cannot ensure the HI/CI nor the NH groups are representative of their respective populations. 
+As it happens in most observational, and some experimental studies, ours can also be a potential victim of sampling bias. While stratifying on the selection variables can help to balance the samples, and even ``correct'' the estimates \cite{Cinelli_et_al_2021, Deffner_et_al_2022}, as we do here by controlling for \textit{hearing age}. Given the sample's selection and matching procedures, we cannot ensure the HI/CI nor the NH groups are representative of their respective populations. 
 
 Nevertheless, we argue that by controlling for other relevant confounders, the qualitative results presented in this study holds. However, we cannot discard the presence of unobservable variables that could bias our results, and in that sense, inferences beyond this particular set of children must be taken with care.
 %
@@ -258,12 +258,6 @@ Nevertheless, we argue that by controlling for other relevant confounders, the q
 \subsubsection{Definition} \label{ssSA:model_definition}
 %-------------------------------
 %
-Previous research already used hierarchical models with the replicated entropy measures as outcomes \citep{Boonen_et_al_2021, Faes_et_al_2021}. Hierarchical models are powerful to control for heterogeneity in the data, and also to avoid pre-aggregating procedures that could be pernicious for a proper statistical inference \citep{McElreath_2020}. 
-
-These claims are easier to understand using a though experiment within our research. Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the entropy's heterogeneity across the $10$ utterances also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility.
-
-The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}, and it is what justify our use of a hierarchical model. More specifically, we will use a Hierarchical (Mixed) Beta Regression model \citep{Figueroa-Zuniga_et_al_2013}, for which we argue, its implementation is rather trivial under the bayesian framework, and we present it in the following lines.
-
 First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. For the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple realizations of a child's \textit{true} entropy $H^{T}_{i}$, measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children.
 
 Second, for the hypothesis part, we can say the child's \textit{true} entropy $H^{T}_{i}$ is inversely explained by the child's speech intelligibility index $SI_{i}$, and in turn, the latter by a set of covariates. Notice from Figure \ref{fig:entropy_ME}, we propose two sets of models. The model in panel (a) use hearing status ($HS_{i}$) and hearing age ($A_{i}$) as covariates. The use of hearing status is justified as we are interested in comparing SI among groups, defined by the children's hearing characteristics (NH, HI/CI, and HI/HA). On the other hand, we expect hearing age\footnote{see section \ref{s_sect:children} to know how the variable is defined.} and its interaction with hearing status, to also have an effect on the SI index, as previous evidence have shown the speech of HI children gradually approximate that of NH children \citep{Boonen_et_al_2019}.
@@ -296,6 +290,13 @@ Three important things need to be noticed from the previous algebraic structure.
 	\caption[Variability in a Beta-Proportional distribution]{Variability in a Beta-Proportional distribution.}
 	\label{fig:BetaProp}
 \end{figure}
+
+
+(known as the ``sample size" of the distribution)
+
+If we would only need a few new flips to sway our beliefs, then our prior beliefs should be represented by a small k. If we would need a large number of new flips to sway us away from our prior beliefs about mu, then our prior beliefs are worth a very large k \cite{Kruschke_2015}
+
+
 %
 %
 %-------------------------------
