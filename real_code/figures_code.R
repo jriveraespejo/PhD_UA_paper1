@@ -20,24 +20,57 @@ source( file.path( getwd(), 'sim_code', '0_sim_extra.R') )
 
 
 
+M = c(2,5,10,20)
+cp = sapply( 1:length(M), col.alpha, alpha=0.7)
 
-
-M = c(2,5,10,20,40)
-
-pdf('BetaProp_dist.pdf')
+# pdf('BetaProp_dist1.pdf')
 for(i in 1:length(M)){
+  
+  
   if(i==1){
-    curve( dbeta2(x, prob=0.5, theta=M[i]), 0, 1, lwd=2, col=i, 
+    curve( dbeta2(x, prob=0.5, theta=M[i]), 0, 1, lwd=2, col=cp[i], 
            xlab="", ylab="", ylim=c(0,5))
-    legend('topleft', legend=c('M=2','M=5','M=10','M=20','M=40'),
-           col=1:length(M), lwd=2, bty='n'  )
+    abline(v=0.5, col='gray', lty=2)
+    
+    legend('topleft', col=cp, lwd=2, bty='n',
+             legend=c(expression(M[ik]==2),expression(M[ik]==5),
+                      expression(M[ik]==10),expression(M[ik]==20)))
   } else{
-    curve( dbeta2(x, prob=0.5, theta=M[i]), 0, 1, lwd=2, col=i, xlab="", ylab="", add=T)
+    curve( dbeta2(x, prob=0.5, theta=M[i]), 0, 1, lwd=2, col=cp[i], xlab="", ylab="", add=T)
   }
 }
-dev.off()
+# dev.off()
 
 
+
+
+p = c(0.2,0.5,0.8)
+M = c(2,5,10,20)
+cp = sapply( 1:length(M), col.alpha, alpha=0.7)
+
+# pdf('BetaProp_dist2.pdf',width=10, height=5)
+par(mfrow=c(1,3))
+for(j in 1:length(p)){
+  for(i in 1:length(M)){
+    
+    
+    if(i==1){
+      curve( dbeta2(x, prob=p[j], theta=M[i]), 0, 1, lwd=2, col=cp[i], 
+             xlab="", ylab="", ylim=c(0,5))
+      abline(v=p[j], col='gray', lty=2)
+      
+      if(j==2){
+        legend('topleft', col=cp, lwd=2, bty='n',
+               legend=c(expression(M[ik]==2),expression(M[ik]==5),
+                        expression(M[ik]==10),expression(M[ik]==20)))
+      }
+    } else{
+      curve( dbeta2(x, prob=p[j], theta=M[i]), 0, 1, lwd=2, col=cp[i], xlab="", ylab="", add=T)
+    }
+  }
+}
+par(mfrow=c(1,1))
+# dev.off()
 
 
 

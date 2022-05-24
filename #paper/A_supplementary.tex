@@ -255,67 +255,42 @@ Nevertheless, we argue that by controlling for other relevant confounders, the q
 %###############################
 %
 %-------------------------------
-\subsubsection{Definition} \label{ssSA:model_definition}
+\subsubsection{Variability in the beta-proportion distribution} \label{ssSA:model_variability}
 %-------------------------------
 %
-First, figure \ref{fig:entropy_ME} depicts the DAG representation of the model. For the measurement error part, section \ref{ss_sect:outcome} reveals the (observed) entropy replicates $H^{O}_{ik}$ can represent multiple realizations of a child's \textit{true} entropy $H^{T}_{i}$, measured with error $e_i$. As a result, we can say the $k$'th entropy measure is nested within the $i$'th child, where $k=1, \dots, K$, $i=1, \dots, I$, $K = 10$ utterances, and $I = 32$ children.
+Figure \ref{fig:BetaProp} shows the implications of different ``sample sizes'' ($M_{ik}$), on the dispersion of the beta-proportion distribution \cite{Kruschke_2015}. The three panels show different assumed ``average'' entropies. The middle panel assumes an ``average'' entropy $\mu=0.5$, the left panel $\mu=0.2$, and the right panel $\mu=0.8$ (as shown by the discontinuous lines).
 
-Second, for the hypothesis part, we can say the child's \textit{true} entropy $H^{T}_{i}$ is inversely explained by the child's speech intelligibility index $SI_{i}$, and in turn, the latter by a set of covariates. Notice from Figure \ref{fig:entropy_ME}, we propose two sets of models. The model in panel (a) use hearing status ($HS_{i}$) and hearing age ($A_{i}$) as covariates. The use of hearing status is justified as we are interested in comparing SI among groups, defined by the children's hearing characteristics (NH, HI/CI, and HI/HA). On the other hand, we expect hearing age\footnote{see section \ref{s_sect:children} to know how the variable is defined.} and its interaction with hearing status, to also have an effect on the SI index, as previous evidence have shown the speech of HI children gradually approximate that of NH children \citep{Boonen_et_al_2019}.
+In all three panels we notice two prevalent pattern: (i) the higher the ``sample size'', the less dispersed is the distribution, and (ii) as expected from non-linear models, the behavior of the dispersion depends on the location of the distribution, i.e. their ``average'' value.
 
-Notice the model depicted in panel (a) is interested on (what we can call) \textit{total effects}, i.e. the effects of the hearing characteristics, not independent from the effects of the hearing apparatus (cochlear implant or hearing aid). This is important to understand for two reasons. Since a hearing apparatus is fitted onto a child depending on aspects such as the locus and severity of his(her) hearing impairment \citep{Korver_et_al_2017}: (1) such specific children's characteristics could confound the (beneficial) effects of using specific hearing apparatuses, while (2) because children are selected from a convenient sample, not representative of their respective populations (see section \ref{s_sect:children}), the need to control for such characteristics is paramount, if we seek to obtain effects that can generalize better and beyond our sample\footnote{follow the \textit{notes} folder, to see a graphical though experiment.}.
+In this sense, we expect that if the posterior estimates for $M_{ik}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ have high dispersion. Therefore, we could say the replicates as a measure of the \textit{true} entropy have low reliability. In contrast, the higher the values posterior estimates for $M_{ik}$, the lower the dispersion, and the higher the reliability of the replicates as a measure for the \textit{true} entropy. 
 
-Considering the previous, we propose the model depicted in panel (b), where we control for the possible confounding variables etiology ($E_{i}$), \textcolor{blue}{as a proxy of locus}, and unaided PTA ($PTA_{i}$), as a proxy for hearing impairment severity. In that sense, the model would estimate (what we can call) the \textit{direct effects} of the hearing apparatus, independent of the children's characteristics.
-
-Lastly, we proceed to use probabilistic programming to declare the algebraic structure of our models. Given the panel (a) model is nested within the panel (b) model, we declare only the model structure for the latter:
+Finally, this approach also implies that we used the ``sample size'' parameter to model the replicates heterogeneity, effectively estimating a measurement error model \cite{Carroll_2006}.
 %
-\begin{align}
-	%
-	H^{O}_{bik} & \sim \text{BetaProp} \left( P_{bi}, M_{ik} \right) \\ 
-	%
-	P_{bi} &= \alpha_{b} + H^{T}_{i} \\
-	%
-	H^{T}_{i} &= \text{logit}^{-1}( -SI_{i} ) \\
-	%
-	SI_{i} & = a_{i} + \alpha + \alpha_{E[i],HS[i]} + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} PTA_{i} \\ 
-	%
-\end{align}
-%
-where $\text{logit}(x) = \log \left[ x / ( 1 - x ) \right]$, and $\text{logit}^{-1}(x) = \exp(x) / ( 1 + \exp(x) ) $. Additionally, a $\text{BetaProp}(\mu, \theta)$ distribution is equal to a $\text{Beta}(\alpha, \beta)$ distribution, with $\alpha=\mu \theta$, $\beta=(1-\mu)\theta$. For our purposes, $\mu = H^{T}_{i}$ and $\theta = M_{i}$, the latter denoting the ``sample size" of the distribution. Moreover, $a_{i}$ denote the children's random effects, $\alpha$ the fixed effects' intercept, $\alpha_{HS[i]}$ and $\beta_{A, HS[i]}$ the intercept and slope of ``hearing age" per hearing status group, $\alpha_{E[i]}$ the intercept per etiology group, and $\beta_{P}$ the slope for the standardized PTA levels. 
-
-Three important things need to be noticed from the previous algebraic structure. First, all the parameters are estimated in the logit scale and centered at $PTA_{i}=0$ and $\bar{A}$, which denotes the minimum hearing age in the sample. Second, instead of a latent measurement error $U_{ik}$, we use the latent ``sample size" parameter $M_{ik}$ to model the heterogeneity/variability of the duplicate entropies. This effectively works as a measurement error model for the replicates, as the parameter defines the shape of the distribution. Third, if we do not consider etiology and PTA values in equation (4), we obtain the panel (a) model.
-%
-\begin{figure}
+\begin{figure} [!h]
 	\centering
-	\includegraphics[width=0.5\linewidth]{BetaProp_dist.pdf}
-	\caption[Variability in a Beta-Proportional distribution]{Variability in a Beta-Proportional distribution.}
+	\includegraphics[width=1\linewidth]{BetaProp_dist2.pdf}
+	\caption[Variability in a beta-proportional distribution]{Variability in a beta-proportional distribution. Discontinuous lines describe the ``average'' value for the distribution ($\mu$), solid lines describe the distribution assuming different $\theta = M_{ik}$.}
 	\label{fig:BetaProp}
 \end{figure}
-
-
-(known as the ``sample size" of the distribution)
-
-If we would only need a few new flips to sway our beliefs, then our prior beliefs should be represented by a small k. If we would need a large number of new flips to sway us away from our prior beliefs about mu, then our prior beliefs are worth a very large k \cite{Kruschke_2015}
-
-
 %
 %
 %-------------------------------
 \subsubsection{Priors}
 %-------------------------------
 %
+Third, we use mildly informative priors and hyper-priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. 
+%
 \begin{align}
 	%
-	M_{i} & \sim \text{LN}( \mu_{M}, \sigma_{M}) \\
+	M_{ik} & \sim \text{LN}( \mu_{M}, \sigma_{M}) \\
 	%
 	a_{i} & \sim \text{N}(\mu_{a}, \sigma_{a}) \\
 	%
 	\alpha & \sim \text{N}(0, 0.3) \\
 	%
-	\alpha_{HS[i]} & \sim \text{N}(0, 0.3) \\
+	\alpha_{E[i],HS[i]} & \sim \text{N}(0, 0.3) \\
 	%
 	\beta_{A, HS[i]} & \sim \text{N}(0 , 0.3) \\
-	%
-	\alpha_{E[i]} & \sim \text{N}(0, 0.5) \\
 	%
 	\beta_{P} & \sim \text{N}(0, 0.3) \\
 	%
@@ -325,14 +300,14 @@ If we would only need a few new flips to sway our beliefs, then our prior belief
 	%
 	\mu_{a} & \sim \text{N}(0, 0.5) \\
 	%
-	\sigma_{a} & \sim \text{Exp}(1)\\
+	\sigma_{a} & \sim \text{Exp}(1)
 	%
 \end{align}
-Third, we use mildly informative priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. 
-\begin{figure}
+%
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.6\linewidth]{prior_predictive.pdf}
-	\caption[Prior distribution implications]{Prior distribution implications: speech intelligibility, ``true'' entropy and observed entropy scales.}
+	\caption[Prior distribution implications]{Prior distribution implications: speech intelligibility, \textit{true} entropy and observed entropy scales.}
 	\label{fig:priors}
 \end{figure}
 %
@@ -340,7 +315,7 @@ Third, we use mildly informative priors to state our uncertainty regarding the d
 %-------------------------------
 \subsubsection{Estimation} \label{ssSA:model_estimation}
 %-------------------------------
-The models proposed in sections \ref{s_sect:evaluation} and \ref{s_sect:models} will be estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we will use the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012}. \texttt{Stan} \citep{Stan_2020} will be the software package that will provide us with the No-U-Turn HMC machinery, while \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020}, the software that will allow us to analyze its outputs.
+The proposed models, described in section \ref{sS:stat_analysis}, were estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we used the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012} implemented in \texttt{Stan} \citep{Stan_2020}. Additionally, we used \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020}, to analyze its outputs.
 %
 %
 %-------------------------------

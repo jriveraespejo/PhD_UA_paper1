@@ -6,21 +6,27 @@
 \subsection{Model selection and results} \label{sS:results_models}
 %###############################
 %
-
+\begin{comment}
+	Notice the model depicted in panel (a) is interested on (what we can call) \textit{total effects}, i.e. the effects of the hearing characteristics, not independent from the effects of the hearing apparatus (cochlear implant or hearing aid). This is important to understand for two reasons. Since a hearing apparatus is fitted onto a child depending on aspects such as the locus and severity of his(her) hearing impairment \citep{Korver_et_al_2017}: (1) such specific children's characteristics could confound the (beneficial) effects of using specific hearing apparatuses, while (2) because children are selected from a convenient sample, not representative of their respective populations (see section \ref{s_sect:children}), the need to control for such characteristics is paramount, if we seek to obtain effects that can generalize better and beyond our sample\footnote{follow the \textit{notes} folder, to see a graphical though experiment.}.
+	
+	Considering the previous, we propose the model depicted in panel (b), where we control for the possible confounding variables etiology ($E_{i}$), \textcolor{blue}{as a proxy of locus}, and unaided PTA ($PTA_{i}$), as a proxy for hearing impairment severity. In that sense, the model would estimate (what we can call) the \textit{direct effects} of the hearing apparatus, independent of the children's characteristics.
+\end{comment}
+%
+%
 %###############################
 \subsection{Speech intelligibility scale} \label{sS:results_scales}
 %###############################
 %
 
 %
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{posterior_predictive_real2.pdf}
 	\caption[Posterior predictive: ``true'' entropy and intelligibility scales]{Posterior predictive: ``true'' entropy and speech intelligibility scales}
 	\label{fig:predictive2}
 \end{figure}
 %
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{variability_plot.pdf}
 	\caption[Posterior predictive: levels of variability]{Posterior predictive: levels of variability}
@@ -34,7 +40,7 @@
 %
 
 %
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{posterior_predictive_real1.pdf}
 	\caption[Posterior predictive: entropy replicates]{Posterior predictive: entropy replicates}
@@ -48,7 +54,7 @@
 %
 
 %
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{outliers.pdf}
 	\caption[Outlying observations]{Outlying observations. Pairs (child, utterance) are reported for specific observations.}
@@ -56,6 +62,3 @@
 \end{figure}
 %
 %
-
-
-
