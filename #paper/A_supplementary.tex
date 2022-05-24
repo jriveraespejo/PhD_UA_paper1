@@ -258,13 +258,13 @@ Nevertheless, we argue that by controlling for other relevant confounders, the q
 \subsubsection{Variability in the beta-proportion distribution} \label{ssSA:model_variability}
 %-------------------------------
 %
-Figure \ref{fig:BetaProp} shows the implications of different ``sample sizes'' ($M_{ik}$), on the dispersion of the beta-proportion distribution \cite{Kruschke_2015}. The three panels show different assumed ``average'' entropies. The middle panel assumes an ``average'' entropy $\mu=0.5$, the left panel $\mu=0.2$, and the right panel $\mu=0.8$ (as shown by the discontinuous lines).
+Figure \ref{fig:BetaProp} shows the implications of different ``sample sizes'' ($M_{i}$), on the dispersion of the beta-proportion distribution \cite{Kruschke_2015}. The panels show different ``average'' entropies: the middle panel assumes an ``average'' entropy $\mu=0.5$, the left $\mu=0.2$, and the right $\mu=0.8$ (as shown by the discontinuous lines).
 
 In all three panels we notice two prevalent pattern: (i) the higher the ``sample size'', the less dispersed is the distribution, and (ii) as expected from non-linear models, the behavior of the dispersion depends on the location of the distribution, i.e. their ``average'' value.
 
-In this sense, we expect that if the posterior estimates for $M_{ik}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ have high dispersion. Therefore, we could say the replicates as a measure of the \textit{true} entropy have low reliability. In contrast, the higher the values posterior estimates for $M_{ik}$, the lower the dispersion, and the higher the reliability of the replicates as a measure for the \textit{true} entropy. 
+In this sense, we expect that if the posterior estimates for $M_{i}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ have high dispersion; and therefore, we could say the replicates have low reliability to reflect the \textit{true} entropy. In contrast, the higher the values for $M_{i}$, the lower the dispersion, and higher the reliability of the replicates to reflect the \textit{true} entropy. 
 
-Finally, this approach also implies that we used the ``sample size'' parameter to model the replicates heterogeneity, effectively estimating a measurement error model \cite{Carroll_2006}.
+Then, as one can notice, the approach uses the ``sample size'' parameter to model the replicates' heterogeneity, effectively estimating an entropy's measurement error model \cite{Carroll_2006}.
 %
 \begin{figure} [!h]
 	\centering
@@ -275,9 +275,23 @@ Finally, this approach also implies that we used the ``sample size'' parameter t
 %
 %
 %-------------------------------
+\subsubsection{Data pre-processing} \label{ssSA:preprocessing}
+%-------------------------------
+%
+Besides the exclusion of corrupted observations, e.g. no available transcription, no other information was excluded before the modeling process. 
+
+This decision departs from what has been done in previous research \cite{Boonen_et_al_2020, vanDaal_2020, Boonen_et_al_2021}, and the reason for it, is that the identification of influential observations cannot be done outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an \textit{outlier} based on a univariate analysis, might behave as expected under the appropriate model. Therefore, we believe the use of preliminary or univariate procedures might lead to erroneous identification of \textit{outliers} and biased conclusions.
+
+Considering the previous, we proposed a set of models that were \textit{robust} against influential observations, rather than to eliminate them based on other analysis (see Table \ref{tab:models}). Playing on the strengths of the Bayesian framework, the proposal of such model was a trivial task. 
+%
+%
+%-------------------------------
 \subsubsection{Priors}
 %-------------------------------
 %
+
+We determined priors for all models through prior predictive simulation. The resulting priors are weakly informative, specifying low probability for impossible outcomes and inducing regularized estimates, but allowing a very wide range of results. The priors used for the model are
+
 Third, we use mildly informative priors and hyper-priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. 
 %
 \begin{align}
@@ -315,20 +329,7 @@ Third, we use mildly informative priors and hyper-priors to state our uncertaint
 %-------------------------------
 \subsubsection{Estimation} \label{ssSA:model_estimation}
 %-------------------------------
-The proposed models, described in section \ref{sS:stat_analysis}, were estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we used the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012} implemented in \texttt{Stan} \citep{Stan_2020}. Additionally, we used \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020}, to analyze its outputs.
-%
-%
-%-------------------------------
-\subsubsection{Pre-processing} \label{ssSA:preprocessing}
-%-------------------------------
-%
-Besides the exclusion of corrupted observations, e.g. no available rating, no other experimental run nor duplicate was eliminated before the modeling process. This decision departs from what it is observed in previous research, e.g. \citet{Boonen_et_al_2020} decided to eliminate "outlying" observations based on misfit analysis \citep{Lesterhuis_2018}, while \citet{vanDaal_2020} and \citet{Boonen_et_al_2021} did the same based on univariate outlier analysis. 
-
-For the case of misfit analysis, we argue that such procedures cannot be used without caution. The literature points out that in the context of CJ, these statistics are always relative, i.e. they depend on other stimulus and judges included in the assessment \citep{Pollitt_2012a, Pollitt_2012b}. Moreover, they have been proven to be less sensitive, as they are calculated with a low number of judgments per representation \citep{Pollitt_2012a}. 
-
-On the other hand, for the case of univariate outlier analysis, we argue that outlying observations are interesting cases to analyze \citep{McElreath_2020}, and usually they cannot be identified properly outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an outlier based on a univariate analysis, can behave as expected under the appropriate model. 
-
-Considering the previous, if we still manage to identify outlying observations within the context of the proposed models (see Section \ref{s_sect:models}), the researcher would rather make the model robust against their influence, playing on the strengths of the bayesian framework, than to eliminate the observations. 
+The proposed models, described in section \ref{sS:stat_analysis}, were estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we used the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012} implemented in \texttt{Stan} \citep{Stan_2020}. Additionally, we used \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020} to analyze its outputs.
 %
 %
 %-------------------------------

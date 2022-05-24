@@ -33,8 +33,8 @@ for(i in 1:length(M)){
     abline(v=0.5, col='gray', lty=2)
     
     legend('topleft', col=cp, lwd=2, bty='n',
-             legend=c(expression(M[ik]==2),expression(M[ik]==5),
-                      expression(M[ik]==10),expression(M[ik]==20)))
+             legend=c(expression(M[i]==2),expression(M[i]==5),
+                      expression(M[i]==10),expression(M[i]==20)))
   } else{
     curve( dbeta2(x, prob=0.5, theta=M[i]), 0, 1, lwd=2, col=cp[i], xlab="", ylab="", add=T)
   }
@@ -61,8 +61,8 @@ for(j in 1:length(p)){
       
       if(j==2){
         legend('topleft', col=cp, lwd=2, bty='n',
-               legend=c(expression(M[ik]==2),expression(M[ik]==5),
-                        expression(M[ik]==10),expression(M[ik]==20)))
+               legend=c(expression(M[i]==2),expression(M[i]==5),
+                        expression(M[i]==10),expression(M[i]==20)))
       }
     } else{
       curve( dbeta2(x, prob=p[j], theta=M[i]), 0, 1, lwd=2, col=cp[i], xlab="", ylab="", add=T)
@@ -71,6 +71,8 @@ for(j in 1:length(p)){
 }
 par(mfrow=c(1,1))
 # dev.off()
+
+
 
 
 
@@ -84,7 +86,7 @@ mom_plot = with(mom, data.frame(cid=icid,
                                 sPTA=dL$sPTA[icid],
                                 H=dS$dO$H) )
 
-pdf('data_example.pdf')
+# pdf('data_example.pdf')
 par(mfrow=c(2,2))
 plot(mom_plot[,c('HS','H')], pch=19, col=col.alpha('black', 0.05))
 coef_mom =coefficients( lm(data=mom_plot[, c('H','HS')]) )
@@ -106,7 +108,7 @@ coef_mom =coefficients( lm(data=mom_plot[, c('H','PTA')]) )
 abline(a=coef_mom[1], b=coef_mom[2], col='gray', lwd=2 )
 abline(h=0.5, col=col.alpha('red',0.2), lty=2, lwd=1.5 )
 par(mfrow=c(1,1))
-dev.off()
+# dev.off()
 
 
 
@@ -200,3 +202,5 @@ for(p in 1:length(mean_val) ){
 par(mfrow=c(1,1))
 
 # dev.off()
+
+

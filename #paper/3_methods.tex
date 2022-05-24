@@ -148,37 +148,74 @@ Finally, we advise the reader to follow the supplementary section \ref{sSA:causa
 \subsection{Statistical analysis} \label{sS:stat_analysis}
 %###############################
 %
-Using the DAG described in previous section we developed multiple bayesian probabilistic models \cite{Jaynes_2003}. The models reflected the different ways we could state our research hypothesis. Additionally, they were used to validate our statistical models and code.
+Using the DAG described in previous section we developed multiple bayesian probabilistic models \cite{Jaynes_2003}, each reflecting our different hypothesis.
 
-In essence every model was composed of two parts: (i) a latent measurement model \cite{Everitt_1984}, and (ii) a structural equation model \cite{Hoyle_et_al_2014}. For the former, we represented the child's \textit{speech intelligibility} as a latent variable, inversely related to the child's (latent) \textit{true} entropy. Moreover, we modeled the latter as a variable that can be inferred from the (observed) entropy replicates in the following way:
+In general terms, every model was composed of two parts: a latent measurement model \cite{Everitt_1984} and a structural equation model \cite{Hoyle_et_al_2014}. For the former, we represented the child's \textit{speech intelligibility} as a latent variable, inversely related to the child's (latent) \textit{true} entropy. Moreover, we modeled the latter as a variable that can be inferred from the (observed) entropy replicates in the following way:
 %
 \begin{align}
 	%
-	H^{O}_{bik} & \sim \text{BetaProp} \left( \bar{H}_{bi}, M_{ik} \right) \\ 
+	H^{O}_{bik} & \sim \text{BetaProp} \left( \bar{H}_{bi}, M_{i} \right) \\ 
 	%
-	\bar{H}_{bi} &= \alpha_{b} + H^{T}_{i} \\
+	\bar{H}_{bi} &= \text{logit}^{-1}( a_{b} -SI_{i} ) \\
 	%
 	H^{T}_{i} &= \text{logit}^{-1}( -SI_{i} )
 	%
 \end{align} 
 
-\noindent where $\text{BetaProp}(\mu, \theta)$ defined the beta-proportion distribution with parameters $\mu$ and $\theta$ \cite{Figueroa-Zuniga_et_al_2013, Kruschke_2015}; where $\mu$ is in the unit interval $[0,1]$ and $\theta>0$. Furthermore, $\bar{H}_{bi}$ represented the ``average'' entropy measure nested within blocks ($b=1,\dots,5$) and children ($i=1,\dots,32$), while $M_{ik}$ denoted the ``sample size'' for the beta-proportion distribution, nested within utterances ($k=1,\dots,10$), and possibly nested within children. Furthermore, $H^{O}_{bik}$, $H^{T}_{i}$ and $SI_{i}$ were defined as in the previous section, and $\alpha_{b}$ represented the block random effects. Finally, $\text{logit}^{-1}(x) = \exp(x) / ( 1 + \exp(x) )$ represented the inverse-logit transformation. 
+\noindent where $\text{BetaProp}(\mu, \theta)$ defined the beta-proportion distribution with parameters $\mu$ and $\theta$ \cite{Figueroa-Zuniga_et_al_2013, Kruschke_2015}; where $\mu \in [0,1]$ and $\theta>0$. Furthermore, $\bar{H}_{bi}$ represented the ``average'' entropy measure nested within blocks ($b=1,\dots,5$) and children ($i=1,\dots,32$), while $M_{i}$ denoted the ``sample size'', possibly nested within children. Furthermore, $H^{O}_{bik}$, $H^{T}_{i}$ and $SI_{i}$ were defined as in the previous section, and $a_{b}$ represented the block random effects. Finally, $\text{logit}^{-1}(x) = \exp(x) / ( 1 + \exp(x) )$ represented the inverse-logit transformation. 
 
-From the previous algebraic structure we can notice. First, we modeled the ``average'' entropy of the replicates with $\mu = \bar{H}_{bi}$, which was composed by the block random effects and the children's \textit{true} entropy. Second, the children \textit{true} entropy $H^{T}_{i}$ is inversely and non-linearly related to the \textit{speech intelligibility} $SI_{i}$. Third and last, we captured the variability present in the entropy replicates around the ``average'' using $\theta = M_{ik}$. See supplementary section \ref{ssSA:model_variability} for a detailed overview of the implications of using this approach.
+From the previous algebraic structure we can notice. First, we modeled the ``average'' entropy of the replicates with $\mu = \bar{H}_{bi}$, which was a non-linear transformation of the block random effects and the children's \textit{speech intelligibility}. Second, the children \textit{true} entropy $H^{T}_{i}$ is inversely and non-linearly related to the \textit{speech intelligibility} $SI_{i}$. Third and last, we captured the variability of the entropy replicates around the ``average'' using $\theta = M_{i}$. See supplementary section \ref{ssSA:model_variability} for a detailed overview of the implications of using this approach.
 
-For the second part, and focus of our research, we used a structural model \cite{Hoyle_et_al_2014}. In this portion, different iterations of our research hypothesis were proposed. Hereby we present the general structural models, from which others were derived:
+For the second component we used a structural model \cite{Hoyle_et_al_2014}. In this portion, different iterations of our research hypothesis were proposed. Hereby, we present the general representation from which the others can be derived:
 %
 \begin{align}
 	%
-	SI_{i} & = a_{i} + \alpha + \alpha_{E[i],HS[i]} + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P} sPTA_{i} 
+	SI_{i} & = a_{i} + \alpha + \alpha_{E[i], HS[i]} + \beta_{A, HS[i]} (A_{i} - \bar{A}) + \beta_{P, HS[i]} sPTA_{i} 
 	%
 \end{align}
 
-\noindent where $A_{i}$, $E_{i}$, $HS_{i}$ are defined as in the previous section, while $sPTA_{i}$ is the standardized version of the post-implant pure tone average $PTA_{i}$. Moreover, $a_{i}$ denoted the children's random intercepts, and $\alpha$ the fixed intercept. On the other hand,  $\alpha_{E[i],HS[i]}$ denoted the fixed effects intercept per etiology and hearing status group, while $\beta_{A, HS[i]}$ denoted the slope of ``hearing age'' per hearing status group. Finally, $\beta_{P}$ described the slope for the standardized pure tone average. 
+\noindent where $E_{i}$ and $HS_{i}$ are defined as in the previous section, $A_{i}$ is defined in years, while $sPTA_{i}$ is the standardized version of the post-implant pure tone average $PTA_{i}$. Moreover, $a_{i}$ denoted the children's random intercepts, and $\alpha$ the fixed intercept. On the other hand,  $\alpha_{E[i],HS[i]}$ denoted the fixed effects intercept per etiology and hearing status group, while $\beta_{A, HS[i]}$ denoted the slope of \textit{hearing age} per hearing status group. Finally, $\beta_{P, HS[i]}$ described the slope for the standardized pure tone average per hearing status. 
 
-One important thing need to be noticed from the previous algebraic structure. All the parameters are estimated in the logit scale and centered at $sPTA_{i}=0$ and $\bar{A}$, the latter denoting the minimum hearing age in the sample.
+One important thing need to notice from the previous algebraic structure is that all parameters are estimated in the logit scale and centered at $sPTA_{i}=0$ and $\bar{A}=5$, the latter denoting the minimum \textit{hearing age} in the sample.
 
-From the previous descriptions, XX models were derived:
+From the previous descriptions, thirteen statistical models were derived. Each model expressed one specific way our outlined research hypothesis could be investigated. The models were characterized by two aspects: (i) the use of interactions and which variables interacted, and (ii) the ``sample size'' that captures the replicates variability. For the former, the options were: intercept only model (model 1), and multivariate regression with no interactions (models 2 to 4), with age and hearing status interaction (models 5, 8, and 11), with etiology and hearing status interaction (models 6, 9, and 12), and a full interaction model comprising the previous two (models 7, 10 and 13). In a similar fashion, for the latter the options were: one fixed ``sample size'' (models 1, 2, 5, 6, 7), one estimated ``sample size'' (models 3, 8, 9, and 10), and finally, one ``sample size'' per child (models 4, 11, 12, and 13), which we dubbed \textit{robust} models. See supplementary section \ref{ssSA:preprocessing}, where we expand about the presence of \textit{robust} models. 
 
+Table \ref{tab:models} provides an overview of their parameterizations. Notice, all models contemplate the use of block and children's random effects ($a_{b}$ and $a_{i}$, respectively), as well as a fixed effect intercept ($\alpha$). Moreover, all models contemplate the interaction of the standardized pure tone average and the hearing status. The latter was imposed because the collection of the data did not contemplated the measurement of the pure tone average for the NH group, therefore, we needed to only estimate the parameter for the HI/CI children, and \textcolor{blue}{this one was the easier way?}.
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|c|lccccccc|} 
+		\hline
+		& & \multicolumn{7}{c |}{Parameters} \\[0.5ex] 
+		\cline{3-9}
+		Model & \multicolumn{1}{c}{Name} & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i], HS[i]}$ & $\beta_{A, HS[i]}$ & \beta_{P, HS[i]} \\[0.5ex] 
+		\hline\hline
+		\rowcolor{gray}
+		1 & Intercept only (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & -- & -- & -- \\
+		2 & No interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		3 & No interaction (one ``size'')  & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		4 & No interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\ 
+		\rowcolor{gray}
+		5 & Age interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\ 
+		6 & Etiology interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		7 & Full interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		8 & Age interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		9 & Etiology interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		10 & Full interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		11 & Age interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		12 & Etiology interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		13 & Full interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		\hline
+	\end{tabular}
+	\caption[Proposed statistical models]{Proposed statistical models.}
+	\label{tab:models}
+\end{table}
+
+Finally, for the model implementation we proposed some priors for our parameters, decide on estimation procedure, performed a pre-processing phase for the data, and conducted a set of simulation studies. All of these are detailed in their corresponding supplementary section.
 %
 %
