@@ -6,7 +6,7 @@
 \subsection{Children characteristics} \label{sSA:characteristics}
 %###############################
 %
-Table \ref{tab:characteristics} shows the detailed information of the sampled children. The referred table includes the variable used for the matching procedure, i.e. chronological age, while also additional variables thought to be relevant for our hypothesis. No other variables are included as no known additional comorbidities, beside their hearing impairment, are suspected.
+Table \ref{tab:characteristics} shows the detailed information of the sampled children. The referred table includes the variable used for the matching procedure, i.e. chronological age, while also additional variables thought to be relevant for our hypothesis. No other variables are included as no known additional comorbidities, beside their hearing impairment, are suspected. Additionally, notice the pure tone average (PTA) data was not collected for the NH children.
 %
 \begin{table}[h!]
 	\centering
@@ -96,13 +96,13 @@ The setting for the transcription task comprised the following steps \citep{Boon
 	%
 	\item the listener read two set of instructions presented on the computer screen about:
 	\begin{enumerate}
-		\item \textit{how to perform the task}, e.g. the listeners were instructed to write one \texttt{X} to replace an unintelligible word, part of an utterance, or a complete utterance,
-		\item \textit{the aspects not to consider for the task}.
+		\item \textit{how to perform the task},
+		\item \textit{the aspects not considered for the task}.
 	\end{enumerate}
 	%
 	\item the listener hear the stimuli through high quality headphones, set at a comfortable volume.
 	%
-	\item the listener wrote the orthographic transcriptions of the utterances, in a free text field in the environment. 
+	\item the listener wrote the orthographic transcriptions of the utterances, in a free text field in the software environment. 
 	%
 \end{enumerate}
 %
@@ -184,7 +184,7 @@ For the fourth utterance, we observe that two transcriptions identify it with th
 	&\approx 0.8277
 \end{align*} 
 %
-Finally, for the fifth utterance, we observe that all of the  transcriptions identify it with different words. Notice we consider the unidentifiable word [X] in the second transcription, as being different from the one in the last. This is done to avoid the artificial reduction of the entropy measure, as [X] values already indicate the lack of intelligibility of the word. Therefore, we registered five word occurrences ($n=5$), with probabilities $\pmb{p} = (p_{1}, \dots, p_{5}) = (1/5, \dots, 1/5)$, and entropy measure equal to:
+Finally, for the fifth utterance, we observe that all transcriptions identify it with different words. Notice that when a transcriber did not managed to identify (part of) the complete utterance, (s)he was instructed to write [X]  to replace it. However, if more than one transcriber used [X] for an unidentifiable word, each was considered as being different from one another. The latter is done to avoid the artificial reduction of the entropy measure, as [X] values already indicate the lack of intelligibility of the word. Therefore, for the fifth utterance we registered five word occurrences ($n=5$), with probabilities $\pmb{p} = (p_{1}, \dots, p_{5}) = (1/5, \dots, 1/5)$, and entropy measure equal to:
 %
 \begin{align*}
 	H &= \frac{-\sum_{i=1}^{5} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(5)} \\
@@ -199,9 +199,9 @@ Finally, for the fifth utterance, we observe that all of the  transcriptions ide
 \subsection{About speech intelligibility} \label{sSA:SI}
 %###############################
 %
-As described in the introduction, intelligible speech can be defined as the extent to which the elements in an speaker's acoustic signal, e.g. phonemes or words, can be correctly recovered by a listener \citep{Kent_et_al_1989, Whitehill_et_al_2004, vanHeuven_2008, Freeman_et_al_2017}. More specifically, in the context of the transcription task, speech intelligibility can be inferred from the extent a set of transcribers can identify the words contained in an utterance \cite{Boonen_et_al_2021}.
+As described in the introduction, intelligible speech can be defined as the extent to which the elements in an speaker's acoustic signal, e.g. phonemes or words, can be correctly recovered by a listener \citep{Kent_et_al_1989, Whitehill_et_al_2004, vanHeuven_2008, Freeman_et_al_2017}. More specifically, in the context of the transcription task, speech intelligibility can be inferred from the extent a set of transcribers can identify the word contained in an utterance \cite{Boonen_et_al_2021}.
 
-Therefore in this paper, through the implementation of our proposed model, \textit{speech intelligibility} is interpreted as a latent trait of individuals (hypothetical construct), which underlies the probability of observing a set of entropy replicates; that in turns, describes the ability of transcribers to identify the words in an utterance. Henceforth, statements such \textit{`speech intelligibility is influenced by'} can be read as \textit{`the probability of observing a set of entropy replicates for each individual in the sample is influenced by'}. Similar interpretation can be extended to the (latent) ``true'' entropy measures.
+Therefore in this paper, through the implementation of our proposed model, \textit{speech intelligibility} is interpreted as a latent trait of individuals (hypothetical construct), which underlies the probability of observing a set of entropy replicates; that in turns, describes the ability of transcribers to identify the words in an utterance. Henceforth, statements such \textit{`speech intelligibility is influenced by'} can be read as \textit{`the probability of observing a set of entropy replicates for each individual in the sample is influenced by'}. Similar interpretation can be extended to the (latent) \textit{true} entropy measures.
 
 Despite this practical approach, we emphasize we did our best to ensure the construct validity of our study, by ensuring the transcription task was well understood and appropriately performed by the transcribers.
 
@@ -216,9 +216,9 @@ In this section we make explicit some of the assumptions that guided our causal 
 
 For \textbf{\textit{hearing age}}, and its relevance in our research hypothesis, we describe how the variable is constructed and its inherent assumptions. 
 
-\textit{Hearing age} is a composite variable constructed by combining the \textit{chronological age} for the NH group, and the \textit{device length of use} for the HI/CI group \citep{Faes_et_al_2021} (see Table \ref{tab:characteristics}). The variable tries to approximate the amount of time a child has been actively hearing and developing his(her) language. However, no short of evidence has been presented in favor of using others surrogate measures, like \textit{chronological age} \cite{Flipsen_et_al_2006, Habib_et_al_2010, Grandon_et_al_2020} or \textit{age at implantation} \cite{Niparko_et_al_2010, Boons_et_al_2012, Bruijnzeel_et_al_2016, Dettman_et_al_2016}. We argue that the feasibility of using any proxy measure, largely depends on the assumed reliability of the surrogate to approximate the variable of interest. In that sense, although we recognize \textit{hearing age} is not a ``perfect'' proxy \cite{Faes_et_al_2021}, we argue is the most appropriate to test our hypothesis, based on the relevant literature review and its assumed reliability to capture children's language development (although the latter has not been tested). Moreover, the variable serve two additional purposes: (i) control for sampling bias (see section \ref{sSA:sampling_bias}), and (ii) de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
+\textit{Hearing age} is a composite variable constructed by combining the \textit{chronological age} for the NH group, and the \textit{device length of use} for the HI/CI group \citep{Faes_et_al_2021} (see Table \ref{tab:characteristics}). The variable tries to approximate the amount of time a child has been actively hearing and developing his(her) language. However, no short of evidence has been presented in favor of using others surrogate measures, like \textit{chronological age} \cite{Flipsen_et_al_2006, Habib_et_al_2010, Grandon_et_al_2020} or \textit{age at implantation} \cite{Niparko_et_al_2010, Boons_et_al_2012, Bruijnzeel_et_al_2016, Dettman_et_al_2016}. We argue that the feasibility of using any other proxy measure, largely depends on the assumed reliability of the surrogate to approximate the variable of interest. In that sense, although we recognize \textit{hearing age} is not a ``perfect'' proxy \cite{Faes_et_al_2021}, we argue is the most appropriate to test our hypothesis, based on the relevant literature review and its assumed reliability to capture children's language development (although the latter has not been tested). Moreover, the variable serve two additional purposes: (i) control for sampling bias (see section \ref{sSA:sampling_bias}), and (ii) de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
 
-Finally, it is important to highlight that for modeling purposes, using more than one of the aforementioned proxies in tandem is not recommended. It is apparent from the previous description, the three surrogate measures share high similarities in their data construction. This in turn might cause problems in the modeling procedure, as including variables that provide ``similar information'' might lead to a problem known as multicollinearity, in which our estimates would be biased and less precise \cite{Farrar_et_al_1967}, leading us to wrong conclusions.
+Finally, it is important to highlight that for modeling purposes, using more than one of the aforementioned proxies in tandem is not recommended. It is apparent from the previous description, the three surrogate measures share high similarities in their data construction. This in turn, could cause problems in the modeling procedure, as including variables that provide ``similar information'' might lead to a problem known as multicollinearity, in which our estimates get biased and less precise \cite{Farrar_et_al_1967}, leading us to incorrect inferences and conclusions.
 %
 \begin{comment}
 	for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement.
@@ -226,13 +226,13 @@ Finally, it is important to highlight that for modeling purposes, using more tha
 
 Regarding \textbf{\textit{hearing status}}, it is clear that its inclusion directly corresponds with the main purpose of the current research endeavor. i.e. compare the levels of speech intelligibility among NH and HI/CI children.
 
-In the case of \textbf{\textit{pure tone average}}, the variable was included for two reasons. First, given that previous modeling efforts did not capture the full hierarchy of variability, it is possible that the effects of PTA on speech intelligibility has been largely overlooked. As one can infer, it might be sensible to think that HI/CI children with severe hearing loss, as accounted by the variable, might develop their language at a slower rate. This is especially true, if we consider the signal provided by the cochlear implant is still degraded compared to the signal in normal hearing scenarios \cite{Drennan_et_al_2008}. Finally, as with \textit{hearing age}, the variable might be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
+In the case of \textbf{\textit{pure tone average}}, beyond the empirical evidence, the variable was included for two reasons. First, given that previous modeling efforts did not capture the full hierarchy of variability, it is possible that the effects of PTA on speech intelligibility has been largely overlooked. As one can infer, it might be sensible to think that HI/CI children with severe hearing loss, as accounted by the variable, might develop their language at a slower rate. This is especially true, if we consider the signal provided by the cochlear implant is still degraded compared to the signal in normal hearing scenarios \cite{Drennan_et_al_2008}. Finally, as with \textit{hearing age}, the variable might be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
 
-For \textbf{\textit{etiology}}, it is possible that its effects on speech intelligibility has also been largely overlooked, due to the lack of control on the full hierarchy of variability, similar to the \textit{pure tone average} case. Moreover, as with its predecessors, the variable might also be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}, assuming our DAG is appropriate.
+For \textbf{\textit{etiology}}, although empirical evidence did not found any effect on speech intelligibility \cite{Boonen_et_al_2021}, it is possible that these has also been largely overlooked, due to the lack of control on the full hierarchy of variability, similar to the \textit{pure tone average} case. Moreover, as with its predecessors, the variable might also be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}, assuming our DAG is appropriate.
 
-Finally, it is important to highlight the reason for the absence of other variables in our causal hypothesis.
+Finally, it is important to highlight the reason for the absence of other variables, deemed relevant by the literature, in our causal hypothesis.
 
-For the \textbf{\textit{type of cochlear implantation}}, i.e. bilateral or contralateral, the variable was not included because we did not expect it to be related to other variables in the DAG, i.e. the decision on receiving one or the other is solely based on the intelligibility outcome, no matter how it is measured. This in turn means that its inclusion/exclusion would not confound our estimates. Additionally, given that most of the children underwent though sequential bilateral implantation (eleven in total), we anticipated the effect of variable already permeates the sample, therefore, if we wanted to investigate its effect, a larger sample size would be required.
+For the \textbf{\textit{type of cochlear implantation}}, i.e. bilateral or contralateral, the variable was not included because we did not expect it to be related to other variables in the DAG, i.e. the decision on receiving one or the other is solely based on the intelligibility outcome, no matter how it is measured. This in turn means that its inclusion/exclusion would not confound our estimates. Additionally, given that most of the children underwent through sequential bilateral implantation (eleven in total), we anticipated the effect of variable already permeates the sample, therefore, if we wanted to investigate its effect, a larger sample size would be required.
 
 For the case of \textbf{\textit{additional disabilities}}, e.g. mental retardation or speech motor problems, there was no need to consider it, as no additional comorbidities were reported.
 
@@ -262,14 +262,18 @@ Figure \ref{fig:BetaProp} shows the implications of different ``sample sizes'' (
 
 In all three panels we notice two prevalent pattern: (i) the higher the ``sample size'', the less dispersed is the distribution, and (ii) as expected from non-linear models, the behavior of the dispersion depends on the location of the distribution, i.e. their ``average'' value.
 
-In this sense, we expect that if the posterior estimates for $M_{i}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ have high dispersion; and therefore, we could say the replicates have low reliability to reflect the \textit{true} entropy. In contrast, the higher the values for $M_{i}$, the lower the dispersion, and higher the reliability of the replicates to reflect the \textit{true} entropy. 
+In this sense, we expect that if the posterior estimates for $M_{i}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ have high dispersion, and therefore, have low reliability to reflect the (latent) \textit{true} entropy. In contrast, the higher the values for $M_{i}$, the lower the dispersion, and higher the reliability of the replicates to reflect the (latent) \textit{true} entropy. Notice here, ``reliability'' is understood as the ``number'' of new entropy measures required to make us teeter between the new data and our prior belief about the ``average'' entropy $\mu$ \cite{Kruschke_2015}.
 
-Then, as one can notice, the approach uses the ``sample size'' parameter to model the replicates' heterogeneity, effectively estimating an entropy's measurement error model \cite{Carroll_2006}.
+\begin{comment}
+	The value we choose for the prior $\theta$ can be thought of this way: It is the number of new flips of the coin that we would need to make us teeter between the new data and the prior belief about $\mu$. If we would only need a few new flips to sway our beliefs, then our prior beliefs should be represented by a small $\theta$. If we would need a large number of new flips to sway us away from our prior beliefs about $\mu$, then our prior beliefs are worth a very large $\theta$ \cite{Kruschke_2015}.
+\end{comment}
+
+As a final point, it is important to highlight that the approach uses the ``sample size'' parameter to model the replicates' heterogeneity. The latter in turn, effectively estimates an entropy measurement error model \cite{Carroll_2006}.
 %
 \begin{figure} [!h]
 	\centering
 	\includegraphics[width=1\linewidth]{BetaProp_dist2.pdf}
-	\caption[Variability in a beta-proportional distribution]{Variability in a beta-proportional distribution. Discontinuous lines describe the ``average'' value for the distribution ($\mu$), solid lines describe the distribution assuming different $\theta = M_{ik}$.}
+	\caption[Variability in a beta-proportional distribution]{Variability in a beta-proportional distribution. Discontinuous lines describe the ``average'' value for the distribution ($\mu$), solid lines describe the distribution assuming different $\theta = M_{i}$.}
 	\label{fig:BetaProp}
 \end{figure}
 %
@@ -280,43 +284,11 @@ Then, as one can notice, the approach uses the ``sample size'' parameter to mode
 %
 Besides the exclusion of corrupted observations, e.g. no available transcription, no other information was excluded before the modeling process. 
 
-This decision departs from what has been done in previous research \cite{Boonen_et_al_2020, vanDaal_2020, Boonen_et_al_2021}, and the reason for it, is that the identification of influential observations cannot be done outside the context of a full model \citep{McElreath_2020}, i.e. what can behave as an \textit{outlier} based on a univariate analysis, might behave as expected under the appropriate model. Therefore, we believe the use of preliminary or univariate procedures might lead to erroneous identification of \textit{outliers} and biased conclusions.
+This decision departs from what has been done in previous research \cite{Boonen_et_al_2020, vanDaal_2020, Boonen_et_al_2021}. The reason is that we believe the identification of influential observations, through preliminary or univariate procedures, might lead to erroneous exclusion of information, ultimately, biasing our results. Furthermore, we believe the identification of \textit{outliers} should not be done outside the context of a full model \citep{McElreath_2020}, as what can behave as an \textit{outlier} based on a univariate analysis, might behave as expected under the appropriate model.
 
-Considering the previous, we proposed a set of models that were \textit{robust} against influential observations, rather than to eliminate them based on other analysis (see Table \ref{tab:models}). Playing on the strengths of the Bayesian framework, the proposal of such model was a trivial task. 
+Considering the previous, instead of eliminating information based on other types of analysis, we proposed a set of models that were \textit{robust} against influential observations. Considering the flexibility of the Bayesian framework, the proposal of such model was a trivial task (see Table \ref{tab:models}).
 %
 %
-%-------------------------------
-\subsubsection{Priors}
-%-------------------------------
-%
-
-We determined priors for all models through prior predictive simulation. The resulting priors are weakly informative, specifying low probability for impossible outcomes and inducing regularized estimates, but allowing a very wide range of results. The priors used for the model are
-
-Third, we use mildly informative priors and hyper-priors to state our uncertainty regarding the direction and magnitude of the effects\footnote{see \citet{Rivera_2021} (p. 18-19) for an intuition on prior elicitation.}. 
-%
-\begin{align}
-	%
-	M_{ik} & \sim \text{LN}( \mu_{M}, \sigma_{M}) \\
-	%
-	a_{i} & \sim \text{N}(\mu_{a}, \sigma_{a}) \\
-	%
-	\alpha & \sim \text{N}(0, 0.3) \\
-	%
-	\alpha_{E[i],HS[i]} & \sim \text{N}(0, 0.3) \\
-	%
-	\beta_{A, HS[i]} & \sim \text{N}(0 , 0.3) \\
-	%
-	\beta_{P} & \sim \text{N}(0, 0.3) \\
-	%
-	\mu_{M} & \sim \text{N}(0, 5) \\
-	%
-	\sigma_{M} & \sim \text{Exp}(1) \\
-	%
-	\mu_{a} & \sim \text{N}(0, 0.5) \\
-	%
-	\sigma_{a} & \sim \text{Exp}(1)
-	%
-\end{align}
 %
 \begin{figure}[!h]
 	\centering
@@ -327,15 +299,70 @@ Third, we use mildly informative priors and hyper-priors to state our uncertaint
 %
 %
 %-------------------------------
-\subsubsection{Estimation} \label{ssSA:model_estimation}
+\subsubsection{Priors and hyper-priors}
 %-------------------------------
-The proposed models, described in section \ref{sS:stat_analysis}, were estimated under the Bayesian framework\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}. More specifically, we used the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012} implemented in \texttt{Stan} \citep{Stan_2020}. Additionally, we used \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020} to analyze its outputs.
+%
+For all models, the selection of priors and hyper-priors was done through prior predictive simulation \citep{McElreath_2020}. The selected priors were considered mildly informative and regularizing. 
+
+Figure \ref{fig:priors} shows the implication of our assumptions on the three outcome scales of interest: the \textit{speech intelligibility}, the \textit{true} entropy, and the (observed) entropy replicates. Notice no undesired assumption has crept in any of the scales, and therefore, the estimates are free to visit a wide range of results, while also setting a low probability for impossible outcomes.
+
+Hereby follows a description of the priors:
+%
+\begin{align}
+	%
+	M_{i} & \sim \text{Log-Normal}( \mu_{M}, \sigma_{M}) \\
+	%
+	a_{b} & \sim \text{Normal}(\mu_{b}, \sigma_{b}) \\
+	%
+	a_{i} & \sim \text{Normal}(\mu_{i}, \sigma_{i}) \\
+	%
+	\alpha & \sim \text{Normal}(0, 0.2) \\
+	%
+	\alpha_{E[i],HS[i]} & \sim \text{Normal}(0, 0.3) \\
+	%
+	\beta_{A, HS[i]} & \sim \text{Normal}(0 , 0.3) \\
+	%
+	\beta_{P, HS[i]} & \sim \text{Normal}(0, 0.3)
+	%
+\end{align}
+
+while the hyper-priors were defined as follows:
+%
+\begin{align}
+	%
+	\mu_{M} & \sim \text{Normal}(0, 0.5) \\
+	%
+	\sigma_{M} & \sim \text{Exponential}(1) \\
+	%
+	\mu_{b} & \sim \text{Normal}(0, 0.2) \\
+	%
+	\sigma_{b} & \sim \text{Exponential}(1) \\
+	%
+	\mu_{i} & \sim \text{Normal}(0, 0.2) \\
+	%
+	\sigma_{i} & \sim \text{Exponential}(1)
+	%
+\end{align}
+%
+%
+%-------------------------------
+\subsubsection{Estimation procedure} \label{ssSA:model_estimation}
+%-------------------------------
+The proposed models in Table \ref{tab:models} were estimated under the Bayesian framework. More specifically, we used the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012} implemented in \texttt{Stan} \citep{Stan_2020}. Additionally, we used \texttt{R} \citep{R_2015} and its integration packages \citep{RStan_2020} to analyze its outputs.
+
+\begin{comment}
+	\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}
+\end{comment}
 %
 %
 %-------------------------------
 \subsubsection{Simulation} \label{ssSA:model_simulation}
 %-------------------------------
-Preliminary to the data collection, we simulated data in silico to test the models and inform data collection procedure. The simulation code is available in the GitHub repository. \cite{Fogarty_et_al_2022}
+%
+We simulated data to test the models' ability to recover the ``real'' parameter values \cite{Fogarty_et_al_2022}. 
+
+The simulation code is available in the GitHub repository: \url{https://github.com/jriveraespejo/PhD_UA_paper1}
+
 \begin{comment}
 Several functional correlation between age and knowledge have been simulated, and the model used in the analysis - which includes age as a ordinal categorical predictor of knowledge with monotonically increasing effect - has been able to recover the different shapes. Causal effect of activities, family composition and schooling have been simulated and tested.
 
@@ -347,12 +374,10 @@ The simulated data have been used -albeit in a previous version- to estimate the
 \subsubsection{Model selection} \label{ssSA:model_selection}
 %-------------------------------
 %
-Following the successful and comprehensive analysis in \citet{vanDaal_2020} and \citet{Lesterhuis_2018}, the current research will also use the Information-Theoretic Approach (ITA) \citep{Anderson_2008, Chamberlain_1965} for the selection of competing models. The approach considers three steps: (1) state our hypothesis into statistical models, (2) select among competing models, and (3) make inferences based on one or multiple models.
+To select among competing models, we used the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}. 
 
-First, for the translation of our working hypotheses into statistical models, we will use Directed Acyclic Graphs (DAG) and probabilistic programming \citep{Jaynes_2003}. A DAG is the simplest representation of a Graphical Causal Model (GCM), a heuristic model that contains information not purely statistical, but unlike a detailed statistical model, it allow us to deduce which variable relationships can provide valid causal inferences \citep{Hernan_et_al_2020, McElreath_2020}. In summary, a DAG is a reasonable way to state our hypothesis, and make our assumption more transparent. However, abide by the \textit{no-free lunch} rule, the causal inferences produced under the DAG will only be valid if the assumed DAG is correct. In contrast, the probabilistic programming will serve as the algebraic formalist to define our statistical models.
+Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. 
 
-Second, to select among competing models, we will use the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}\footnote{\citet{vanDaal_2020} used the Akaike’s Information Criterion (AIC) \citep{Akaike_1974} with similar purposes.}. Two reasons justify our decision. First, both criteria allow us to embrace the full flexibility and information of our bayesian implementation (outlined in Section \ref{s_sect:models}). Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. \citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure that we do not need the KL divergence's absolute value, as the \textit{true} distribution of our data is not available (otherwise, we would not need a statistical model). But rather, using the difference in deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data\footnote{see \citet{McElreath_2020} (p. 202-211) for the intuition and detailed derivation of the argument.}.
-
-Finally, considering the evidence provided by the previous step, we proceed to make inferences based on one or multiple models.
+\citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure that we do not need the KL divergence's absolute value, as the \textit{true} distribution of our data is not available. But rather, using the difference in deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data\footnote{see \citet{McElreath_2020} (p. 202-211) for the intuition and detailed derivation of the argument.}.
 %
 %

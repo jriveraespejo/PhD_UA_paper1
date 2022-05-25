@@ -6,7 +6,51 @@
 \subsection{Model selection and results} \label{sS:results_models}
 %###############################
 %
+The current research used the Information-Theoretic Approach (ITA) \citep{Anderson_2008, Chamberlain_1965} to select among competing models. The approach was comprised of three steps: (i) state your research hypothesis into statistical models, (ii) select among competing models, and (iii) make inferences based on one or multiple models. Since the first step is covered by sections \ref{sS:causal_frame}, \ref{sS:stat_analysis}, and largely expanded in the supplementary sections \ref{sSA:causal_details} and \ref{sSA:model_details}, here we proceed with the next two steps.
+
+Table \ref{tab:competing_models}
+ 
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|c|lccccccc|} 
+		\hline
+		Model & \multicolumn{1}{c}{Name} & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i], HS[i]}$ & $\beta_{A, HS[i]}$ & \beta_{P, HS[i]} \\[0.5ex] 
+		\hline\hline
+		\rowcolor{gray}
+		1 & Intercept only (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & -- & -- & -- \\
+		2 & No interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		3 & No interaction (one ``size'')  & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		4 & No interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\ 
+		\rowcolor{gray}
+		5 & Age interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\ 
+		6 & Etiology interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		7 & Full interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		8 & Age interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		9 & Etiology interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		10 & Full interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		11 & Age interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		12 & Etiology interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		\rowcolor{gray}
+		13 & Full interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		\hline
+	\end{tabular}
+	\caption[Fit of statistical models]{Fit of statistical models.}
+	\label{tab:competing_models}
+\end{table}
+
+Finally, considering the evidence provided by the previous step, we proceed to make inferences based on one or multiple models.
+
+
+It is important to highlight that for all model implementations, the visual inspection of trace, trace-rank and autocorrelation plots was performed. Additionally, we also evaluated the Gelman-Rubin diagnostic and effective number of samples \cite{Gelman_et_al_2014}. In all cases, the plots and statistics indicated the parameters achieved convergence, good mixing and lack of serial autocorrelation; all necessary requirements to be able to interpret the model estimates. 
+
 \begin{comment}
+	Following the successful and comprehensive analysis in \citet{vanDaal_2020} and \citet{Lesterhuis_2018}, 
+	
 	Notice the model depicted in panel (a) is interested on (what we can call) \textit{total effects}, i.e. the effects of the hearing characteristics, not independent from the effects of the hearing apparatus (cochlear implant or hearing aid). This is important to understand for two reasons. Since a hearing apparatus is fitted onto a child depending on aspects such as the locus and severity of his(her) hearing impairment \citep{Korver_et_al_2017}: (1) such specific children's characteristics could confound the (beneficial) effects of using specific hearing apparatuses, while (2) because children are selected from a convenient sample, not representative of their respective populations (see section \ref{s_sect:children}), the need to control for such characteristics is paramount, if we seek to obtain effects that can generalize better and beyond our sample\footnote{follow the \textit{notes} folder, to see a graphical though experiment.}.
 	
 	Considering the previous, we propose the model depicted in panel (b), where we control for the possible confounding variables etiology ($E_{i}$), \textcolor{blue}{as a proxy of locus}, and unaided PTA ($PTA_{i}$), as a proxy for hearing impairment severity. In that sense, the model would estimate (what we can call) the \textit{direct effects} of the hearing apparatus, independent of the children's characteristics.
