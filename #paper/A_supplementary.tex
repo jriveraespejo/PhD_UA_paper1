@@ -361,6 +361,8 @@ The proposed models in Table \ref{tab:models} were estimated under the Bayesian 
 %
 We simulated data to test the models' ability to recover the ``real'' parameter values \cite{Fogarty_et_al_2022}. 
 
+\textcolor{red}{work in progress}
+
 The simulation code is available in the GitHub repository: \url{https://github.com/jriveraespejo/PhD_UA_paper1}
 
 \begin{comment}
@@ -374,10 +376,88 @@ The simulated data have been used -albeit in a previous version- to estimate the
 \subsubsection{Model selection} \label{ssSA:model_selection}
 %-------------------------------
 %
-To select among competing models, we used the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}. 
+The current research used the Information-Theoretic Approach \citep{Anderson_2008, Chamberlain_1965} for model selection. The application of the approach required: (i) the expression of the research hypothesis into statistical models, (ii) the selection of the most plausible models, and (iii) produce inferences based on one or multiple selected models. Since the first step is largely covered in sections \ref{sS:causal_frame} and \ref{sS:stat_analysis}, and expanded in the supplementary sections \ref{sSA:causal_details} and \ref{sSA:model_details}, here we proceed with the intermediate step. 
 
-Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. 
+Regarding the criteria used to select among competing models, we used the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}. Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. In that sense, by comparing the deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data \cite{McElreath_2020}.
 
-\citet{McElreath_2020} points out that is a rather benign characteristic of the model's selection procedure that we do not need the KL divergence's absolute value, as the \textit{true} distribution of our data is not available. But rather, using the difference in deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data\footnote{see \citet{McElreath_2020} (p. 202-211) for the intuition and detailed derivation of the argument.}.
+Table \ref{tab:WAIC} and \ref{tab:PSIS} report
+
+\textcolor{red}{work in progress}
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|c|lcccccc|} 
+		\hline
+		Model & \multicolumn{1}{c}{Name} & WAIC & SE & dWAIC & dSE & pWAIC & WE \\[0.5ex] 
+		\hline\hline
+		\rowcolor{gray}
+		3 & No interaction (one ``size'') & -621.0 & 42.99 & 0.0 & -- & 31.1 & 0.18 \\
+		10 & Full interaction (one ``size'') & -621.0 & 42.98 & 0.1 & 0.78 & 31.2 & 0.18 \\
+		\rowcolor{gray}
+		9 & Etiology interaction (one ``size'') & -620.7 & 43.07 & 0.4 & 0.48 & 31.2 & 0.15 \\
+		8 & Age interaction (one ``size'') & -620.2 & 42.91 & 0.8 & 0.76 & 32.1 & 0.12 \\
+		\rowcolor{gray}
+		11 & Age interaction (robust) & -620.1 & 42.70 & 0.9 & 2.21 & 34.2 & 0.12 \\
+		12 & Etiology interaction (robust) & -619.9 & 42.77 & 1.1 & 2.06 & 34.4 & 0.10 \\
+		\rowcolor{gray}
+		4 & No interaction (robust) & -619.2 & 42.81 & 1.8 & 2.18 & 34.8 & 0.07 \\
+		13 & Full interaction (robust) & -618.8 & 42.65 & 2.2 & 2.17 & 35.0 & 0.06 \\
+		\rowcolor{gray}
+		5 & Age interaction (fixed ``size'') & -578.2 & 52.51 & 42.8 & 16.85 & 50.7 & 0.00 \\
+		6 & Etiology interaction (fixed ``size'') & -578.2 & 52.63 & 42.8 & 16.95 & 50.7 & 0.00 \\
+		\rowcolor{gray}
+		2 & No interaction (fixed ``size'') & -577.6 & 52.59 & 43.5 & 16.97 & 51.0 & 0.00 \\
+		1 & Intercept only (fixed ``size'') & -576.8 & 52.98 & 44.3 & 17.40 & 51.8 & 0.00 \\
+		\rowcolor{gray}
+		7 & Full interaction (fixed ``size'') & -575.8 & 52.58 & 45.3 & 16.96 & 52.1 & 0.00 \\
+		\hline\hline
+		\multicolumn{1}{|r|}{\small SE} & \multicolumn{7}{l|}{\small WAIC approximate standard error} \\
+		\multicolumn{1}{|r|}{\small dWAIC} & \multicolumn{7}{l|}{\small difference in WAIC from the best model} \\
+		\multicolumn{1}{|r|}{\small dSE} & \multicolumn{7}{l|}{\small standard error for the difference in WAIC from the best model} \\
+		\multicolumn{1}{|r|}{\small pWAIC} & \multicolumn{7}{l|}{\small WAIC over fitting penalty} \\
+		\multicolumn{1}{|r|}{\small WE} & \multicolumn{7}{l|}{\small weight of evidence} \\
+		\hline
+	\end{tabular}
+	\caption[Fit of statistical models: WAIC]{Fit of statistical models: WAIC.}
+	\label{tab:WAIC}
+\end{table}
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|c|lcccccc|} 
+		\hline
+		Model & \multicolumn{1}{c}{Name} & PSIS & SE & dPSIS & dSE & pPSIS & WE \\[0.5ex] 
+		\hline\hline
+		\rowcolor{gray}
+		3 & No interaction (one ``size'') & -619.8 & 42.98 & 0.0 & -- & 31.8 & 0.22 \\
+		10 & Full interaction (one ``size'') & -619.7 & 42.97 & 0.0 & 0.82 & 31.8 & 0.22 \\
+		\rowcolor{gray}
+		9 & Etiology interaction (one ``size'') & -619.2 & 43.05 & 0.5 & 0.51 & 32.0 & 0.17 \\
+		8 & Age interaction (one ``size'') & -619.0 & 42.89 & 0.7 & 0.81 & 31.8 & 0.15 \\
+		\rowcolor{gray}
+		11 & Age interaction (robust) & -617.8 & 42.70 & 2.0 & 2.19 & 35.4 & 0.08 \\
+		12 & Etiology interaction (robust) & -617.7 & 42.77 & 2.1 & 2.07 & 35.5 & 0.08 \\
+		\rowcolor{gray}
+		4 & No interaction (robust) & -616.5 & 42.81 & 3.3 & 2.19 & 36.1 & 0.04 \\
+		13 & Full interaction (robust) & -616.3 & 42.64 & 3.4 & 2.13 & 36.2 & 0.04 \\
+		\rowcolor{gray}
+		6 & Etiology interaction (fixed ``size'') & -576.0 & 52.63 & 43.7 & 17.00 & 51.7 & 0.00 \\
+		5 & Age interaction (fixed ``size'') & -575.9 & 52.54 & 43.9 & 16.94 & 51.9 & 0.00 \\
+		\rowcolor{gray}
+		2 & No interaction (fixed ``size'') & -575.3 & 52.59 & 44.4 & 17.03 & 52.1 & 0.00 \\
+		1 & Intercept only (fixed ``size'') & -574.6 & 52.97 & 45.1 & 17.44 & 52.9 & 0.00 \\
+		\rowcolor{gray}
+		7 & Full interaction (fixed ``size'') & -573.8 & 52.61 & 46.0 & 17.01 & 53.1 & 0.00 \\
+		\hline\hline
+		\multicolumn{1}{|r|}{\small SE} & \multicolumn{7}{l|}{\small WAIC approximate standard error} \\
+		\multicolumn{1}{|r|}{\small dPSIS} & \multicolumn{7}{l|}{\small difference in PSIS from the best model} \\
+		\multicolumn{1}{|r|}{\small dSE} & \multicolumn{7}{l|}{\small standard error for the difference in PSIS from the best model} \\
+		\multicolumn{1}{|r|}{\small pPSIS} & \multicolumn{7}{l|}{\small PSIS over fitting penalty} \\
+		\multicolumn{1}{|r|}{\small WE} & \multicolumn{7}{l|}{\small weight of evidence} \\
+		\hline
+	\end{tabular}
+	\caption[Fit of statistical models: PSIS]{Fit of statistical models: PSIS.}
+	\label{tab:PSIS}
+\end{table}
 %
 %
