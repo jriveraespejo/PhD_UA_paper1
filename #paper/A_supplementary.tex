@@ -117,7 +117,7 @@ The outcome from the transcription task was obtained following a two step proced
 	H = H(\pmb{p}) = \frac{-\sum_{i=1}^{n} p_{i} \cdot \log_{2}(p_{i})}{\log_{2}(N)}
 \end{equation}
 %
-where $H$ is bounded in the continuum $[0,1]$, $n$ denotes the number of word occurrences within each utterance, $p_{i}$ the probability of such word occurrence, and $N$ the total number of aligned transcriptions per utterance.
+where $H$ is bounded in the unit interval $[0,1]$, $n$ denotes the number of word occurrences within each utterance, $p_{i}$ the probability of such word occurrence, and $N$ the total number of aligned transcriptions per utterance.
 %
 \begin{comment}
 under DoE literature, the design corresponds to $32$ experimental units with $10$ replicates each, making a total of $320$ experimental runs. Moreover, we register $20$ duplicates (transcriptions) for each run, making a total of $6400$ transcriptions.
@@ -224,9 +224,9 @@ Finally, it is important to highlight that for modeling purposes, using more tha
 	for the NH group uses the child's \textit{age} (at recording), the method cannot use the same variable for the other two groups. This is due to the fact that \textit{age} is merely used as a proxy, for the amount of time a child has been developing his(her) language. In that sense, more appropriate variables to use under the HI/CI group would be e.g. the \textit{device length of use}, which approximates the ``hearing age'' of such children, or their \textit{vocabulary size}, which resembles their "lexical age" \citep{Faes_et_al_2021}. For this research, we consider the \textit{device length of use} as the simplest one to implement.
 \end{comment}
 
-Regarding \textbf{\textit{hearing status}}, it is clear that its inclusion directly corresponds with the main purpose of the current research endeavor. i.e. compare the levels of speech intelligibility among NH and HI/CI children.
+Regarding \textbf{\textit{hearing status}}, it is clear that its inclusion directly corresponds with the main purpose of the current research endeavor. i.e. compare the levels of \textit{speech intelligibility} among NH and HI/CI children.
 
-In the case of \textbf{\textit{pure tone average}}, beyond the empirical evidence, the variable was included for two reasons. First, given that previous modeling efforts did not capture the full hierarchy of variability, it is possible that the effects of PTA on speech intelligibility has been largely overlooked. As one can infer, it might be sensible to think that HI/CI children with severe hearing loss, as accounted by the variable, might develop their language at a slower rate. This is especially true, if we consider the signal provided by the cochlear implant is still degraded compared to the signal in normal hearing scenarios \cite{Drennan_et_al_2008}. Finally, as with \textit{hearing age}, the variable might be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
+In the case of \textbf{\textit{pure tone average}}, beyond the empirical evidence, the variable was included for two additional reasons. First, given that previous modeling efforts did not capture the full hierarchy of variability, it is possible that the effects of PTA on \textit{speech intelligibility} has been largely overlooked. Although evidence seem to suggest the variable has no effect, it is also sensible to think that HI/CI children with severe hearing loss, as accounted by the variable, might develop their language at a slower rate. This is especially true, if we consider the signal provided by the cochlear implant is still degraded compared to the signal in normal hearing scenarios \cite{Drennan_et_al_2008}. Finally, as with \textit{hearing age}, the variable might be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
 
 For \textbf{\textit{etiology}}, although empirical evidence did not found any effect on speech intelligibility \cite{Boonen_et_al_2021}, it is possible that these has also been largely overlooked, due to the lack of control on the full hierarchy of variability, similar to the \textit{pure tone average} case. Moreover, as with its predecessors, the variable might also be useful to de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}, assuming our DAG is appropriate.
 
@@ -238,7 +238,7 @@ For the case of \textbf{\textit{additional disabilities}}, e.g. mental retardati
 
 In the case of \textbf{\textit{environmental factors}}, such as communication modality, the current sample of HI/CI children were raised orally using monolingual Dutch, with a limited support of signs, a scenario similar to the NH group (see section \ref{sS:children}).
 
-Last but not least, \textbf{\textit{gender}} was not included in our hypothesis as no theoretical nor empirical evidence have been found on its effects \cite{Boonen_et_al_2021}.
+Last but not least, \textbf{\textit{gender}} was not included in our hypothesis, as no theoretical nor empirical evidence have been found on its effects \cite{Boonen_et_al_2021}.
 %
 %
 %###############################
@@ -258,11 +258,11 @@ Nevertheless, we argue that by controlling for other relevant confounders, the q
 \subsubsection{Variability in the beta-proportion distribution} \label{ssSA:model_variability}
 %-------------------------------
 %
-Figure \ref{fig:BetaProp} shows the implications of different ``sample sizes'' ($M_{i}$), on the dispersion of the beta-proportion distribution \cite{Kruschke_2015}. The panels show different ``average'' entropies: the middle panel assumes an ``average'' entropy $\mu=0.5$, the left $\mu=0.2$, and the right $\mu=0.8$ (as shown by the discontinuous lines).
+Figure \ref{fig:BetaProp} shows the implications of different ``sample sizes'' ($M_{i}$), on the dispersion of the beta-proportion distribution \cite{Kruschke_2015}. The panels show different ``average'' entropies: the middle panel assumes $\mu=0.5$, the left $\mu=0.2$, and the right $\mu=0.8$ (as shown by the discontinuous lines).
 
 In all three panels we notice two prevalent pattern: (i) the higher the ``sample size'', the less dispersed is the distribution, and (ii) as expected from non-linear models, the behavior of the dispersion depends on the location of the distribution, i.e. their ``average'' value.
 
-In this sense, we expect that if the posterior estimates for $M_{i}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ have high dispersion, and therefore, have low reliability to reflect the (latent) \textit{true} entropy. In contrast, the higher the values for $M_{i}$, the lower the dispersion, and higher the reliability of the replicates to reflect the (latent) \textit{true} entropy. Notice here, ``reliability'' is understood as the ``number'' of new entropy measures required to make us teeter between the new data and our prior belief about the ``average'' entropy $\mu$ \cite{Kruschke_2015}.
+Concerning the first pattern, we expect that if the posterior estimates for $M_{i}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ had high dispersion. In contrast, higher $M_{i}$ estimates would imply a lower dispersion in the replicates. In this particular case, a good comparison point is the number of utterances/replicates. If $M_{i}<10$, it would imply that our ``effective sample size'' (measuring points) is less than the actual number of replicates, and therefore, we would need more replicates to provide an accurate measure of the (latent) \textit{true} entropy. In contrast, $M_{i}>10$ would imply the opposite, and no more measurements would be required. Notice here, we are inherently understanding the estimates for $M_{i}$ as a ``reliability'' score. More specifically, ``reliability'' is understood as the ``number'' of new entropy measures required to make us teeter between the new data and our prior belief about the ``average'' entropy $\mu$ \cite{Kruschke_2015}.
 
 \begin{comment}
 	The value we choose for the prior $\theta$ can be thought of this way: It is the number of new flips of the coin that we would need to make us teeter between the new data and the prior belief about $\mu$. If we would only need a few new flips to sway our beliefs, then our prior beliefs should be represented by a small $\theta$. If we would need a large number of new flips to sway us away from our prior beliefs about $\mu$, then our prior beliefs are worth a very large $\theta$ \cite{Kruschke_2015}.
@@ -282,11 +282,9 @@ As a final point, it is important to highlight that the approach uses the ``samp
 \subsubsection{Data pre-processing} \label{ssSA:preprocessing}
 %-------------------------------
 %
-Besides the exclusion of corrupted observations, e.g. no available transcription, no other information was excluded before the modeling process. 
+Besides the exclusion of corrupted observations, e.g. no available transcription, no other information was excluded before the modeling process. This decision departs from what has been done in previous research \cite{Boonen_et_al_2020, vanDaal_2020, Boonen_et_al_2021}. The reason is that we believe the identification of influential observations, through preliminary or univariate procedures, might lead to erroneous exclusion of information, ultimately biasing our results. Furthermore, we believe the identification of \textit{outliers} should not be done outside the context of a full modeling effort \citep{McElreath_2020}, as what can behave as an \textit{outlier} based on a univariate analysis, might behave as expected under the appropriate model.
 
-This decision departs from what has been done in previous research \cite{Boonen_et_al_2020, vanDaal_2020, Boonen_et_al_2021}. The reason is that we believe the identification of influential observations, through preliminary or univariate procedures, might lead to erroneous exclusion of information, ultimately, biasing our results. Furthermore, we believe the identification of \textit{outliers} should not be done outside the context of a full model \citep{McElreath_2020}, as what can behave as an \textit{outlier} based on a univariate analysis, might behave as expected under the appropriate model.
-
-Considering the previous, instead of eliminating information based on other types of analysis, we proposed a set of models that were \textit{robust} against influential observations. Considering the flexibility of the Bayesian framework, the proposal of such model was a trivial task (see Table \ref{tab:models}).
+Considering the previous, instead of eliminating information based on other types of analysis, we proposed a set of models that were \textit{robust} against influential observations. Considering the flexibility of the Bayesian framework, the proposal of such models was a trivial task (see Table \ref{tab:models}).
 %
 %
 %
@@ -304,7 +302,7 @@ Considering the previous, instead of eliminating information based on other type
 %
 For all models, the selection of priors and hyper-priors was done through prior predictive simulation \citep{McElreath_2020}. The selected priors were considered mildly informative and regularizing. 
 
-Figure \ref{fig:priors} shows the implication of our assumptions on the three outcome scales of interest: the \textit{speech intelligibility}, the \textit{true} entropy, and the (observed) entropy replicates. Notice no undesired assumption has crept in any of the scales, and therefore, the estimates are free to visit a wide range of results, while also setting a low probability for impossible outcomes.
+Figure \ref{fig:priors} shows the implication of our assumptions on the three outcome scales of interest: the \textit{speech intelligibility}, the \textit{true} entropy, and the \textit{observed} entropy replicates. Notice, no undesirable assumption has crept in any of the scales. Therefore, the estimates are free to visit a wide range of results, while also have a low probability of reaching impossible outcomes.
 
 Hereby follows a description of the priors:
 %
@@ -380,9 +378,27 @@ The current research used the Information-Theoretic Approach \citep{Anderson_200
 
 Regarding the criteria used to select among competing models, we used the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}. Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. In that sense, by comparing the deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data \cite{McElreath_2020}.
 
-Table \ref{tab:WAIC} and \ref{tab:PSIS} report
+Table \ref{tab:WAIC} and \ref{tab:PSIS} report the WAIC and PSIS criteria for all the proposed models, sorted by the appropriate statistic. Three patterns are visible from the two tables. 
+
+First, we notice that around $63\%$ of the evidence (WE) is within two types of models: (a) no interaction and one estimated ``sample size'', and (b) three ``similar'' interaction models with one estimated ``sample size''. Furthermore, $35\%$ of the evidence is condense in the diverse type of \textit{robust} models. Finally, the remaining $2\%$ of evidence is negligible dispersed in the remaining models.
 
 \textcolor{red}{work in progress}
+
+\begin{comment}
+Second, comparing the differences in the WAIC or PSIS from the best model (dWAIC or dPSIS), we notice a higher and ``more precise'' support for models with no interaction of any type of interaction, but with one estimated ``sample size''.
+
+Highest evidence in favor of
+“simplest” model, i.e. one global
+M and no interaction,
+models: E_NC2b.
+However, is indistinguishable from
+the interaction models
+especially E_NC5b3
+models: E_NC5b1, E_NC5b2.
+
+
+Third, we have a greater over-fitting penalty for models with a fixed ``sample size'', than models with one estimated ``sample size''. More particular still, we have the \textit{robust} models, characterized by having more parameters than any other proposed model, with a penalty term similar to the highest supported models
+\end{comment}
 %
 \begin{table}[h!]
 	\centering
