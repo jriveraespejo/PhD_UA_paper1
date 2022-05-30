@@ -353,31 +353,37 @@ The proposed models in Table \ref{tab:models} were estimated under the Bayesian 
 \end{comment}
 %
 %
-\begin{figure}[!h]
-	\centering
-	\includegraphics[trim=0 490 0 0, clip, width=0.7\textwidth]{power_result23.pdf}
-	%trim=left lower right upper
-	\caption[Group contrasts: Power on small effects]{Group contrasts: Power on small effects ($\approx 0.15$ differences between groups)}
-	\label{fig:contrasts}
-\end{figure}
-%
-%
 %-------------------------------
 \subsubsection{Simulation} \label{ssSA:model_simulation}
 %-------------------------------
 %
-Prior to fitting real data, all the proposed models were tested on simulated data. The simulation was done with two purposes: (i) to test the models' ability to recover the `real' parameter values \cite{Fogarty_et_al_2022}, and (ii) to test the data size power on our assumed hypothesis \cite{Kruschke_2015}. 
+Prior to fitting real data, all the proposed models were tested on simulated data. The simulation was done with two purposes: (i) to test the models' ability to recover the `real' parameter values \cite{Fogarty_et_al_2022}, and (ii) to test the power of our data size and assumed hypothesis \cite{Kruschke_2015}. On both instances, we used the \textit{equivalent prior sampling} method \cite{Winkler_1967}, informed by the appropriate children population \cite{DeRaeve_2016}. 
 
-On both instances, we used the \textit{equivalent prior sampling} method \cite{Winkler_1967}, informed by the appropriate children population \cite{DeRaeve_2016}. Moreover, we tested three goals\footnote{see \citet{Kruschke_2015} chapter 13 for a detailed overview of the method.}: (a) reject the null value of a parameter, (b) affirm a predicted value, and (c) achieve an estimate precision.
+\begin{comment}
+	Moreover, we tested three goals\footnote{see \citet{Kruschke_2015} chapter 13 for a detailed overview of the method.}: (a) reject the null value of a parameter, (b) affirm a predicted value, and (c) achieve an estimate precision.
+\end{comment}
 
-The results of our simulations indicated that each statistical model was able to recover the `real' parameters values, with a sample sizes similar to the population size.
+The results of our simulations highlight three key points. First, the probabilistic implementations work as intended, i.e. the statistical models manage to recover the `real' estimate values, if enough sample size is available. 
 
-Furthermore, the power analysis reported three key points. First, assuming a sample size similar to our data size ($16$ children per group) and medium differences among the groups ($\approx 0.4$), the hearing group contrasts manage to affirm the predicted values with power above the $80\%$ threshold. However, the same cannot be said if we assume small differences between the groups ($\approx 0.15$), where the power of the estimates barely surpass the $60\%$ threshold (see figure \ref{fig:contrasts}). Second, other parameters of interest ($bA$ and $bP$) affirm the predicted value with power above the $80\%$ threshold, even with small assumed effects ($0.15$ and $0.1$, respectively). Third and final, no parameter (nor any contrast) managed to reject the null hypothesis or achieve high estimates precision with power above the $80\%$ threshold.
+Second, considering our data size ($16$ children per group), if the assumed hearing status group difference is small ($\approx 0.15$), we can be certain that at least $60\%$ of the time our models will affirm the predicted value (see green discontinuous line in figure \ref{fig:contrasts}). Moreover, the previous power threshold surpasses $80\%$ if we assume medium group differences ($\approx 0.4$, not shown). In the case of other parameters of interest, even if we assume small effects, the models always affirm the predicted value with power above $80\%$, e.g. for $bA=0.15$ or $bP=0.1$.
 
-As a result we can say, the probabilistic implementations work as intended, i.e. they manage to recover the appropriate estimate values, if enough sample size is available. Furthermore, with our current data size, if the contrast effects are small, we can be certain that $60\%$ of the time our models will affirm the correct value. However, the precision of our estimates will not allow us to make categorical inferences.
-
+Third, again considering our data size, the statistical precision of our estimates do not reach similar power results (see yellow discontinuous line in figure \ref{fig:contrasts}). The latter implies that with sixteen children per group, the standard error of our estimates will not allow us to produce definite conclusions, e.g. we will not be certain if two groups are not different because they are truly not statistically different or because the sample size is not enough to produce unequivocal inferences. However, further testing indicated that such unequivocal results are accomplished with the full population size ($70$ children per group).
+%
+\begin{comment}
+	The results of our simulations indicated that each statistical model was able to recover the `real' parameters values, when the sample size was similar to the population size.
+	
+	Third and final, no parameter (nor any contrast) managed to reject the null hypothesis or achieve high estimates precision with power above the $80\%$ threshold.
+\end{comment}
 
 For more details on the assumed effects, as well as the simulation code, refer to the GitHub repository: \url{https://github.com/jriveraespejo/PhD_UA_paper1}
+%
+\begin{figure}[!h]
+	\centering
+	\includegraphics[trim=0 490 0 0, clip, width=0.7\textwidth]{power_result23.pdf}
+	%trim=left lower right upper
+	\caption[Group contrasts: power on small hearing group differences]{Group contrasts: power on small hearing group differences ($\approx 0.15$)}
+	\label{fig:contrasts}
+\end{figure}
 %
 %
 %-------------------------------
@@ -386,15 +392,15 @@ For more details on the assumed effects, as well as the simulation code, refer t
 %
 As stated in previous sections, the current research used the Information-Theoretic Approach \citep{Anderson_2008, Chamberlain_1965} for model selection. The application of the approach required: (i) the expression of the research hypothesis into statistical models, (ii) the selection of the most plausible models, and (iii) to produce inferences based on one or multiple selected models. Since the first step is covered in sections \ref{sS:causal_frame} and \ref{sS:stat_analysis}, and expanded in supplementary sections \ref{sSA:causal_details} and \ref{sSA:model_details}, here we proceed with the intermediate step. 
 
-We used the widely applicable information criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021} as the criteria to select among competing models. Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. In that sense, by comparing the deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data \cite{McElreath_2020}.
+We used the widely applicable information criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021} as the criteria to select among competing models. Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. In that sense, by comparing the deviance between competing models, we can measure which model is the farthest from `perfect (predictive) accuracy' for our data \cite{McElreath_2020}.
 
-Table \ref{tab:WAIC} and \ref{tab:PSIS} report the WAIC and PSIS criteria for all the proposed models, sorted by the appropriate statistic. Three patterns are visible from the two tables. 
+Table \ref{tab:WAIC} and \ref{tab:PSIS} report the criteria for all the proposed models, sorted by the appropriate statistic. 
 
-First, we notice that around $63\%$ of the evidence (WE) support two types of models: (a) no interaction and one estimated ``sample size'', and (b) three ``similar'' interaction models with one estimated ``sample size''. Furthermore, $35\%$ of the evidence is condensed in the diverse type of \textit{robust} models, while the remaining $2\%$ is negligible dispersed in the remaining ones.
+Three patterns are visible from the tables. First, we notice that around $63\%$ of the evidence (WE) support two types of models: (a) no interaction and one estimated `sample size', and (b) three (similar) interaction models with one estimated `sample size'. Furthermore, $35\%$ of the evidence is condensed in the diverse type of \textit{robust} models, while the remaining $2\%$ is negligible dispersed in the remaining ones.
 
-Second, comparing the differences in WAIC/PSIS from the ``best'' model (dWAIC and dPSIS, respectively), we arrive at the same conclusion as the previous paragraphs, i.e. the model with no interaction and one ``sample size'' is the best model, followed by the interaction models with one ``sample size'', and a bit further away, by the \textit{robust} models. One important point to highlight is that all these models are indistinguishable from each other, as it can be inferred from their precision estimate (dSE). However, we can also observe a ``bit more precise'' support for models with any type of interaction and one estimated ``sample size'', than for the \textit{robust} models.
+Second, comparing the differences in WAIC/PSIS from the ``best'' model (dWAIC and dPSIS, respectively), we arrive at the same conclusion as the previous paragraph, i.e. the model with no interaction and one estimated `sample size' is the best model, followed by the interaction models with one `sample size', and a bit further away, by the \textit{robust} models. One important point to highlight is that all these models are indistinguishable from each other, as it can be inferred from their precision estimate (dSE). However, we can also observe, a more precise support for models with any type of interaction and one estimated `sample size', than for the \textit{robust} models.
 
-Third, we observe a greater over-fitting penalty (pWAIC and pPSIS, respectively) for models with a fixed ``sample size'' than any other model. This is quite particular, as one would expect that a model with less parameters would over-fit less the data. However in this case, it implies the complexity of the data requires more parameters (than less), especially considering there are some highly influential observations that might sway the estimates of the less parameterized models (see section \ref{sS:results_outliers}). 
+Third, we observe a greater over-fitting penalty (pWAIC and pPSIS, respectively) for models with a fixed `sample size' than any other model. This is quite particular, as one would expect that a model with less parameters would over-fit less the data. However in this case, it implies the complexity of the data requires more parameters (than less), especially considering there are some highly influential observations that might sway the estimates of the less parameterized models (see section \ref{sS:results_outliers}). 
 
 Considering all of the above, the final inferences will be performed with models three and ten. The former is considered because it is the highest supported model. The latter is considered because it encompasses the remaining highest supported models. Furthermore, no \textit{robust} model is analyzed, as we prefer a more parsimonious depiction of our hypothesis.
 %

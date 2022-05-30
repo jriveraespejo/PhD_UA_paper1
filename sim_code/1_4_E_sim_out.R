@@ -85,21 +85,21 @@ par_recovery_C
 # SI and Ht are good
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for SI[140] (not the most extreme)
+# maximum RMSE is for re_i[140] (not the most extreme)
 # underestimated
-# with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
+# with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
 sum(par_recovery_C$sign)/nrow(par_recovery_C)
-# 93.8% correct sign
+# 93.5% correct sign
 
 sum(par_recovery_C$reject_null)/nrow(par_recovery_C)
-# 42.4% reject the null
+# 45.3% reject the null
 
 sum(par_recovery_C$accept_val)/nrow(par_recovery_C)
-# 64.9% reject the null
+# 77.8% reject the null
 
 sum(par_recovery_C$precision)/nrow(par_recovery_C)
-# 36.3% reject the null
+# 55.8% reject the null
 
 
 
@@ -157,13 +157,13 @@ sum(par_recovery_NC$sign)/nrow(par_recovery_NC)
 # 94% correct sign
 
 sum(par_recovery_NC$reject_null)/nrow(par_recovery_NC)
-# 42.5% reject the null
+# 45.8% reject the null
 
 sum(par_recovery_NC$accept_val)/nrow(par_recovery_NC)
-# 65.4% reject the null
+# 77.4% reject the null
 
 sum(par_recovery_NC$precision)/nrow(par_recovery_NC)
-# 36.3% reject the null
+# 56.7% reject the null
 
 
 # recovery plot
@@ -335,21 +335,21 @@ par_recovery_C
 # good samples for the rest (no matter E, HS, or both in model)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for SI[140] (not the most extreme)
+# maximum RMSE is for re_i[30] (not the most extreme)
 # underestimated
-# with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
+# with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
 sum(par_recovery_C$sign)/nrow(par_recovery_C)
-# 93.4% correct sign
+# 94.2% correct sign
 
 sum(par_recovery_C$reject_null)/nrow(par_recovery_C)
-# 46.7% reject the null
+# 48.8% reject the null
 
 sum(par_recovery_C$accept_val)/nrow(par_recovery_C)
-# 67.6% reject the null
+# 79.6% reject the null
 
 sum(par_recovery_C$precision)/nrow(par_recovery_C)
-# 45.1% reject the null
+# 56.5% reject the null
 
 
 
@@ -359,7 +359,7 @@ cont_recovery_C = contrast_recovery(stan_object=res_C,
                                     true_diff = diff_true, 
                                     p=0.90)
 cont_recovery_C
-# when use only HS in model, contrasts are slightly overestamated
+# when use only HS in model, contrasts are slightly underestimated
 #   because we break multicollinearity
 # when use E and HS in model, contrasts come all wrong,
 #   because of multicollinearity
@@ -388,7 +388,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 # distributional plots
 distH_plot( stan_object=res_C, true_data=data_true, 
             csize=6, rplot=c(3,2),
-            par_object=par_recovery_C, M=10)
+            par_object=par_recovery_C, M=9.951)
 # captures well the data
 
 
@@ -411,21 +411,21 @@ par_recovery_NC
 # great samples for all parameters
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for re_i[140] (not the most extreme)
+# maximum RMSE is for re_i[30] (not the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(re_i) == max( abs(re_i) ) ) )
 
 sum(par_recovery_NC$sign)/nrow(par_recovery_NC)
-# 93.9% correct sign
+# 94.7% correct sign
 
 sum(par_recovery_NC$reject_null)/nrow(par_recovery_NC)
-# 47.4% reject the null
+# 49.5% reject the null
 
 sum(par_recovery_NC$accept_val)/nrow(par_recovery_NC)
-# 67.8% reject the null
+# 80.5% reject the null
 
 sum(par_recovery_NC$precision)/nrow(par_recovery_NC)
-# 45.2% reject the null
+# 55.5% reject the null
 
 
 
@@ -434,7 +434,7 @@ cont_recovery_NC = contrast_recovery(stan_object = res_NC,
                                      est_diff = 'aHS',
                                      true_diff = diff_true)
 cont_recovery_NC
-# when use only HS, contrasts come slightly overestamated
+# when use only HS, contrasts come slightly overestimated
 #   even when we break multicollinearity
 # when use E and HS, contrasts come all wrong,
 #   because of multicollinearity
@@ -473,9 +473,10 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 # pdf("posterior_predictive.pdf")
 distH_plot( stan_object=res_NC, true_data=data_true, 
             csize=6, rplot=c(3,2),
-            par_object=par_recovery_C, M=10)
+            par_object=par_recovery_NC, M=9.948)
 # dev.off()
 # still captures the data
+
 
 
 # chain stats
@@ -581,7 +582,7 @@ par_recovery_C
 #   (no matter E, HS, or both in model)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for M[241] (the most extreme)
+# maximum RMSE is for M[307] (the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(M) == max( abs(M) ) ) )
 
@@ -589,13 +590,13 @@ sum(par_recovery_C$sign)/nrow(par_recovery_C)
 # 92.9% correct sign
 
 sum(par_recovery_C$reject_null)/nrow(par_recovery_C)
-# 54.5% reject the null
+# 56.7% reject the null
 
 sum(par_recovery_C$accept_val)/nrow(par_recovery_C)
-# 51.8% reject the null
+# 61.1% reject the null
 
 sum(par_recovery_C$precision)/nrow(par_recovery_C)
-# 29.7% reject the null
+# 29.3% reject the null
 
 
 
@@ -604,7 +605,7 @@ cont_recovery_C = contrast_recovery(stan_object = res_C,
                                     est_diff = 'aHS',
                                     true_diff = diff_true)
 cont_recovery_C
-# when use only HS in model, contrasts slightly overestamated
+# when use only HS in model, contrasts slightly overestimated
 #   because we break multicollinearity
 # when use E and HS in model, contrasts come all wrong,
 #   because of multicollinearity
@@ -614,7 +615,7 @@ cont_recovery_C
 # recovery plot
 recovery_plots(par_object=par_recovery_C, 
                cont_object=cont_recovery_C,
-               par_plot=c('m_i','s_i','m_M','a','aHS','aE','bP','bA','SI'))
+               par_plot=c('m_i','s_i','m_M','s_M','a','aHS','aE','bP','bA','SI'))
 # still good recovery
 
 
@@ -656,21 +657,21 @@ par_recovery_NC
 #   worst samples for all parameters, when E and HS are in the model
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for M[241] (the most extreme)
+# maximum RMSE is for M[307] (the most extreme)
 # underestimated
 # with(mom$dS$dT, which( abs(M) == max( abs(M) ) ) )
 
 sum(par_recovery_NC$sign)/nrow(par_recovery_NC)
-# 92.9% correct sign
+# 92.8% correct sign
 
 sum(par_recovery_NC$reject_null)/nrow(par_recovery_NC)
-# 54.3% reject the null
+# 56.6% reject the null
 
 sum(par_recovery_NC$accept_val)/nrow(par_recovery_NC)
-# 51.2% reject the null
+# 60.7% reject the null
 
 sum(par_recovery_NC$precision)/nrow(par_recovery_NC)
-# 29.7% reject the null
+# 29.6% reject the null
 
 
 
@@ -679,7 +680,7 @@ cont_recovery_NC = contrast_recovery(stan_object = res_NC,
                                      est_diff = 'aHS',
                                      true_diff = diff_true)
 cont_recovery_NC
-# when use only HS in model, contrasts slightly overestamated
+# when use only HS in model, contrasts slightly overestimated
 #   because we break multicollinearity
 # when use E and HS in model, contrasts come all wrong,
 #   because of multicollinearity
@@ -689,7 +690,7 @@ cont_recovery_NC
 # recovery plot
 recovery_plots(par_object=par_recovery_NC, 
                cont_object=cont_recovery_NC,
-               par_plot=c('m_i','s_i','m_M','a','aHS','aE','bP','bA','SI'))
+               par_plot=c('m_i','s_i','m_M','s_M','a','aHS','aE','bP','bA','SI'))
 # still good recovery
 
 
@@ -942,27 +943,27 @@ par_recovery_C = parameter_recovery( stan_object = res_C,
                                      p=0.90)
 par_recovery_C
 # View(par_recovery_C)
-# poor samples for a, aHS, m_i and re_i
+# poor samples for a, aEHS, m_i and re_i
 #   worst samples for the same, when E and HS are in the model
 # good samples for the rest
 #   (no matter E, HS, or both in model)
 
 par_recovery_C[par_recovery_C$RMSE==max(par_recovery_C$RMSE),]
-# maximum RMSE is for SI[344] (not the most extreme)
+# maximum RMSE is for SI[12] (not the most extreme)
 # overestimated
 # with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
 
 sum(par_recovery_C$sign)/nrow(par_recovery_C)
-# 89.5% correct sign
+# 88.7% correct sign
 
 sum(par_recovery_C$reject_null)/nrow(par_recovery_C)
-# 39.4% reject the null
+# 40.0% reject the null
 
 sum(par_recovery_C$accept_val)/nrow(par_recovery_C)
-# 61.5% reject the null
+# 74.5% reject the null
 
 sum(par_recovery_C$precision)/nrow(par_recovery_C)
-# 40.6% reject the null
+# 45.8% reject the null
 
 
 
@@ -972,11 +973,8 @@ cont_recovery_C = contrast_recovery(stan_object = res_C,
                                     est_diff = c('aEHS','bAHS'),
                                     true_diff = diff_true)
 cont_recovery_C
-# when use only HS in model, contrasts come out down/up ward biased
-#   because we break multicollinearity
-# when use E and HS in model, contrasts come all wrong,
-#   because of multicollinearity
-#   it does not matter if you increase I or K
+# slightly overestimated
+
 
 
 # recovery plot
@@ -1005,7 +1003,7 @@ tri_plot(stan_object=res_C, pars=paste0('Ht[', 1:5,']') )
 # distributional plots
 distH_plot( stan_object=res_C, true_data=data_true, 
             csize=6, rplot=c(3,2),
-            par_object=par_recovery_C, M=exp(1.5))
+            par_object=par_recovery_C, M=3.66)
 # might overfit the data
 
 
@@ -1029,7 +1027,7 @@ par_recovery_NC
 #   worst samples for all parameters, when E and HS are in the model
 
 par_recovery_NC[par_recovery_NC$RMSE==max(par_recovery_NC$RMSE),]
-# maximum RMSE is for SI[344] (the most extreme)
+# maximum RMSE is for SI[12] (not the most extreme)
 # overestimated
 # with(mom$dS$dT, which( abs(SI) == max( abs(SI) ) ) )
 
@@ -1037,13 +1035,13 @@ sum(par_recovery_NC$sign)/nrow(par_recovery_NC)
 # 88.9% correct sign
 
 sum(par_recovery_NC$reject_null)/nrow(par_recovery_NC)
-# 39.4% reject the null
+# 39.7% reject the null
 
 sum(par_recovery_NC$accept_val)/nrow(par_recovery_NC)
-# 61.9% reject the null
+# 74.9% reject the null
 
 sum(par_recovery_NC$precision)/nrow(par_recovery_NC)
-# 40.6% reject the null
+# 45.9% reject the null
 
 
 
@@ -1053,11 +1051,7 @@ cont_recovery_NC = contrast_recovery(stan_object = res_NC,
                                      est_diff = c('aEHS','bAHS'),
                                      true_diff = diff_true)
 cont_recovery_NC
-# when use only HS in model, contrasts come down/up ward biased
-#   because we break multicollinearity
-# when use E and HS in model, contrasts come all wrong,
-#   because of multicollinearity
-#   it does not matter if you increase I or K
+# slightly overestimated
 
 
 # recovery plot
@@ -1086,7 +1080,7 @@ tri_plot(stan_object=res_NC, pars=paste0('Ht[', 1:5,']') )
 # distributional plots
 distH_plot( stan_object=res_NC, true_data=data_true, 
             csize=6, rplot=c(3,2),
-            par_object=par_recovery_NC, M=exp(1.5))
+            par_object=par_recovery_NC, M=3.66)
 # might overfit the data
 
 
