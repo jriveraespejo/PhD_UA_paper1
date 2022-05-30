@@ -216,7 +216,7 @@ In this section we make explicit some of the assumptions that guided our causal 
 
 For \textbf{\textit{hearing age}}, and its relevance in our research hypothesis, we describe how the variable is constructed and its inherent assumptions. 
 
-\textit{Hearing age} is a composite variable constructed by combining the \textit{chronological age} for the NH group, and the \textit{device length of use} for the HI/CI group \citep{Faes_et_al_2021} (see Table \ref{tab:characteristics}). The variable tries to approximate the amount of time a child has been actively hearing and developing his(her) language. However, no short of evidence has been presented in favor of using others surrogate measures, like \textit{chronological age} \cite{Flipsen_et_al_2006, Habib_et_al_2010, Grandon_et_al_2020} or \textit{age at implantation} \cite{Niparko_et_al_2010, Boons_et_al_2012, Bruijnzeel_et_al_2016, Dettman_et_al_2016}. We argue that the feasibility of using any other proxy measure, largely depends on the assumed reliability of the surrogate to approximate the variable of interest. In that sense, although we recognize \textit{hearing age} is not a ``perfect'' proxy \cite{Faes_et_al_2021}, we argue is the most appropriate to test our hypothesis, based on the relevant literature review and its assumed reliability to capture children's language development (although the latter has not been tested). Moreover, the variable serve two additional purposes: (i) control for sampling bias (see section \ref{sSA:sampling_bias}), and (ii) de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
+\textit{Hearing age} is a composite variable constructed by combining the \textit{chronological age} for the NH group, and the \textit{device length of use} for the HI/CI group \citep{Faes_et_al_2021} (see Table \ref{tab:characteristics}). The variable tries to approximate the amount of time a child has been actively hearing and developing his(her) language. However, no short of evidence has been presented in favor of using others surrogate measures, like \textit{chronological age} \cite{Flipsen_et_al_2006, Habib_et_al_2010, Grandon_et_al_2020} or \textit{age at implantation} \cite{Niparko_et_al_2010, Boons_et_al_2012, Bruijnzeel_et_al_2016, Dettman_et_al_2016}. We argue that the feasibility of using any other proxy measure, largely depends on the assumed reliability of the surrogate to approximate the variable of interest. In that sense, although we recognize \textit{hearing age} is not a `perfect' proxy \cite{Faes_et_al_2021}, we argue is the most appropriate to test our hypothesis, based on the relevant literature review and its assumed reliability to capture children's language development (although the latter has not been tested). Moreover, the variable serve two additional purposes: (i) control for sampling bias (see section \ref{sSA:sampling_bias}), and (ii) de-confound the parameter estimates of \textit{hearing status} \cite{Cinelli_et_al_2021}.
 
 Finally, it is important to highlight that for modeling purposes, using more than one of the aforementioned proxies in tandem is not recommended. It is apparent from the previous description, the three surrogate measures share high similarities in their data construction. This in turn, could cause problems in the modeling procedure, as including variables that provide ``similar information'' might lead to a problem known as multicollinearity, in which our estimates get biased and less precise \cite{Farrar_et_al_1967}, leading us to incorrect inferences and conclusions.
 %
@@ -245,7 +245,7 @@ Last but not least, \textbf{\textit{gender}} was not included in our hypothesis,
 \subsection{Sampling bias} \label{sSA:sampling_bias}
 %###############################
 %
-As it happens in most observational, and some experimental studies, ours can also be a potential victim of sampling bias. While stratifying on the selection variables can help to balance the samples, and even ``correct'' the estimates \cite{Cinelli_et_al_2021, Deffner_et_al_2022}, as we do here by controlling for \textit{hearing age}. Given the sample's selection and matching procedures, we cannot ensure the HI/CI nor the NH groups are representative of their respective populations. 
+As it happens in most observational, and some experimental studies, ours can also be a potential victim of sampling bias. While stratifying on the selection variables can help to balance the samples, and even `correct' the estimates \cite{Cinelli_et_al_2021, Deffner_et_al_2022}, as we do here by controlling for \textit{hearing age}. Given the sample's selection and matching procedures, we cannot ensure the HI/CI nor the NH groups are representative of their respective populations. 
 
 Nevertheless, we argue that by controlling for other relevant confounders, the qualitative results presented in this study holds. However, we cannot discard the presence of unobservable variables that could bias our results, and in that sense, inferences beyond this particular set of children must be taken with care.
 %
@@ -258,22 +258,22 @@ Nevertheless, we argue that by controlling for other relevant confounders, the q
 \subsubsection{Variability in the beta-proportion distribution} \label{ssSA:model_variability}
 %-------------------------------
 %
-Figure \ref{fig:BetaProp} shows the implications of different ``sample sizes'' ($M_{i}$), on the dispersion of the beta-proportion distribution \cite{Kruschke_2015}. The panels show different ``average'' entropies: the middle panel assumes $\mu=0.5$, the left $\mu=0.2$, and the right $\mu=0.8$ (as shown by the discontinuous lines).
+Figure \ref{fig:BetaProp} shows the implications of different `sample sizes' ($M_{i}$), on the dispersion of the beta-proportion distribution \cite{Kruschke_2015}. The panels show different ``average'' entropies: the middle panel assumes $\mu=0.5$, the left $\mu=0.2$, and the right $\mu=0.8$ (as shown by the discontinuous lines).
 
-In all three panels we notice two prevalent pattern: (i) the higher the ``sample size'', the less dispersed is the distribution, and (ii) as expected from non-linear models, the behavior of the dispersion depends on the location of the distribution, i.e. their ``average'' value.
+In all three panels we notice two prevalent pattern: (i) the higher the `sample size', the less dispersed is the distribution, and (ii) as expected from non-linear models, the behavior of the dispersion depends on the location of the distribution, i.e. their average value.
 
-Concerning the first pattern, we expect that if the posterior estimates for $M_{i}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ had high dispersion. In contrast, higher $M_{i}$ estimates would imply a lower dispersion in the replicates. In this particular case, a good comparison point is the number of utterances/replicates. If $M_{i}<10$, it would imply that our ``effective sample size'' (measuring points) is less than the actual number of replicates, and therefore, we would need more replicates to provide an accurate measure of the (latent) \textit{true} entropy. In contrast, $M_{i}>10$ would imply the opposite, and no more measurements would be required. Notice here, we are inherently understanding the estimates for $M_{i}$ as a ``reliability'' score. More specifically, ``reliability'' is understood as the ``number'' of new entropy measures required to make us teeter between the new data and our prior belief about the ``average'' entropy $\mu$ \cite{Kruschke_2015}.
+Concerning the first pattern, we expect that if the posterior estimates for $M_{i}$ reach lower values, it would imply the entropy replicates $H^{O}_{bik}$ had high dispersion. In contrast, higher $M_{i}$ estimates would imply a lower dispersion in the replicates. In this particular case, a good comparison point is the number of utterances/replicates. If $M_{i}<10$, it would imply that our effective `sample size' (measuring points) is less than the actual number of replicates, and therefore, we would need more replicates to provide an accurate measure of the (latent) \textit{true} entropy. In contrast, $M_{i}>10$ would imply the opposite, and no more measurements would be required. Notice here, we are inherently understanding the estimates for $M_{i}$ as a `reliability' score. More specifically, `reliability' is understood as the `number' of new entropy measures required to make us teeter between the new data and our prior belief about the average entropy $\mu$ \cite{Kruschke_2015}.
 
 \begin{comment}
 	The value we choose for the prior $\theta$ can be thought of this way: It is the number of new flips of the coin that we would need to make us teeter between the new data and the prior belief about $\mu$. If we would only need a few new flips to sway our beliefs, then our prior beliefs should be represented by a small $\theta$. If we would need a large number of new flips to sway us away from our prior beliefs about $\mu$, then our prior beliefs are worth a very large $\theta$ \cite{Kruschke_2015}.
 \end{comment}
 
-As a final point, it is important to highlight that the approach uses the ``sample size'' parameter to model the replicates' heterogeneity. The latter in turn, effectively estimates an entropy measurement error model \cite{Carroll_2006}.
+As a final point, it is important to highlight that the approach uses the `sample size' parameter to model the replicates' heterogeneity. The latter in turn, effectively estimates an entropy measurement error model \cite{Carroll_2006}.
 %
 \begin{figure} [!h]
 	\centering
-	\includegraphics[width=1\linewidth]{BetaProp_dist2.pdf}
-	\caption[Variability in a beta-proportional distribution]{Variability in a beta-proportional distribution. Discontinuous lines describe the ``average'' value for the distribution ($\mu$), solid lines describe the distribution assuming different $\theta = M_{i}$.}
+	\includegraphics[width=0.9\linewidth]{BetaProp_dist2.pdf}
+	\caption[Variability in a beta-proportional distribution]{Variability in a beta-proportional distribution. Discontinuous lines describe the average value for the distribution ($\mu$), solid lines describe the distribution assuming different $\theta = M_{i}$.}
 	\label{fig:BetaProp}
 \end{figure}
 %
@@ -353,52 +353,50 @@ The proposed models in Table \ref{tab:models} were estimated under the Bayesian 
 \end{comment}
 %
 %
+\begin{figure}[!h]
+	\centering
+	\includegraphics[trim=0 490 0 0, clip, width=0.7\textwidth]{power_result23.pdf}
+	%trim=left lower right upper
+	\caption[Group contrasts: Power on small effects]{Group contrasts: Power on small effects ($\approx 0.15$ differences between groups)}
+	\label{fig:contrasts}
+\end{figure}
+%
+%
 %-------------------------------
 \subsubsection{Simulation} \label{ssSA:model_simulation}
 %-------------------------------
 %
-We simulated data to test the models' ability to recover the ``real'' parameter values \cite{Fogarty_et_al_2022}. 
+Prior to fitting real data, all the proposed models were tested on simulated data. The simulation was done with two purposes: (i) to test the models' ability to recover the `real' parameter values \cite{Fogarty_et_al_2022}, and (ii) to test the data size power on our assumed hypothesis \cite{Kruschke_2015}. 
 
-\textcolor{red}{work in progress}
+On both instances, we used the \textit{equivalent prior sampling} method \cite{Winkler_1967}, informed by the appropriate children population \cite{DeRaeve_2016}. Moreover, we tested three goals\footnote{see \citet{Kruschke_2015} chapter 13 for a detailed overview of the method.}: (a) reject the null value of a parameter, (b) affirm a predicted value, and (c) achieve an estimate precision.
 
-The simulation code is available in the GitHub repository: \url{https://github.com/jriveraespejo/PhD_UA_paper1}
+The results of our simulations indicated that each statistical model was able to recover the `real' parameters values, with a sample sizes similar to the population size.
 
-\begin{comment}
-Several functional correlation between age and knowledge have been simulated, and the model used in the analysis - which includes age as a ordinal categorical predictor of knowledge with monotonically increasing effect - has been able to recover the different shapes. Causal effect of activities, family composition and schooling have been simulated and tested.
+Furthermore, the power analysis reported three key points. First, assuming a sample size similar to our data size ($16$ children per group) and medium differences among the groups ($\approx 0.4$), the hearing group contrasts manage to affirm the predicted values with power above the $80\%$ threshold. However, the same cannot be said if we assume small differences between the groups ($\approx 0.15$), where the power of the estimates barely surpass the $60\%$ threshold (see figure \ref{fig:contrasts}). Second, other parameters of interest ($bA$ and $bP$) affirm the predicted value with power above the $80\%$ threshold, even with small assumed effects ($0.15$ and $0.1$, respectively). Third and final, no parameter (nor any contrast) managed to reject the null hypothesis or achieve high estimates precision with power above the $80\%$ threshold.
 
-The simulated data have been used -albeit in a previous version- to estimate the minimum number of interviewees necessary to recover the parameter values. If individuals were to name a maximum of 300 items in the freelist, 50 interviewees would have been suffcient to obtain reliable estimates of the parameters. Given that data collection in vivo is much less regular and less controllable than in silico, we roughly doubled the number of interviewees and that of questions.
-\end{comment}
+As a result we can say, the probabilistic implementations work as intended, i.e. they manage to recover the appropriate estimate values, if enough sample size is available. Furthermore, with our current data size, if the contrast effects are small, we can be certain that $60\%$ of the time our models will affirm the correct value. However, the precision of our estimates will not allow us to make categorical inferences.
+
+
+For more details on the assumed effects, as well as the simulation code, refer to the GitHub repository: \url{https://github.com/jriveraespejo/PhD_UA_paper1}
 %
 %
 %-------------------------------
 \subsubsection{Model selection} \label{ssSA:model_selection}
 %-------------------------------
 %
-The current research used the Information-Theoretic Approach \citep{Anderson_2008, Chamberlain_1965} for model selection. The application of the approach required: (i) the expression of the research hypothesis into statistical models, (ii) the selection of the most plausible models, and (iii) produce inferences based on one or multiple selected models. Since the first step is largely covered in sections \ref{sS:causal_frame} and \ref{sS:stat_analysis}, and expanded in the supplementary sections \ref{sSA:causal_details} and \ref{sSA:model_details}, here we proceed with the intermediate step. 
+As stated in previous sections, the current research used the Information-Theoretic Approach \citep{Anderson_2008, Chamberlain_1965} for model selection. The application of the approach required: (i) the expression of the research hypothesis into statistical models, (ii) the selection of the most plausible models, and (iii) to produce inferences based on one or multiple selected models. Since the first step is covered in sections \ref{sS:causal_frame} and \ref{sS:stat_analysis}, and expanded in supplementary sections \ref{sSA:causal_details} and \ref{sSA:model_details}, here we proceed with the intermediate step. 
 
-Regarding the criteria used to select among competing models, we used the Widely Applicable Information Criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021}. Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. In that sense, by comparing the deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data \cite{McElreath_2020}.
+We used the widely applicable information criterion (WAIC) \citep{Watanabe_2013}, and the Pareto-smoothed importance sampling cross-validation (PSIS) \citep{Vehtari_et_al_2021} as the criteria to select among competing models. Two reasons justify our decision. First, both criteria allow us to use all the information of our Bayesian models, i.e. the posterior distribution of the parameters. Last, and more important, both criteria provide us with the best approximations for the out-of-sample (cross-validated) deviance \citep{McElreath_2020}. The deviance is the best approximation for the Kullback-Liebler (KL) divergence \citep{Kullback_et_al_1951}, i.e. a measure of how far a model is from describing the \textit{true} distribution of our data. In that sense, by comparing the deviance between competing models, we can measure which model is the farthest from \textit{perfect (predictive) accuracy} for our data \cite{McElreath_2020}.
 
 Table \ref{tab:WAIC} and \ref{tab:PSIS} report the WAIC and PSIS criteria for all the proposed models, sorted by the appropriate statistic. Three patterns are visible from the two tables. 
 
-First, we notice that around $63\%$ of the evidence (WE) is within two types of models: (a) no interaction and one estimated ``sample size'', and (b) three ``similar'' interaction models with one estimated ``sample size''. Furthermore, $35\%$ of the evidence is condense in the diverse type of \textit{robust} models. Finally, the remaining $2\%$ of evidence is negligible dispersed in the remaining models.
+First, we notice that around $63\%$ of the evidence (WE) support two types of models: (a) no interaction and one estimated ``sample size'', and (b) three ``similar'' interaction models with one estimated ``sample size''. Furthermore, $35\%$ of the evidence is condensed in the diverse type of \textit{robust} models, while the remaining $2\%$ is negligible dispersed in the remaining ones.
 
-\textcolor{red}{work in progress}
+Second, comparing the differences in WAIC/PSIS from the ``best'' model (dWAIC and dPSIS, respectively), we arrive at the same conclusion as the previous paragraphs, i.e. the model with no interaction and one ``sample size'' is the best model, followed by the interaction models with one ``sample size'', and a bit further away, by the \textit{robust} models. One important point to highlight is that all these models are indistinguishable from each other, as it can be inferred from their precision estimate (dSE). However, we can also observe a ``bit more precise'' support for models with any type of interaction and one estimated ``sample size'', than for the \textit{robust} models.
 
-\begin{comment}
-Second, comparing the differences in the WAIC or PSIS from the best model (dWAIC or dPSIS), we notice a higher and ``more precise'' support for models with no interaction of any type of interaction, but with one estimated ``sample size''.
+Third, we observe a greater over-fitting penalty (pWAIC and pPSIS, respectively) for models with a fixed ``sample size'' than any other model. This is quite particular, as one would expect that a model with less parameters would over-fit less the data. However in this case, it implies the complexity of the data requires more parameters (than less), especially considering there are some highly influential observations that might sway the estimates of the less parameterized models (see section \ref{sS:results_outliers}). 
 
-Highest evidence in favor of
-“simplest” model, i.e. one global
-M and no interaction,
-models: E_NC2b.
-However, is indistinguishable from
-the interaction models
-especially E_NC5b3
-models: E_NC5b1, E_NC5b2.
-
-
-Third, we have a greater over-fitting penalty for models with a fixed ``sample size'', than models with one estimated ``sample size''. More particular still, we have the \textit{robust} models, characterized by having more parameters than any other proposed model, with a penalty term similar to the highest supported models
-\end{comment}
+Considering all of the above, the final inferences will be performed with models three and ten. The former is considered because it is the highest supported model. The latter is considered because it encompasses the remaining highest supported models. Furthermore, no \textit{robust} model is analyzed, as we prefer a more parsimonious depiction of our hypothesis.
 %
 \begin{table}[h!]
 	\centering

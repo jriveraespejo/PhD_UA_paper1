@@ -191,7 +191,8 @@ Esim(sim_name='E_sim2.RData', # file_name need to include '.RData'
                m_M=10, s_M=NULL, # generation of df (M)
                a=0,
                bP=-0.1,
-               aHS=c(0.15,0,-0.15),
+               # aHS=c(0.4,0,-0.4), # E_sim2_power
+               aHS=c(0.15,0,-0.15), # E_sim2_power2 
                bA=0.15,
                bAHS=rep(0,3),
                aE=rep(0,4), # (1st is E=none)
@@ -234,7 +235,8 @@ Esim(sim_name='E_sim2.RData', # file_name need to include '.RData'
                m_M=10, s_M=NULL, # generation of df (M)
                a=0,
                bP=-0.1,
-               aHS=c(0.15,0,-0.15),
+               # aHS=c(0.4,0,-0.4), # E_sim2_power
+               aHS=c(0.15,0,-0.15), # E_sim2_power2 
                bA=0.15,
                bAHS=rep(0,3),
                aE=rep(0,4), # (1st is E=none)

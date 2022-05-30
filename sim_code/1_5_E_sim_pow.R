@@ -26,7 +26,7 @@ source( file.path( getwd(), 'sim_code', '1_2_E_sim_fun.R') )
 # # testing power ####
 # # run only once
 # Epower( power_save=file.path(getwd(), 'sim_chain'), # power result dir need to include getwd()
-#         sim_name='E_sim2_power2.RData', # file_save need to include getwd()
+#         sim_name='E_sim2_power.RData', # file_save need to include getwd()
 #         sim_save=file.path(getwd(), 'sim_data'), # file_name need to include '.RData'
 #         model_name='E_NC_sim2', # model for which we want to calculate power
 #         model_in=file.path(getwd(), 'sim_models'), # location load models
@@ -41,32 +41,45 @@ source( file.path( getwd(), 'sim_code', '1_2_E_sim_fun.R') )
 
 
 
+
+
+# result analysis ####
+
+## medium effects ####
+
 # load results
-load(file.path( getwd(), 'sim_chain', 'E_sim2_power2.RData'))
+load(file.path( getwd(), 'sim_chain', 'E_sim2_power.RData'))
 # View( par_res )
 
 
 
 # plot results
-unique(par_res$par_names)
+# unique(par_res$par_names)
 
-# pdf("power_result1.pdf", width=6, height=10)
+# pdf("power_result11.pdf", width=6, height=10)
 plot_power(d=par_res, # object from Epower() function
-           par_plot=c('bA','bP'), # parameters to find power
+           par_plot=c('bA','bP','s_i','m_M'), # parameters to find power
            contrast=F, # plot contrast only
            Nprop = 0.33, # for x axis in plot
            plotN = 1) # number for the set of plot to show)
 # dev.off()
 
-# pdf("power_result1.pdf", width=6, height=10)
+par_res[par_res$par_names=='bA',]
+par_res[par_res$par_names=='bP',]
+
+par_res[par_res$par_names=='s_i',]
+par_res[par_res$par_names=='m_M',]
+
+
+# pdf("power_result12.pdf", width=6, height=10)
 plot_power(d=par_res, # object from Epower() function
-           par_plot=c('s_i','m_M'), # parameters to find power
+           par_plot='aHS', # parameters to find power
            contrast=F, # plot contrast only
            Nprop = 0.33, # for x axis in plot
-           plotN = 1) # number for the set of plot to show)
+           plotN = 2) # number for the set of plot to show)
 # dev.off()
 
-# pdf("power_result2.pdf", width=6, height=10)
+# pdf("power_result13.pdf", width=6, height=10)
 plot_power(d=par_res, # object from Epower() function
            par_plot='aHS', # parameters to find power
            contrast=T, # plot contrast only
@@ -74,12 +87,83 @@ plot_power(d=par_res, # object from Epower() function
            plotN = 2) # number for the set of plot to show)
 # dev.off()
 
+par_res[ str_detect(par_res$par_names, '^aHS'),]
 
-# pdf("power_result3.pdf", width=6, height=10)
+
+
+# pdf("power_result14.pdf", width=6, height=10)
 plot_power(d=par_res, # object from Epower() function
            par_plot='SI', # parameters to find power
            contrast=T, # plot contrast only
            Nprop = 0.33, # for x axis in plot
            plotN = 1) # number for the set of plot to show)
 # dev.off()
+
+par_res[ str_detect(par_res$par_names, '^SI'),]
+
+
+
+
+
+
+
+## small effects ####
+
+# load results
+load(file.path( getwd(), 'sim_chain', 'E_sim2_power2.RData'))
+# View( par_res )
+
+
+
+# plot results
+# unique(par_res$par_names)
+
+# pdf("power_result21.pdf", width=6, height=10)
+plot_power(d=par_res, # object from Epower() function
+           par_plot=c('bA','bP','s_i','m_M'), # parameters to find power
+           contrast=F, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 1) # number for the set of plot to show)
+# dev.off()
+
+par_res[par_res$par_names=='bA',]
+par_res[par_res$par_names=='bP',]
+
+par_res[par_res$par_names=='s_i',]
+par_res[par_res$par_names=='m_M',]
+
+
+
+# pdf("power_result22.pdf", width=6, height=10)
+plot_power(d=par_res, # object from Epower() function
+           par_plot='aHS', # parameters to find power
+           contrast=F, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 2) # number for the set of plot to show)
+# dev.off()
+
+
+# png("power_result23.png", width=600, height=800, res=100)
+plot_power(d=par_res, # object from Epower() function
+           par_plot='aHS', # parameters to find power
+           contrast=T, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 2, # number for the set of plot to show),
+           legend_loc='left')
+# dev.off()
+
+
+par_res[ str_detect(par_res$par_names, '^aHS'),]
+
+
+# pdf("power_result24.pdf", width=6, height=10)
+plot_power(d=par_res, # object from Epower() function
+           par_plot='SI', # parameters to find power
+           contrast=T, # plot contrast only
+           Nprop = 0.33, # for x axis in plot
+           plotN = 1) # number for the set of plot to show)
+# dev.off()
+
+
+par_res[ str_detect(par_res$par_names, '^SI'),]
 

@@ -606,7 +606,8 @@ plot_power = function(d, # object from Epower() function
                       par_plot, # parameters to find power
                       contrast=T,
                       Nprop = 0.33, # for x axis in plot
-                      plotN = 1){ # number for the set of plot to show 
+                      plotN = 1, # number for the set of plot to show 
+                      legend_loc ='left'){
   
   # # test
   # d=par_res # object from Epower() function
@@ -714,7 +715,7 @@ plot_power = function(d, # object from Epower() function
       
       # legend
       if(i==pp[1] & k==1){
-        legend('left', 
+        legend(legend_loc, 
                legend = c('Sign','Reject Null','Accept Val','Precision'), 
                bty='n', 
                box.lwd='n', lty=c(1,1,2,2), lwd=rep(2,4),
