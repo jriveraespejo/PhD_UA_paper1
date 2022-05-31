@@ -3,12 +3,30 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %###############################
+\subsection{About the variability hierarchy of the data} \label{sS:results_variability}
+%###############################
+%
+As expected, the posterior estimates for the block and children's random effects, as well as the `sample size' of the distribution, reveal that our data effectively had three levels of variability: children, replicates and blocks (see Figure \ref{fig:variability}).
+
+More importantly, 
+In this regard, we expect that if the experiment was `set up right', the block random effects would explain a small amount of variability in the data, and its inclusion/exclusion in the model would not change the parameter estimates. Moreover, we expect a larger variability between children's \textit{speech intelligibility}, at least larger than the block random effects. Several evidence suggest this is particularly true among HI/CI children \cite{Young_et_al_2002, Peng_et_al_2004, Montag_et_al_2014, Castellanos_et_al_2014, Yanbay_et_al_2014, Nittrouer_et_al_2014, Freeman_et_al_2017}. Finally, we did not had any comparable expectation for the variability in the replicates, as this feature has not been investigated before.
+%
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.5\linewidth]{variability_plot.pdf}
+	\caption[Posterior predictive: data variability hierarchy]{Posterior predictive: data variability hierarchy.}
+	\label{fig:variability}
+\end{figure}
+%
+%###############################
 \subsection{About our hypothesis} \label{sS:results_hypothesis}
 %###############################
 %
 The current research used the Information-Theoretic Approach \citep{Anderson_2008, Chamberlain_1965} for model selection and inference. The application of the approach required: (i) the expression of the research hypothesis into statistical models, (ii) the selection of the most plausible models, and (iii) to produce inferences based on one or multiple selected models.
 
 Since the first requirement is covered in sections \ref{sS:causal_frame} and \ref{sS:stat_analysis}, and expanded in supplementary sections \ref{sSA:causal_details} and \ref{sSA:model_details}, while the second requirement is detailed in the supplementary section \ref{ssSA:model_selection}, here we proceed with the last step of the approach. 
+
+Considering all of the above, the final inferences will be performed with models three and ten. The former is considered because it is the highest supported model. The latter is considered because it encompasses the remaining highest supported models. Furthermore, no \textit{robust} model is analyzed, as we prefer a more parsimonious depiction of our hypothesis.
 
 \textcolor{red}{work in progress}
 
@@ -87,13 +105,6 @@ Finally, considering the evidence provided by the previous step, we proceed to m
 	\includegraphics[width=0.7\linewidth]{posterior_predictive_real2.pdf}
 	\caption[Posterior predictive: ``true'' entropy and intelligibility scales]{Posterior predictive: ``true'' entropy and speech intelligibility scales}
 	\label{fig:predictive2}
-\end{figure}
-%
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=0.5\linewidth]{variability_plot.pdf}
-	\caption[Posterior predictive: levels of variability]{Posterior predictive: levels of variability}
-	\label{fig:variability}
 \end{figure}
 %
 %
