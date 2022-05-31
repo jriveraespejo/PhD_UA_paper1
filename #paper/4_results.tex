@@ -3,18 +3,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %###############################
-\subsection{About the variability hierarchy of the data} \label{sS:results_variability}
+\subsection{About the hierarchy of variability} \label{sS:results_variability}
 %###############################
 %
-As expected, the posterior estimates for the block and children's random effects, as well as the `sample size' of the distribution, reveal that our data effectively had three levels of variability: children, replicates and blocks (see Figure \ref{fig:variability}).
+As expected, three hierarchies of variability were present in our data: the blocks and children's random effects, as well as, the variability of the entropy replicates.
 
-More importantly, 
-In this regard, we expect that if the experiment was `set up right', the block random effects would explain a small amount of variability in the data, and its inclusion/exclusion in the model would not change the parameter estimates. Moreover, we expect a larger variability between children's \textit{speech intelligibility}, at least larger than the block random effects. Several evidence suggest this is particularly true among HI/CI children \cite{Young_et_al_2002, Peng_et_al_2004, Montag_et_al_2014, Castellanos_et_al_2014, Yanbay_et_al_2014, Nittrouer_et_al_2014, Freeman_et_al_2017}. Finally, we did not had any comparable expectation for the variability in the replicates, as this feature has not been investigated before.
+Evidence from the posterior estimates reveal the block random effects explained a small amount of variability in the data (top panel of figure \ref{fig:variability}), and its inclusion/exclusion in the model did not change the parameter estimates. The previous implies the experiment was correctly `set up', as the series in which the utterances were transcribed did not explain a significant amount of variation, nor its exclusion biased the parameter estimates.
+
+On the contrary, we observe a significantly larger variability between children's \textit{speech intelligibility}, i.e. more than three times the block effects variability (middle panel of figure \ref{fig:variability}). The previous corroborated preliminary evidence on the matter \cite{Young_et_al_2002, Peng_et_al_2004, Montag_et_al_2014, Castellanos_et_al_2014, Yanbay_et_al_2014, Nittrouer_et_al_2014, Freeman_et_al_2017, Boonen_et_al_2021}. Additionally, it implied that given such a large amount of between variability, the statistical models might have a harder time comparing the two \textit{hearing status} groups, in respect to their location on the intelligibility scale.
+
+Finally, for the variability of the entropy replicates, the posterior estimates provide a surprising finding: the amount of variability at the replicates level is even larger than the one observed at the children level (bottom panel of figure \ref{fig:variability}). The latter implies there is significant error in measuring speech intelligibility with multiple entropy replicates. This further emphasize the difficulty of producing unequivocal  inferences, in respect to the intelligibility levels of the \textit{hearing status} groups.
 %
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{variability_plot.pdf}
-	\caption[Posterior predictive: data variability hierarchy]{Posterior predictive: data variability hierarchy.}
+	\caption[Posterior predictive: hierarchy of variability in the data]{Posterior predictive: hierarchy of variability in the data. Distributions are plotted at entropy replicates' scale, considering three different average entropy values: $\mu=0.2$, $\mu=0.5$, and $\mu=0.8$ (discontinuous lines). }
 	\label{fig:variability}
 \end{figure}
 %
@@ -95,7 +98,7 @@ Finally, considering the evidence provided by the previous step, we proceed to m
 %
 %
 %###############################
-\subsection{Speech intelligibility scale} \label{sS:results_scales}
+\subsection{The speech intelligibility scale} \label{sS:results_scales}
 %###############################
 %
 \textcolor{red}{work in progress}

@@ -1592,9 +1592,11 @@ distH_plot1 = function(stan_object, true_data, par_object,
   # par_object = par_recovery
   # M=6
   # rsize=100
-  # csize=16
-  # seed=1
+  # csize=6
+  # seed=32
   # rplot=c(3,2)
+  # alpha1=0.3
+  # alpha2=0.4
   
   
   # distribution Ht
@@ -1604,8 +1606,14 @@ distH_plot1 = function(stan_object, true_data, par_object,
   nchain= dim(post$SI)
   set.seed(seed)
   idx_row = sample(x=1:nchain[1], size=rsize, replace=F)
-  idx_col = sample(x=1:nchain[2], size=csize, replace=F)
-  idx_col = idx_col[order(idx_col)]
+  
+  mom = unique(true_data[,c('child','HS')])
+  mom = mom[order(mom$HS),]
+  
+  idx_col = sample(mom$child[mom$HS==1], size=csize/2, replace=F)
+  idx_col = c(idx_col,  
+              sample(mom$child[mom$HS==2], size=csize/2, replace=F))
+  idx_HS = c( rep(1, csize/2), rep(2, csize/2) )
   
   
   # extracting info
@@ -1630,6 +1638,7 @@ distH_plot1 = function(stan_object, true_data, par_object,
   
   # plot
   par(mfrow=rplot)
+  layout(matrix(1:csize, ncol=rplot[2], byrow=F))
   
   # i=1
   for(i in 1:ncol(out_mom) ){ # children
@@ -1649,14 +1658,18 @@ distH_plot1 = function(stan_object, true_data, par_object,
     curve( dbeta2(x, out_mean[i], M_mean[i]), from=0, to=1, lwd=2.5,
            xlab='Entropy', ylab='Density', col='black', add=T)
     
-    
     # observations
     points( true_data$H[true_data$child==idx_col[i]], 
             rep( 0.3, sum(true_data$child==idx_col[i]) ), 
-            pch=19, col=col.alpha('blue', alpha2))
+            pch=19, col=rethink_palette[idx_HS[i]])
     points( par_object$mean[i], 0, pch=19, col='red')
     lines(x=with(par_object[i,], c(`5.5%`, `94.5%`)), 
           y=rep(0, 2), col='red')
+    
+    if(i==1){
+      legend('topright', legend=c('NH','HI/CI'), 
+             col=rethink_palette[1:2], bty='n', pch=19)
+    }
     
   }
   

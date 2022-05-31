@@ -305,21 +305,27 @@ child_out; utt_out
 
 
 ## distributional plots ####
-data_true = with(dlist, data.frame(H=H, child=cid))
+data_true = with(dlist, data.frame(H=H, child=cid, HS=HS[cid]))
 par_recovery = precis(E_NC5b3, depth=4)
 
 # pdf("posterior_predictive_real1.pdf")
 distH_plot1( stan_object=E_NC5b3, 
              true_data=data_true, 
-             csize=6, rplot=c(3,2),
-             par_object=par_recovery, M=6)
+             par_object=par_recovery,
+             csize=6, 
+             rplot=c(3,2),
+             M=6,
+             seed=10)
 # dev.off()
 # well enough capture of the data
 
 
 
 
-## SI plots ####
+
+
+
+## Ht and SI plots ####
 par_E_NC5b3 = parameter_recovery( stan_object= E_NC5b3, true_par = NULL, p=0.95,
                                   est_par=c('SI','Ht') )
 

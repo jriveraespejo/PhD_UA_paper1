@@ -20,6 +20,10 @@ source( file.path( getwd(), 'sim_code', '0_sim_extra.R') )
 
 
 
+
+
+# varibility in beta distribution ####
+
 M = c(2,5,10,20)
 cp = sapply( 1:length(M), col.alpha, alpha=0.7)
 
@@ -74,6 +78,9 @@ par(mfrow=c(1,1))
 
 
 
+
+
+# data plot ####
 
 
 icid=mom$dL$cid
@@ -146,10 +153,11 @@ for(p in 1:length(mean_val) ){
   if(p==1){
     dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_b) ) ),
           col=rethink_palette[p], lwd=2, xlab='Entropy', xlim=c(0,1))
-    mtext( paste0('s_b = ', round( mean(post$s_b), 2) ), 3, adj=0, cex=1.5)
-    legend('topleft', legend=c('H=0.2','H=0.5','H=0.8'), bty='n',
-           lty=rep(1,3), lwd=rep(2,3), cex=1.5,
-           col=c(rethink_palette[1],rethink_palette[2],rethink_palette[3]) )
+    # mtext( paste0('s_b = ', round( mean(post$s_b), 2) ), 3, adj=0, cex=1.5)
+    mtext( text = parse(text=paste0('"Blocks "', '(U[b])')), 3, adj=0, cex=1.5)
+    # legend('topleft', legend=c('H=0.2','H=0.5','H=0.8'), bty='n',
+    #        lty=rep(1,3), lwd=rep(2,3), cex=1.5,
+    #        col=c(rethink_palette[1],rethink_palette[2],rethink_palette[3]) )
   } else{
     dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_b) ) ),
           col=rethink_palette[p], lwd=2, add=T)
@@ -159,6 +167,7 @@ for(p in 1:length(mean_val) ){
     dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=post$s_b[idx_sample[s]] ) ),
           col=col.alpha(rethink_palette[p], 0.05), lwd=1, add=T)
   }
+  abline(v=mean_val[p], col=rethink_palette[p], lty=2)
 }
 
 
@@ -168,7 +177,8 @@ for(p in 1:length(mean_val) ){
   if(p==1){
     dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_i) ) ),
           col=rethink_palette[p], lwd=2, xlab='Entropy', xlim=c(0,1))
-    mtext( paste0('s_i = ', round( mean(post$s_i), 2) ), 3, adj=0, cex=1.5)
+    # mtext( paste0('s_i = ', round( mean(post$s_i), 2) ), 3, adj=0, cex=1.5)
+    mtext( text = parse(text=paste0('"Children "', '(U[i])')), 3, adj=0, cex=1.5)
   } else{
     dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_i) ) ),
           col=rethink_palette[p], lwd=2, add=T)
@@ -178,6 +188,7 @@ for(p in 1:length(mean_val) ){
     dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=post$s_i[idx_sample[s]] ) ),
           col=col.alpha(rethink_palette[p], 0.05), lwd=1, add=T)
   }
+  abline(v=mean_val[p], col=rethink_palette[p], lty=2)
 }
 
 
@@ -187,7 +198,8 @@ for(p in 1:length(mean_val) ){
   if(p==1){
     dens( rbeta2(n=1e5, prob=mean_val[p], theta=mean(post$m_M) ),
           col=rethink_palette[p], lwd=2, xlab='Entropy', xlim=c(0,1)) 
-    mtext( paste0('m_M = ', round( mean(post$m_M), 2) ), 3, adj=0, cex=1.5)
+    # mtext( paste0('m_M = ', round( mean(post$m_M), 2) ), 3, adj=0, cex=1.5)
+    mtext( text = parse(text=paste0('"Replicates "', '(U[ik])')), 3, adj=0, cex=1.5)
   } else{
     dens( rbeta2(n=1e5, prob=mean_val[p], theta=mean(post$m_M) ),
           col=rethink_palette[p], lwd=2, add=T)
@@ -197,6 +209,7 @@ for(p in 1:length(mean_val) ){
     dens( rbeta2(n=1e5, prob=mean_val[p], theta=post$m_M[idx_sample[s]] ),
           col=col.alpha(rethink_palette[p], 0.05), lwd=1, add=T)
   }
+  abline(v=mean_val[p], col=rethink_palette[p], lty=2)
 }
 
 par(mfrow=c(1,1))
