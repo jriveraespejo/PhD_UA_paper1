@@ -313,11 +313,22 @@ while the hyper-priors were defined as follows:
 %-------------------------------
 \subsubsection{Estimation procedure} \label{ssSA:model_estimation}
 %-------------------------------
-The proposed models in Table \ref{tab:models} were estimated under the Bayesian framework. More specifically, we used the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012} implemented in \texttt{Stan} \citep{Stan_2020}. Additionally, all procedures were performed in \texttt{R} 4.1.2 \citep{R_2015} and its integration packages \citep{RStan_2020}, in a 64-bit system with a MINGW 32-bit cross-compiler (\texttt{x86\_64-w64-mingw32/x64}).
+The proposed models in Table \ref{tab:models} were estimated under the Bayesian framework. More specifically, we used the No-U-Turn Hamiltonian Monte Carlo algorithm (No-U-Turn HMC) \citep{Betancourt_et_al_2013, Duane_et_al_1987, Hoffman_et_al_2014, Neal_2012} implemented in \texttt{Stan} \citep{Stan_2020}. We used four chains of $2000$ iterations each, from which the first $1000$ were discarded as a warm-up required by the software, leaving $1000$ effective iterations.
+
+Additionally, all procedures were performed in \texttt{R} 4.1.2 \citep{R_2015} and its integration packages \citep{RStan_2020}, in a 64-bit system with a MINGW 32-bit cross-compiler (\texttt{x86\_64-w64-mingw32/x64}).
 
 \begin{comment}
 	\footnote{see \citet{Rivera_2021} (p. 11-13, 15-27) for a detailed description of its benefits and shortcomings.}
 \end{comment}
+%
+%
+\begin{figure}[!h]
+	\centering
+	\includegraphics[trim=0 490 0 0, clip, width=0.7\textwidth]{power_result23.pdf}
+	%trim=left lower right upper
+	\caption[Group contrasts: power on small hearing group differences]{Group contrasts: power on small hearing group differences ($\approx 0.15$)}
+	\label{fig:contrasts}
+\end{figure}
 %
 %
 %-------------------------------
@@ -343,14 +354,6 @@ Third, the statistical precision of our estimates do not reach similar power res
 \end{comment}
 
 For more details on the assumed effects and the simulation code, refer to the GitHub repository: \url{https://github.com/jriveraespejo/PhD_UA_paper1}
-%
-\begin{figure}[!h]
-	\centering
-	\includegraphics[trim=0 490 0 0, clip, width=0.7\textwidth]{power_result23.pdf}
-	%trim=left lower right upper
-	\caption[Group contrasts: power on small hearing group differences]{Group contrasts: power on small hearing group differences ($\approx 0.15$)}
-	\label{fig:contrasts}
-\end{figure}
 %
 %
 %-------------------------------

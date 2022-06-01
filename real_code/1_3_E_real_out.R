@@ -204,9 +204,11 @@ parameter_recovery( stan_object= E_NC5b3, true_par = NULL, p=0.95,
 
 
 ## contrasts ####
+
+# E_NC2b
 post = extract.samples( E_NC2b )
-cont_post = post$aHS[,2] - post$aHS[,1]
-attr(cont_post, "dimnames") = 'aHS[2] - aHS[1]'
+cont_post = data.frame( post$aHS[,2] - post$aHS[,1] )
+colnames(cont_post) = 'aHS[2] - aHS[1]'
   
 res_stan = precis( as_tibble(cont_post), depth=4, hist=F, prob=0.95 )
 names(res_stan)[3:4] = c('CI_lower','CI_upper')
@@ -217,12 +219,11 @@ attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper')
 
 res_stan = cbind(res_stan, hpdi_res) # join info
 res_stan = round( res_stan, 3 ) # round
-
 res_stan
 
 
 
-
+# E_NC5b3
 post = extract.samples( E_NC5b3 )
 
 # levels
@@ -261,6 +262,7 @@ attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper')
 
 res_stan = cbind(res_stan, hpdi_res) # join info
 res_stan = round( res_stan, 3 ) # round
+res_stan
 # Results
 #
 # Variability around parameters does not allow to check if the contrast
