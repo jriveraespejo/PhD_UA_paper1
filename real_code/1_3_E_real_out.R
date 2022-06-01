@@ -204,6 +204,25 @@ parameter_recovery( stan_object= E_NC5b3, true_par = NULL, p=0.95,
 
 
 ## contrasts ####
+post = extract.samples( E_NC2b )
+cont_post = post$aHS[,2] - post$aHS[,1]
+attr(cont_post, "dimnames") = 'aHS[2] - aHS[1]'
+  
+res_stan = precis( as_tibble(cont_post), depth=4, hist=F, prob=0.95 )
+names(res_stan)[3:4] = c('CI_lower','CI_upper')
+
+# get the HPDI
+hpdi_res = HPDinterval( as.mcmc(cont_post), prob=0.95)
+attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
+
+res_stan = cbind(res_stan, hpdi_res) # join info
+res_stan = round( res_stan, 3 ) # round
+
+res_stan
+
+
+
+
 post = extract.samples( E_NC5b3 )
 
 # levels
@@ -306,13 +325,17 @@ child_out; utt_out
 
 ## distributional plots ####
 data_true = with(dlist, data.frame(H=H, child=cid, HS=HS[cid]))
-par_recovery = precis(E_NC5b3, depth=4)
+par_E_NC5b3 = parameter_recovery( stan_object= E_NC5b3, 
+                                  true_par = NULL, 
+                                  p=0.95,
+                                  est_par=c('SI','Ht') )
 
 # pdf("posterior_predictive_real1.pdf")
 distH_plot1( stan_object=E_NC5b3, 
              true_data=data_true, 
-             par_object=par_recovery,
+             par_object=par_E_NC5b3,
              csize=6, 
+             rsize=100,
              rplot=c(3,2),
              M=6,
              seed=10)
@@ -326,9 +349,6 @@ distH_plot1( stan_object=E_NC5b3,
 
 
 ## Ht and SI plots ####
-par_E_NC5b3 = parameter_recovery( stan_object= E_NC5b3, true_par = NULL, p=0.95,
-                                  est_par=c('SI','Ht') )
-
 
 # pdf("posterior_predictive_real2.pdf")
 par(mfrow=c(2,1))
@@ -342,12 +362,17 @@ sc = sc[idx_order,]
 
 plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
       ylim=c(0,1), xaxt='n', xlab="", ylab=" 'true' entropy (Ht)")
+abline(v=16.5, col='gray', lwd=0.5, lty=2)
 axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
 for(i in 1:nrow(sc)){
   lines( x=rep(i, 2), 
          y=sc[i, c('HPDI_lower','HPDI_upper')],
          col=rethink_palette[sc$HS[i]] )
 }
+lines(x= c(0,16.5), y= rep( mean( sc$mean[sc$HS==1] ), 2),
+      col=rethink_palette[1], lty=2)
+lines(x= c(16.5,33), y= rep( mean( sc$mean[sc$HS==2] ), 2),
+      col=rethink_palette[2], lty=2)
 legend('topleft',legend=c('NH','HI/CI'), col=rethink_palette[1:2], bty='n', pch=19, lty=1)
 
 
@@ -359,12 +384,115 @@ sc = sc[ idx_order,]
 
 plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
       ylim=c(-2,3.5), xaxt='n', xlab="children", ylab=" speech intelligibility (SI)")
+abline(v=16.5, col='gray', lty=2)
 axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
 for(i in 1:nrow(sc)){
   lines( x=rep(i, 2), 
          y=sc[i, c('HPDI_lower','HPDI_upper')],
          col=rethink_palette[sc$HS[i]] )
 }
+lines(x= c(0,16.5), y= rep( mean( sc$mean[sc$HS==1] ), 2),
+      col=rethink_palette[1], lty=2)
+lines(x= c(16.5,33), y= rep( mean( sc$mean[sc$HS==2] ), 2),
+      col=rethink_palette[2], lty=2)
 
 par(mfrow=c(1,1))
 # dev.off()
+
+
+
+
+
+
+
+
+
+
+## variability plot ####
+
+# plot of variability
+post = extract.samples(E_NC5b3)
+# str(post)
+
+n=100 # samples from posterior 
+set.seed(12345)
+idx_sample = sample(1:length(post$a), size=n)
+
+mean_val = c(0.2,0.5,0.8)
+
+
+
+
+# pdf('variability_plot.pdf')
+
+par(mfrow=c(3,1))
+
+for(p in 1:length(mean_val) ){
+  
+  set.seed(12345)
+  if(p==1){
+    dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_b) ) ),
+          col=rethink_palette[p], lwd=2, xlab='Entropy', xlim=c(0,1))
+    mtext( text = parse(text=paste0('"Blocks "', '(U[b])')), 3, adj=0, cex=1.5)
+    # legend('topleft', legend=c('H=0.2','H=0.5','H=0.8'), bty='n',
+    #        lty=rep(1,3), lwd=rep(2,3), cex=1.5,
+    #        col=c(rethink_palette[1],rethink_palette[2],rethink_palette[3]) )
+  } else{
+    dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_b) ) ),
+          col=rethink_palette[p], lwd=2, add=T)
+  }
+  
+  for(s in 1:length(idx_sample)){
+    dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=post$s_b[idx_sample[s]] ) ),
+          col=col.alpha(rethink_palette[p], 0.05), lwd=1, add=T)
+  }
+  abline(v=mean_val[p], col=rethink_palette[p], lty=2)
+}
+
+
+for(p in 1:length(mean_val) ){
+  
+  set.seed(12345)
+  if(p==1){
+    dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_i) ) ),
+          col=rethink_palette[p], lwd=2, xlab='Entropy', xlim=c(0,1))
+    # mtext( paste0('s_i = ', round( mean(post$s_i), 2) ), 3, adj=0, cex=1.5)
+    mtext( text = parse(text=paste0('"Children "', '(U[i])')), 3, adj=0, cex=1.5)
+  } else{
+    dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=mean(post$s_i) ) ),
+          col=rethink_palette[p], lwd=2, add=T)
+  }
+  
+  for(s in 1:length(idx_sample)){
+    dens( inv_logit( rnorm(n=1e5, mean=logit(mean_val[p]), sd=post$s_i[idx_sample[s]] ) ),
+          col=col.alpha(rethink_palette[p], 0.05), lwd=1, add=T)
+  }
+  abline(v=mean_val[p], col=rethink_palette[p], lty=2)
+}
+
+
+for(p in 1:length(mean_val) ){
+  
+  set.seed(12345)
+  if(p==1){
+    dens( rbeta2(n=1e5, prob=mean_val[p], theta=mean(post$m_M) ),
+          col=rethink_palette[p], lwd=2, xlab='Entropy', xlim=c(0,1)) 
+    # mtext( paste0('m_M = ', round( mean(post$m_M), 2) ), 3, adj=0, cex=1.5)
+    mtext( text = parse(text=paste0('"Replicates "', '(U[ik])')), 3, adj=0, cex=1.5)
+  } else{
+    dens( rbeta2(n=1e5, prob=mean_val[p], theta=mean(post$m_M) ),
+          col=rethink_palette[p], lwd=2, add=T)
+  }
+  
+  for(s in 1:length(idx_sample)){
+    dens( rbeta2(n=1e5, prob=mean_val[p], theta=post$m_M[idx_sample[s]] ),
+          col=col.alpha(rethink_palette[p], 0.05), lwd=1, add=T)
+  }
+  abline(v=mean_val[p], col=rethink_palette[p], lty=2)
+}
+
+par(mfrow=c(1,1))
+
+# dev.off()
+
+

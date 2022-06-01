@@ -119,7 +119,7 @@ The analysis was informed by a preliminary work aimed at describing the causal a
 		%\node at (4.5,1.8) {\small $b=1,\dots,B$};
 	\end{tikzpicture}
 	%
-	\caption[DAG: causal diagram]{DAG: causal diagram describing the relationships among the analyzed variables}
+	\caption[DAG: causal diagram]{DAG: causal diagram describing the relationships among the analyzed variables. Open circles describe latent/unobserved variables, full circles describe observed variables.}
 	\label{fig:DAG}
 \end{figure}
 
@@ -204,7 +204,9 @@ Thirteen statistical models were derived from the previous general description. 
 
 Table \ref{tab:models} provides an overview of the parameterization for the full set of proposed models. Notice all used block and children's random effects ($a_{b}$ and $a_{i}$, respectively), as well as the fixed effect intercept ($\alpha$). Moreover, the models with one fixed `sample size' used a value of ten, corresponding to number of utterances per child (see supplementary section \ref{ssSA:model_variability} on its implications for modeling). Finally, all models contemplated the interaction of the standardized pure tone average and the hearing status. The latter was imposed, because the collection of data did not contemplated the measurement of the pure tone average for the NH group. Therefore, the only interpretable parameter is the one estimated for the HI/CI children.
 
-Additional details concerning the Bayesian implementation of the models, such as the representation of variability in a beta-proportion distribution, the parameters' priors and hyper-priors, the estimation procedure, the data pre-processing phase, and simulation studies are expanded in the supplementary section \ref{sSA:model_details}.
+It is important to highlight that for all model implementations, the visual inspection of trace, trace-rank and autocorrelation plots was performed. Additionally, we also evaluated the Gelman-Rubin diagnostic and effective number of samples \cite{Gelman_et_al_2014}. In all cases, the plots and statistics indicated the parameters achieved convergence, good mixing and lack of serial autocorrelation, all necessary requirements to be able to interpret the model estimates.
+
+Additional details concerning the Bayesian implementation of the models, such as the representation of variability in a beta-proportion distribution, the parameters' priors and hyper-priors, the estimation procedure, the data pre-processing phase, and simulation studies are expanded in the supplementary section \ref{sSA:model_details}. 
 %
 \begin{table}[h!]
 	\centering
@@ -215,20 +217,20 @@ Additional details concerning the Bayesian implementation of the models, such as
 		Model & \multicolumn{1}{c}{Name} & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i], HS[i]}$ & $\beta_{A, HS[i]}$ & \beta_{P, HS[i]} \\[0.5ex] 
 		\hline\hline
 		\rowcolor{gray}
-		1 & Intercept only (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & -- & -- & -- \\
-		2 & No interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		1 & Intercept only (fixed `size') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & -- & -- & -- \\
+		2 & No interaction (fixed `size') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
 		\rowcolor{gray}
-		3 & No interaction (one ``size'')  & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		3 & No interaction (one `size')  & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
 		4 & No interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\ 
 		\rowcolor{gray}
-		5 & Age interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\ 
-		6 & Etiology interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		5 & Age interaction (fixed `size') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\ 
+		6 & Etiology interaction (fixed `size') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
 		\rowcolor{gray}
-		7 & Full interaction (fixed ``size'') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
-		8 & Age interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		7 & Full interaction (fixed `size') & 10 & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		8 & Age interaction (one `size') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
 		\rowcolor{gray}
-		9 & Etiology interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
-		10 & Full interaction (one ``size'') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
+		9 & Etiology interaction (one `size') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
+		10 & Full interaction (one `size') & $M$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
 		\rowcolor{gray}
 		11 & Age interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
 		12 & Etiology interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A}$ & $\beta_{P, HS[i]}$ \\
@@ -236,7 +238,7 @@ Additional details concerning the Bayesian implementation of the models, such as
 		13 & Full interaction (robust) & $M_{i}$ & $a_{b}$ & $a_{i}$ & $\alpha$ & $\alpha_{E[i],HS[i]}$ & $\beta_{A, HS[i]}$ & $\beta_{P, HS[i]}$ \\
 		\hline
 	\end{tabular}
-	\caption[Proposed statistical models]{Proposed statistical models.}
+	\caption[Proposed statistical models]{Proposed statistical models. Parameterizations.}
 	\label{tab:models}
 \end{table}
 %

@@ -1663,7 +1663,7 @@ distH_plot1 = function(stan_object, true_data, par_object,
             rep( 0.3, sum(true_data$child==idx_col[i]) ), 
             pch=19, col=rethink_palette[idx_HS[i]])
     points( par_object$mean[i], 0, pch=19, col='red')
-    lines(x=with(par_object[i,], c(`5.5%`, `94.5%`)), 
+    lines(x=with(par_object[i,], c(HPDI_lower, HPDI_upper)), 
           y=rep(0, 2), col='red')
     
     if(i==1){

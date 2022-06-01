@@ -10,14 +10,14 @@ As expected, three hierarchies of variability were present in our data: the bloc
 
 Evidence from the posterior estimates reveal the block random effects explained a small amount of variability in the data (top panel of figure \ref{fig:variability}), and its inclusion/exclusion in the model did not change the parameter estimates. The previous implies the experiment was correctly `set up', as the series in which the utterances were transcribed did not explain a significant amount of variation, nor its exclusion biased the parameter estimates.
 
-On the contrary, we observe a significantly large variability between children's \textit{speech intelligibility}, more precisely, more than three times the block effects variability (middle panel of figure \ref{fig:variability}). The previous corroborated preliminary evidence on the matter \cite{Young_et_al_2002, Peng_et_al_2004, Montag_et_al_2014, Castellanos_et_al_2014, Yanbay_et_al_2014, Nittrouer_et_al_2014, Freeman_et_al_2017, Boonen_et_al_2021}. Additionally, it implied that given such a large amount of between variability, the statistical models might have a harder time comparing the two \textit{hearing status} groups, in respect to their location on the intelligibility scale.
+On the contrary, we observe a significantly larger variability between children's \textit{speech intelligibility}, more precisely, more than three times the block effects variability (middle panel of figure \ref{fig:variability}). The previous corroborated preliminary evidence on the matter \cite{Young_et_al_2002, Peng_et_al_2004, Montag_et_al_2014, Castellanos_et_al_2014, Yanbay_et_al_2014, Nittrouer_et_al_2014, Freeman_et_al_2017, Boonen_et_al_2021}. Additionally, it implied that given such a large amount of between variability, the statistical models might have a harder time comparing the two \textit{hearing status} groups, in respect to their location on the intelligibility scale.
 
-Finally, for the variability of the entropy replicates, the posterior estimates provide a surprising finding: the amount of variability at the replicates level is even larger than the one observed at the children level (bottom panel of figure \ref{fig:variability}). The latter implies there is significant error in measuring speech intelligibility with multiple entropy replicates. This further emphasize the difficulty of producing unequivocal  inferences, in respect to the intelligibility levels of the \textit{hearing status} groups.
+Finally, for the variability of the entropy replicates, the posterior estimates reveal a reasonable finding: the amount of variability at the replicates level is even larger than the one observed at the children level (bottom panel of figure \ref{fig:variability}). The latter implies there is significant error in measuring speech intelligibility with the entropy replicates. This further emphasize the difficulty of producing unequivocal  inferences, in respect to the intelligibility levels of the \textit{hearing status} groups.
 %
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{variability_plot.pdf}
-	\caption[Posterior predictive: hierarchy of variability in the data]{Posterior predictive: hierarchy of variability in the data. Distributions are plotted at entropy replicates' scale, considering three different average entropy values: $\mu=0.2$, $\mu=0.5$, and $\mu=0.8$ (discontinuous lines). }
+	\caption[Posterior predictive: hierarchy of variability in the data]{Posterior predictive: hierarchy of variability in the data. Distributions are plotted at the entropy replicates scale, considering three different average entropy values: $\mu=0.2$, $\mu=0.5$, and $\mu=0.8$ (discontinuous lines). Thick solid lines represent the marginal distribution, thin solid lines depict $100$ random posterior distribution samples.}
 	\label{fig:variability}
 \end{figure}
 %
@@ -25,11 +25,37 @@ Finally, for the variability of the entropy replicates, the posterior estimates 
 \subsection{About our hypothesis} \label{sS:results_hypothesis}
 %###############################
 %
-The current research used the Information-Theoretic Approach \citep{Anderson_2008, Chamberlain_1965} for model selection and inference. The application of the approach required: (i) the expression of the research hypothesis into statistical models, (ii) the selection of the most plausible models, and (iii) to produce inferences based on one or multiple selected models.
+The current research used the Information-Theoretic Approach \citep{Anderson_2008, Chamberlain_1965} for model selection and inference. The application of the approach required: (i) the expression of the research hypothesis into statistical models, (ii) the selection of the most plausible models, and (iii) to produce inferences based on one or multiple selected models. The first requirement of the approach is covered in sections \ref{sS:causal_frame} and \ref{sS:stat_analysis}, and expanded in supplementary section \ref{sSA:model_details}. Here we use the results of the second requirement, detailed in the supplementary section \ref{ssSA:model_selection}, to produce our inferences. 
 
-Since the first requirement is covered in sections \ref{sS:causal_frame} and \ref{sS:stat_analysis}, and expanded in supplementary sections \ref{sSA:causal_details} and \ref{sSA:model_details}, while the second requirement is detailed in the supplementary section \ref{ssSA:model_selection}, here we proceed with the last step of the approach. 
-
-Considering all of the above, the final inferences will be performed with models three and ten. The former is considered because it is the highest supported model. The latter is considered because it encompasses the remaining highest supported models. Furthermore, no \textit{robust} model is analyzed, as we prefer a more parsimonious depiction of our hypothesis.
+As detailed in the aforementioned supplementary section, the final conclusions of our research will be drawn from the comparisons of two models: (i) a no interaction model, with one estimated `sample size' (model 3), and (ii) a full interaction model, with one estimated `sample size' (model 10). The former is selected because it is the model with highest probabilistic support. The latter is considered because it encompasses the remaining highest supported models. Furthermore, no \textit{robust} model is inspected, as we prefer a more parsimonious depiction of our hypothesis.
+%
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|cccccccccccc|} 
+		\hline
+		& \multicolumn{3}{c}{} & \multicolumn{2}{c}{CI} & & \multicolumn{2}{c}{HPDI} & & \multicolumn{2}{c|}{}\\[0.5ex]
+		\cline{5-6} \cline{8-9}
+		Parameter & Mean & SD & & $2.5\%$ & $97.5\%$ & & $2.5\%$ & $97.5\%$ & & n eff. & Rhat \\[0.5ex] 
+		\hline\hline
+		\multicolumn{12}{|l|}{ \textbf{Model 3: No interaction (one `size')} } \\
+		\multicolumn{1}{|r}{ \texttt{a} } & & & & & & & & & & & \\
+		\multicolumn{1}{|r}{ \texttt{bP[HI/CI]} } & & & & & & & & & & & \\
+		\multicolumn{1}{|r}{ \texttt{bA} } & & & & & & & & & & & \\
+		\hline
+		\multicolumn{12}{|l|}{ \textbf{Model 10: Full interaction (one `size')} } \\
+		\multicolumn{1}{|r}{ \texttt{a} } & & & & & & & & & & & \\
+		\multicolumn{1}{|r}{ \texttt{bP[HI/CI]} } & & & & & & & & & & & \\
+		\multicolumn{1}{|r}{ \texttt{bAHS[NH]} } & & & & & & & & & & & \\
+		\multicolumn{1}{|r}{ \texttt{bAHS[HI/CI]} } & & & & & & & & & & & \\
+		\hline
+		\multicolumn{12}{l}{\footnotesize{CI = compatibility interval}} \\
+		\multicolumn{12}{l}{\footnotesize{HDPI = highest posterior density interval}} \\
+		\multicolumn{12}{l}{\footnotesize{n eff. = effective number samples}} \\
+		\multicolumn{12}{l}{\footnotesize{Rhat = Gelman-Rubin diagnostic}} \\
+	\end{tabular}
+	\caption[Characteristics of selected children]{Characteristics of selected children.}
+	\label{tab:characteristics}
+\end{table}
 
 \textcolor{red}{work in progress}
 
@@ -82,11 +108,7 @@ therefore we decide to keep the
 (E_NC5b3) model
 \end{comment}
 
-\begin{comment}
-It is important to highlight that for all model implementations, the visual inspection of trace, trace-rank and autocorrelation plots was performed. Additionally, we also evaluated the Gelman-Rubin diagnostic and effective number of samples \cite{Gelman_et_al_2014}. In all cases, the plots and statistics indicated the parameters achieved convergence, good mixing and lack of serial autocorrelation; all necessary requirements to be able to interpret the model estimates. 
 
-Finally, considering the evidence provided by the previous step, we proceed to make inferences based on the selected models.
-\end{comment}
 
 \begin{comment}
 	Following the successful and comprehensive analysis in \citet{vanDaal_2020} and \citet{Lesterhuis_2018}, 
@@ -106,7 +128,7 @@ Finally, considering the evidence provided by the previous step, we proceed to m
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{posterior_predictive_real2.pdf}
-	\caption[Posterior predictive: ``true'' entropy and intelligibility scales]{Posterior predictive: ``true'' entropy and speech intelligibility scales}
+	\caption[Posterior predictive: \textit{true} entropy and \textit{speech intelligibility} scales]{Posterior predictive: \textit{true} entropy and \textit{speech intelligibility} scales. Circles represent mean values, lines depict $95\%$ highest posterior density intervals (HDPI). Horizontal discontinuous lines represent the marginal average for the \textit{hearing status} groups.}
 	\label{fig:predictive2}
 \end{figure}
 %
@@ -120,13 +142,13 @@ Finally, considering the evidence provided by the previous step, we proceed to m
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{posterior_predictive_real1.pdf}
-	\caption[Posterior predictive: entropy replicates]{Posterior predictive: entropy replicates}
+	\caption[Posterior predictive: entropy replicates]{Posterior predictive: entropy replicates. Red point with lines represent the mean \textit{true} entropy with $95\%$ highest posterior density interval (HPDI). Thick solid line represents the marginal distribution, thin solid lines depicts $100$ random posterior distribution samples.}
 	\label{fig:predictive1}
 \end{figure}
 %
 %
 %###############################
-\subsection{Outlying observations} \label{sS:results_outliers}
+\subsection{Influential observations} \label{sS:results_outliers}
 %###############################
 %
 \textcolor{red}{work in progress}
@@ -134,7 +156,7 @@ Finally, considering the evidence provided by the previous step, we proceed to m
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{outliers.pdf}
-	\caption[Outlying observations]{Outlying observations. Pairs (child, utterance) are reported for specific observations.}
+	\caption[Influential observations]{Influential observations. Pairs (child, utterance) are reported for specific observations.}
 	\label{fig:outliers}
 \end{figure}
 %
