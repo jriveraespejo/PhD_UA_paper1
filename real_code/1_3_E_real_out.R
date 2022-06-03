@@ -310,15 +310,15 @@ obs_out = as.integer( rownames(PSIS_E[PSIS_E$k>=0.5,]) )
 child_out = dlist$cid[obs_out] # zero values (fixed with trick)
 utt_out = dlist$uid[obs_out] # zero values (fixed with trick)
 
-dlist$H[obs_out]; psych::describe( dlist$H[!(dlist$H==0.0001)] ) 
+child_out
+dlist$H[obs_out]; psych::describe( dlist$H[!(dlist$H==0.0001)] )
 dlist$HS[child_out] 
 dlist$E[child_out] 
-dlist$A[child_out]; psych::describe( dlist$A[-child_out] ) 
-dlist$PTA[child_out]; psych::describe( dlist$PTA[-child_out] ) 
+# dlist$A[child_out]; psych::describe( dlist$A[-child_out] ) 
+# dlist$PTA[child_out]; psych::describe( dlist$PTA[-child_out] ) 
 
 idx = dlist$cid %in% child_out #& dlist$uid %in% utt_out
 data.frame(cid=dlist$cid[idx], uid=dlist$uid[idx], H=dlist$H[idx])
-child_out; utt_out
 # it is because they have H=0 (perfect SI)
 
 
@@ -351,10 +351,6 @@ distH_plot1( stan_object=E_NC5b3,
 
 
 ## Ht and SI plots ####
-
-# pdf("posterior_predictive_real2.pdf")
-par(mfrow=c(2,1))
-
 idx = str_detect( rownames(par_E_NC5b3), '^Ht')
 sc = par_E_NC5b3[idx,]
 sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
@@ -362,8 +358,9 @@ sc$HS = dlist$HS
 idx_order = with(sc, order(HS, mean) )
 sc = sc[idx_order,]
 
+# pdf("posterior_predictive_real2_1.pdf", width=7, height=3.5)
 plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
-      ylim=c(0,1), xaxt='n', xlab="", ylab=" 'true' entropy (Ht)")
+      ylim=c(0,1), xaxt='n', xlab="children", ylab=" 'true' entropy (Ht)")
 abline(v=16.5, col='gray', lwd=0.5, lty=2)
 axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
 for(i in 1:nrow(sc)){
@@ -376,6 +373,9 @@ lines(x= c(0,16.5), y= rep( mean( sc$mean[sc$HS==1] ), 2),
 lines(x= c(16.5,33), y= rep( mean( sc$mean[sc$HS==2] ), 2),
       col=rethink_palette[2], lty=2)
 legend('topleft',legend=c('NH','HI/CI'), col=rethink_palette[1:2], bty='n', pch=19, lty=1)
+# dev.off()
+
+
 
 
 idx = str_detect( rownames(par_E_NC5b3), '^SI')
@@ -384,6 +384,8 @@ sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
 sc$HS = dlist$HS
 sc = sc[ idx_order,]
 
+
+# pdf("posterior_predictive_real2_2.pdf", width=7, height=3.5)
 plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
       ylim=c(-2,3.5), xaxt='n', xlab="children", ylab=" speech intelligibility (SI)")
 abline(v=16.5, col='gray', lty=2)
