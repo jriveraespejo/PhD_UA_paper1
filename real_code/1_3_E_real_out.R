@@ -289,123 +289,6 @@ tri_plot(stan_object=E_NC5b3, pars=paste0('Ht[', 1:5,']') )
 
 
 
-## outlier check ####
-WAIC_E = WAIC(E_NC5b3, pointwise=TRUE)
-PSIS_E = PSIS(E_NC5b3, pointwise=TRUE)
-
-
-# pdf("outliers.pdf")
-plot( PSIS_E$k, WAIC_E$penalty, col=rangi2, lwd=2, xlim=c(0,0.8),
-      xlab="PSIS Pareto k", ylab="WAIC penalty"  )
-abline(v=0.5, lty=2)
-abline(v=0.7, lty=2, lwd=2)
-identify( x=PSIS_E$k , y=WAIC_E$penalty, labels=paste0(dlist$cid, ',', dlist$uid) )
-# dev.off()
-# 4 observations are outlying
-
-
-
-PSIS_E[PSIS_E$k>=0.5,]
-obs_out = as.integer( rownames(PSIS_E[PSIS_E$k>=0.5,]) )
-child_out = dlist$cid[obs_out] # zero values (fixed with trick)
-utt_out = dlist$uid[obs_out] # zero values (fixed with trick)
-
-child_out
-dlist$H[obs_out]; psych::describe( dlist$H[!(dlist$H==0.0001)] )
-dlist$HS[child_out] 
-dlist$E[child_out] 
-# dlist$A[child_out]; psych::describe( dlist$A[-child_out] ) 
-# dlist$PTA[child_out]; psych::describe( dlist$PTA[-child_out] ) 
-
-idx = dlist$cid %in% child_out #& dlist$uid %in% utt_out
-data.frame(cid=dlist$cid[idx], uid=dlist$uid[idx], H=dlist$H[idx])
-# it is because they have H=0 (perfect SI)
-
-
-
-
-
-## distributional plots ####
-data_true = with(dlist, data.frame(H=H, child=cid, HS=HS[cid]))
-par_E_NC5b3 = parameter_recovery( stan_object= E_NC5b3, 
-                                  true_par = NULL, 
-                                  p=0.95,
-                                  est_par=c('SI','Ht') )
-
-# pdf("posterior_predictive_real1.pdf")
-distH_plot1( stan_object=E_NC5b3, 
-             true_data=data_true, 
-             par_object=par_E_NC5b3,
-             csize=6, 
-             rsize=100,
-             rplot=c(3,2),
-             M=6,
-             seed=10)
-# dev.off()
-# well enough capture of the data
-
-
-
-
-
-
-
-## Ht and SI plots ####
-idx = str_detect( rownames(par_E_NC5b3), '^Ht')
-sc = par_E_NC5b3[idx,]
-sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
-sc$HS = dlist$HS
-idx_order = with(sc, order(HS, mean) )
-sc = sc[idx_order,]
-
-# pdf("posterior_predictive_real2_1.pdf", width=7, height=3.5)
-plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
-      ylim=c(0,1), xaxt='n', xlab="children", ylab=" 'true' entropy (Ht)")
-abline(v=16.5, col='gray', lwd=0.5, lty=2)
-axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
-for(i in 1:nrow(sc)){
-  lines( x=rep(i, 2), 
-         y=sc[i, c('HPDI_lower','HPDI_upper')],
-         col=rethink_palette[sc$HS[i]] )
-}
-lines(x= c(0,16.5), y= rep( mean( sc$mean[sc$HS==1] ), 2),
-      col=rethink_palette[1], lty=2)
-lines(x= c(16.5,33), y= rep( mean( sc$mean[sc$HS==2] ), 2),
-      col=rethink_palette[2], lty=2)
-legend('topleft',legend=c('NH','HI/CI'), col=rethink_palette[1:2], bty='n', pch=19, lty=1)
-# dev.off()
-
-
-
-
-idx = str_detect( rownames(par_E_NC5b3), '^SI')
-sc = par_E_NC5b3[idx,]
-sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
-sc$HS = dlist$HS
-sc = sc[ idx_order,]
-
-
-# pdf("posterior_predictive_real2_2.pdf", width=7, height=3.5)
-plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
-      ylim=c(-2,3.5), xaxt='n', xlab="children", ylab=" speech intelligibility (SI)")
-abline(v=16.5, col='gray', lty=2)
-axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
-for(i in 1:nrow(sc)){
-  lines( x=rep(i, 2), 
-         y=sc[i, c('HPDI_lower','HPDI_upper')],
-         col=rethink_palette[sc$HS[i]] )
-}
-lines(x= c(0,16.5), y= rep( mean( sc$mean[sc$HS==1] ), 2),
-      col=rethink_palette[1], lty=2)
-lines(x= c(16.5,33), y= rep( mean( sc$mean[sc$HS==2] ), 2),
-      col=rethink_palette[2], lty=2)
-
-par(mfrow=c(1,1))
-# dev.off()
-
-
-
-
 
 
 
@@ -423,8 +306,6 @@ set.seed(12345)
 idx_sample = sample(1:length(post$a), size=n)
 
 mean_val = c(0.2,0.5,0.8)
-
-
 
 
 # pdf('variability_plot.pdf')
@@ -499,4 +380,156 @@ par(mfrow=c(1,1))
 
 # dev.off()
 
+
+
+
+
+
+
+## Ht and SI plots ####
+data_true = with(dlist, data.frame(H=H, child=cid, HS=HS[cid]))
+par_E_NC5b3 = parameter_recovery( stan_object= E_NC5b3, 
+                                  true_par = NULL, 
+                                  p=0.95,
+                                  est_par=c('SI','Ht') )
+
+
+idx = str_detect( rownames(par_E_NC5b3), '^Ht')
+sc = par_E_NC5b3[idx,]
+sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
+sc$HS = dlist$HS
+idx_order = with(sc, order(HS, mean) )
+sc = sc[idx_order,]
+
+# pdf("posterior_predictive_real2_1.pdf", width=7, height=3.5)
+plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
+      ylim=c(0,1), xaxt='n', xlab="children", ylab=" 'true' entropy (Ht)")
+abline(v=16.5, col='gray', lwd=0.5, lty=2)
+axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
+for(i in 1:nrow(sc)){
+  lines( x=rep(i, 2), 
+         y=sc[i, c('HPDI_lower','HPDI_upper')],
+         col=rethink_palette[sc$HS[i]] )
+}
+
+lines(x= c(0,16.5), y= rep( mean( sc$mean[sc$HS==1] ), 2),
+      col=col.alpha(rethink_palette[1], 0.5), lty=2, lwd=1.5)
+polygon( x=c(0,16.5,16.5,0), 
+         y=c(rep(quantile( sc$mean[sc$HS==1], 0.025 ), 2),
+             rep(quantile( sc$mean[sc$HS==1], 0.975 ), 2)),
+         col=col.alpha(rethink_palette[1], 0.15), lty=0, lwd=0.1)
+
+lines(x= c(16.5,33), y= rep( mean( sc$mean[sc$HS==2] ), 2),
+      col=col.alpha(rethink_palette[2], 0.5), lty=2, lwd=1.5)
+polygon( x=c(16.5,33,33,16.5), 
+         y=c(rep(quantile( sc$mean[sc$HS==2], 0.025 ), 2),
+             rep(quantile( sc$mean[sc$HS==2], 0.975 ), 2)),
+         col=col.alpha(rethink_palette[2], 0.15), lty=0, lwd=0.1)
+
+legend('topleft',legend=c('NH','HI/CI'), col=rethink_palette[1:2], bty='n', pch=19, lty=1)
+# dev.off()
+
+
+
+
+idx = str_detect( rownames(par_E_NC5b3), '^SI')
+sc = par_E_NC5b3[idx,]
+sc$N = as.integer( str_extract( row.names(sc), '[:digit:]{1,2}') )
+sc$HS = dlist$HS
+sc = sc[ idx_order,]
+
+
+# pdf("posterior_predictive_real2_2.pdf", width=7, height=3.5)
+plot( 1:nrow(sc), sc[,'mean'], pch=19, col=rethink_palette[sc$HS], 
+      ylim=c(-2,3.5), xaxt='n', xlab="children", ylab=" speech intelligibility (SI)")
+abline(v=16.5, col='gray', lty=2)
+axis(side=1, at=1:nrow(sc), labels=sc$N, las=2 )
+for(i in 1:nrow(sc)){
+  lines( x=rep(i, 2), 
+         y=sc[i, c('HPDI_lower','HPDI_upper')],
+         col=rethink_palette[sc$HS[i]] )
+}
+lines(x= c(0,16.5), y= rep( mean( sc$mean[sc$HS==1] ), 2),
+      col=col.alpha(rethink_palette[1], 0.5), lty=2, lwd=1.5)
+polygon( x=c(0,16.5,16.5,0), 
+         y=c(rep(quantile( sc$mean[sc$HS==1], 0.025 ), 2),
+             rep(quantile( sc$mean[sc$HS==1], 0.975 ), 2)),
+         col=col.alpha(rethink_palette[1], 0.15), lty=0, lwd=0.1)
+
+lines(x= c(16.5,33), y= rep( mean( sc$mean[sc$HS==2] ), 2),
+      col=col.alpha(rethink_palette[2], 0.5), lty=2, lwd=1.5)
+polygon( x=c(16.5,33,33,16.5), 
+         y=c(rep(quantile( sc$mean[sc$HS==2], 0.025 ), 2),
+             rep(quantile( sc$mean[sc$HS==2], 0.975 ), 2)),
+         col=col.alpha(rethink_palette[2], 0.15), lty=0, lwd=0.1)
+
+par(mfrow=c(1,1))
+# dev.off()
+
+
+
+
+
+
+
+## distributional plots ####
+data_true = with(dlist, data.frame(H=H, child=cid, HS=HS[cid]))
+par_E_NC5b3 = parameter_recovery( stan_object= E_NC5b3, 
+                                  true_par = NULL, 
+                                  p=0.95,
+                                  est_par=c('SI','Ht') )
+
+
+# pdf("posterior_predictive_real1.pdf")
+distH_plot1( stan_object=E_NC5b3, 
+             true_data=data_true, 
+             par_object=par_E_NC5b3,
+             csize=6, 
+             rsize=100,
+             rplot=c(3,2),
+             M=6,
+             seed=10)
+# dev.off()
+# well enough capture of the data
+
+
+
+
+
+
+
+
+
+
+## outlier check ####
+WAIC_E = WAIC(E_NC5b3, pointwise=TRUE)
+PSIS_E = PSIS(E_NC5b3, pointwise=TRUE)
+
+
+# pdf("outliers.pdf")
+plot( PSIS_E$k, WAIC_E$penalty, col=rangi2, lwd=2, xlim=c(0,0.8),
+      xlab="PSIS Pareto k", ylab="WAIC penalty"  )
+abline(v=0.5, lty=2)
+abline(v=0.7, lty=2, lwd=2)
+identify( x=PSIS_E$k , y=WAIC_E$penalty, labels=paste0(dlist$cid, ',', dlist$uid) )
+# dev.off()
+# 4 observations are outlying
+
+
+
+PSIS_E[PSIS_E$k>=0.5,]
+obs_out = as.integer( rownames(PSIS_E[PSIS_E$k>=0.5,]) )
+child_out = dlist$cid[obs_out] # zero values (fixed with trick)
+utt_out = dlist$uid[obs_out] # zero values (fixed with trick)
+
+child_out
+dlist$H[obs_out]; psych::describe( dlist$H[!(dlist$H==0.0001)] )
+dlist$HS[child_out] 
+dlist$E[child_out] 
+# dlist$A[child_out]; psych::describe( dlist$A[-child_out] ) 
+# dlist$PTA[child_out]; psych::describe( dlist$PTA[-child_out] ) 
+
+idx = dlist$cid %in% child_out #& dlist$uid %in% utt_out
+data.frame(cid=dlist$cid[idx], uid=dlist$uid[idx], H=dlist$H[idx])
+# it is because they have H=0 (perfect SI)
 

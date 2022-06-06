@@ -1,19 +1,43 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion} \label{S:discussion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+As stated in previous paragraphs, the main focus of the present research was to investigate the speech intelligibility levels of normal hearing (NH) versus hearing-impaired children with cochlear implants (HI/CI). For that purpose, we set up an experiment where ten utterances, from thirty two children, were transcribed and transformed into entropy measures. Finally, the entropy replicates served as our outcome variable.
 
-\textcolor{red}{work in progress}
+Rather than use the common multilevel approach, the current research proposed a novel method of statistical analysis. First, we modeled the \textit{speech intelligibility} as a latent variable that can be inferred from the entropy replicates \cite{Everitt_1984, Hoyle_et_al_2014}. The previous method not only allow us to `construct' an \textit{intelligibility} score, but also to control for all the levels of variability present in our data. We argue the former was important to make comparisons at the appropriate levels, while the latter, to not `manufacture' false confidence in our parameter estimates, leading us to incorrect inferences \cite{McElreath_2020}. Second, we used Directed Acyclic Graphs (DAG) \cite{Pearl_2009, Cinelli_et_al_2021} to describe our causal and non-causal hypothesis about the \textit{intelligibility} of speech, and determine which variables were relevant for its development. Finally, we implemented the method under the Bayesian framework, where we provided the steps and code for its implementation.
 
 \begin{comment}
-talk about decision statements or thinking-at-loud tasks. the listener provide a decision statement on why the selected stimulus sounded more intelligible
-
-We relied on the DAG presented in section \ref{sS:causal_frame} only to define the analyses described \ref{sS:stat_analysis}. A better planning could be done by designing the experimental design according to our hypothesis described by the causal framework. but ....
+	we believe that pre-aggregating procedures could be more pernicious for a proper statistical inference \citep{McElreath_2020}
 \end{comment}
+	
+The statistical results highlighted XXX points. First, and most important, considering the variability present in our data, we were not able to produce unequivocal null hypothesis rejections. The latter was a result of the large variability registered at the children and replicates levels, which impeded our ability to delimit the \textit{hearing status} group location on the \textit{intelligibility} scale. However, based on simulation studies, we were able to say our models could affirm the estimated values, as long as the estimates were different from zero (power analysis). In that sense, although we continue interpreting the parameters estimates, we believe that to ultimately define the direction of the effects, a larger sample size might still be needed. 
 
 \begin{comment}
-Previous research already used hierarchical models with the replicated entropy measures as outcomes \citep{Boonen_et_al_2021, Faes_et_al_2021}. Hierarchical models are powerful to control for heterogeneity in the data, and also to avoid pre-aggregating procedures that could be pernicious for a proper statistical inference \citep{McElreath_2020}. 
-
 These claims are easier to understand using a though experiment within our research. Consider we have two children with the same mean entropy, but the second child shows more variability across the $10$ utterances than the first. It is clear that the average entropy measure informs about the child's average SI, indicating that both children have similar level. However, the entropy's heterogeneity across the $10$ utterances also informs about the child's SI, as a higher variability imply transcribers agreed less about the second child's intelligibility.
-
-The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}, and it is what justify our use of a hierarchical model.
 \end{comment}
+
+Considering the previous, we still believe our parameter estimates provided preliminary evidence about our causal hypothesis. On the one hand, we found there is a difference in \textit{intelligibility} among the \textit{hearing status} groups, in favor of the NH children. However, the evidence indicated the difference is only observed between NH and HI/CI children with etiologies other than the genetic one. Our intuition indicates that this might be due to the need of a `re-wiring' of the child's neural hearing patterns, something that might be inherently done in children with genetic etiology. As it is point out by \citet{Flexer_2011}: ``the more delayed the age of acquisition of a skill, the farther behind children are in the amount of cumulative practice they have had to perfect that skill. The same concept holds true for cumulative auditory practice''. It is fair to say then, the researchers believe it would be interesting to further inspect this hypothesis with the support of Magnetic Resonance Imaging (MRI).
+
+In contrast, \textit{hearing age} was clearly identified as one of the main determinant in the evolution of \textit{speech intelligibility}. Moreover, the evidence seem to indicate there is a different evolution between NH and HI/CI children, contrary to what was previously found \cite{Boonen_et_al_2021}. We intuit the latter result have two possible complementary explanations, either: (i) the children develop their language differently, at different stages of their (\textit{hearing}) age, as it is implied by \citet{Flexer_2011} in the previous paragraph, or (ii) given that the hearing signal provided by the apparatus is degraded \cite{Drennan_et_al_2008}, HI/CI children might take longer to achieve similar levels of \textit{intelligibility} than their NH counterparts. As with the previous case, the researchers believe it would be interesting to assess the latter hypothesis. For that purpose,  a further collection of data would be required, where we identify the levels of degradation of the hearing signals in each of the cochlear implants.
+
+However, we can still
+%
+\begin{comment} 
+	and remains to determined if these observations were a result of the actual variability in the data or an artifact of the measurement procedure.
+\end{comment}
+
+\begin{comment}
+	talk about decision statements or thinking-at-loud tasks. the listener provide a decision statement on why the selected stimulus sounded more intelligible
+	
+	We relied on the DAG presented in section \ref{sS:causal_frame} only to define the analyses described \ref{sS:stat_analysis}. A better planning could be done by designing the experimental design according to our hypothesis described by the causal framework. but ....
+	
+	Previous research already used hierarchical models with the replicated entropy measures as outcomes \citep{Boonen_et_al_2021, Faes_et_al_2021}. Hierarchical models are powerful to control for heterogeneity in the data, and also to avoid pre-aggregating procedures that could be pernicious for a proper statistical inference \citep{McElreath_2020}. 
+	
+	The intuition derived from the previous though experiment is similar to the one presented in \citet{Boonen_et_al_2021}, and it is what justify our use of a hierarchical model.
+	
+	talk about other ways to calculate entropy, a more precise way considering the distance of words
+	
+	and remains to determined if these observations were a result of the actual variability in the data or an artifact of the measurement procedure.
+\end{comment}
+%
+%
