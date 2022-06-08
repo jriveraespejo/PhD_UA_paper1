@@ -222,6 +222,11 @@ res_stan = round( res_stan, 3 ) # round
 res_stan
 
 
+sum(cont_post < -0.01)/nrow(cont_post)
+sum(post$bP[,2] < -0.01)/nrow(post$bP)
+
+
+
 
 # E_NC5b3
 post = extract.samples( E_NC5b3 )
@@ -256,6 +261,7 @@ attr(cont_post, "dimnames")[[2]] = c('aEHS[2,2] - aEHS[1,1]',
 res_stan = precis( as_tibble(cont_post), depth=4, hist=F, prob=0.95 )
 names(res_stan)[3:4] = c('CI_lower','CI_upper')
 
+
 # get the HPDI
 hpdi_res = HPDinterval( as.mcmc(cont_post), prob=0.95)
 attr(hpdi_res, 'dimnames')[[2]] = c('HPDI_lower','HPDI_upper') 
@@ -268,6 +274,10 @@ res_stan
 # Variability around parameters does not allow to check if the contrast
 # are significantly different from zero
 
+
+colSums(cont_post < -0.01)/nrow(cont_post)
+colSums(cont_post < +0.01)/nrow(cont_post)
+sum(post$bP[,2] < -0.01)/nrow(post$bP)
 
 
 

@@ -271,7 +271,7 @@ For all models, the selection of priors and hyper-priors was done through prior 
 
 Figure \ref{fig:priors} shows the implication of our assumptions on the three outcome scales of interest: the \textit{speech intelligibility}, the \textit{true} entropy, and the \textit{observed} entropy replicates. Notice, no undesirable assumption has crept in any of the scales. Consequently, the estimates are free to visit a wide range of results, while also establishing a low probability of reaching impossible outcomes.
 
-Hereby follows a description of the priors:
+Hereby follows a description of the priors for the parameters already defined in section \ref{sS:stat_analysis}:
 %
 \begin{align}
 	%
@@ -308,6 +308,8 @@ while the hyper-priors were defined as follows:
 	\sigma_{i} & \sim \text{Exponential}(1)
 	%
 \end{align}
+
+\noindent where $\mu_{M}$ represent the average `sample size' and $\sigma_{M}$ the variability of such average. Moreover, $\mu_{b}$ and $\mu_{i}$ represent the average block and children random effect, respectively. Finally, in a similar manner, $\sigma_{b}$ and $\sigma_{i}$ represent the variability present at the blocks and children, respectively (see section \ref{sS:results_variability}).
 %
 %
 %-------------------------------
@@ -335,17 +337,19 @@ Additionally, all procedures were performed in \texttt{R} 4.1.2 \citep{R_2015} a
 \subsubsection{Simulation} \label{ssSA:model_simulation}
 %-------------------------------
 %
-Prior to fitting real data, all the proposed models were tested on simulated data. The simulation was done with two purposes: (i) to test the models' ability to recover the `real' parameter values \cite{Fogarty_et_al_2022}, and (ii) to test the power of our data size and assumed hypothesis \cite{Kruschke_2015}. On both instances, we used the \textit{equivalent prior sampling} method \cite{Winkler_1967}, informed by the appropriate children population \cite{DeRaeve_2016}. 
+Prior to fitting real data, all the proposed models were tested on simulated data. The simulation was done with two purposes: (i) to test the models' ability to recover the `real' parameter values \cite{Fogarty_et_al_2022}, and (ii) to test the power of our data size and assumed hypothesis \cite{Kruschke_2015}. On both instances, we used the \textit{equivalent prior sampling} method \cite{Winkler_1967}, using an idealized data informed by the appropriate children population \cite{DeRaeve_2016}. 
 
 \begin{comment}
 	Moreover, we tested three goals\footnote{see \citet{Kruschke_2015} chapter 13 for a detailed overview of the method.}: (a) reject the null value of a parameter, (b) affirm a predicted value, and (c) achieve an estimate precision.
 \end{comment}
 
-The results of our simulations highlight three key points. First, the probabilistic implementations work as intended, i.e. the statistical models manage to recover the `real' estimate values, if enough sample size is available. 
+The results of our simulations highlight two key points. First, regarding the models ability to recover the `real' estimate values, the probabilistic implementations work as intended, i.e. the statistical models manage to recover the `real' values, if enough sample size is available. 
 
-Second, considering our data size (sixteen children per group), if the assumed group difference is small (approximately $0.15$), we can be certain that at least $60\%$ of the time our models will affirm the predicted value, i.e. our model can correctly estimate values different from zero, when such alternative hypothesis is true (see green discontinuous line in figure \ref{fig:contrasts}). Moreover, the previous power threshold surpasses $80\%$ if we assume medium group differences (approximately $0.4$, not shown). In the case of other parameters of interest, even if we assume small effects, the models always affirm the predicted value with power above $80\%$, e.g. for $bA=0.15$ or $bP=0.1$.
+Second, regarding the power of our data to affirm parameter estimates, reject null hypothesis, or provide enough precision for our inferences, three additional points can be made. On the one hand, assuming a small difference among the \textit{hearing status} groups (approximately $0.15$), sixteen children per group are enough to provide at least $60\%$ certainty that our estimates affirm the predicted value, i.e. our model can correctly estimate values different from zero, when such alternative hypothesis is true (see green discontinuous line in figure \ref{fig:contrasts}). Moreover, the previous power threshold surpasses $80\%$ if we assume medium group differences (approximately $0.4$, not shown). Furthermore, in the case of other parameters of interest, even if the assumptions involve small effects (e.g. $bA=0.15$ or $bP=0.1$), our results always show the specific assumed value is tenable with power above $80\%$.
 
-Third, with our current data size, the statistical precision of our estimates do not achieve similar power (see yellow discontinuous line in figure \ref{fig:contrasts}). The latter implies that with sixteen children per group, the standard error of our estimates will not allow us to produce definite conclusions, e.g. we will not be certain if the two groups are not different because they are truly not statistically different or because the sample size is not enough to produce unequivocal inferences. A great part of this result is due to the assumed variability at the children and replicates levels, which we assumed moderate. However, further model testing indicated that such unequivocal results can be accomplished, if we have sample sizes similar to the full population size ($70$ children per group).
+In contrast, the power analysis also reveal that with sufficient amount of variability at the children and replicates levels ($\sigma_{i}=0.5$ and $M_{i}=10$), the models do not have enough power to produce unequivocal null hypothesis rejections (see orange continuous lines in figure \ref{fig:contrasts}), i.e. the compatibility and highest posterior density intervals contain the value of zero, in almost all simulations. The latter implies that with reasonable expectations about the variability between children and the presence of measurement error (multiple replicates to measure one latent value), the statistical models require a data size significantly larger than sixteen children per group. Further model testing indicate that such unequivocal inferences can be accomplished, if we have a sample size similar to the full population size ($70$ children per group).
+
+Lastly, and complementary to the previous result, the statistical precision of our estimates do not achieve power levels above the $80\%$ threshold with our current data size (see yellow discontinuous line in figure \ref{fig:contrasts}). The latter implies that with sixteen children per group, the standard error of our estimates will not allow us to produce definite conclusions, e.g. we will not be certain if the two \textit{hearing status} groups are not different because they are truly not statistically different or because the sample size is not enough to produce unequivocal inferences. This result is also related to the assumptions regarding the variability between children and the presence of measurement error. Similar to the previous case, sufficient levels of precision power can be reached, if we have a sample size similar to the full population size.
 %
 \begin{comment}
 	The results of our simulations indicated that each statistical model was able to recover the `real' parameters values, when the sample size was similar to the population size.
