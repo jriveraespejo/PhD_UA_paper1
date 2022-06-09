@@ -41,6 +41,12 @@ metadata = read.csv(file.path(data_dir, data_name),
 
 
 
+# correlation among age variables
+psych::pairs.panels(data_entropy[,c("ChronAge","ImplAge","hearing.age")])
+# notice hearing age is associated with the two,
+# implying the variable comprises, in one way or another, both variables
+
+
 
 # modify data ####
 # select appropriate info

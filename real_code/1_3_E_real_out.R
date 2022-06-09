@@ -222,8 +222,8 @@ res_stan = round( res_stan, 3 ) # round
 res_stan
 
 
-sum(cont_post < -0.01)/nrow(cont_post)
-sum(post$bP[,2] < -0.01)/nrow(post$bP)
+sum(cont_post < 0)/nrow(cont_post)
+sum(post$bP[,2] < 0)/nrow(post$bP)
 
 
 
@@ -275,9 +275,9 @@ res_stan
 # are significantly different from zero
 
 
-colSums(cont_post < -0.01)/nrow(cont_post)
-colSums(cont_post < +0.01)/nrow(cont_post)
-sum(post$bP[,2] < -0.01)/nrow(post$bP)
+colSums(cont_post < 0)/nrow(cont_post)
+colSums(cont_post > 0)/nrow(cont_post)
+sum(post$bP[,2] < 0)/nrow(post$bP)
 
 
 
