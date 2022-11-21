@@ -18,7 +18,7 @@ BCOR5mm, % Binding correction
 %----------------------------------------
 % PACKAGES DOCUMENT CONFIGURATIONS
 %----------------------------------------
-\usepackage[square,numbers]{natbib} % bibliography with brackets and numbers
+\usepackage[natbibapa]{natbib} % bibliography with brackets and numbers: [square,numbers], for APA style: [natbibapa]
 \usepackage[hidelinks]{hyperref} % black hyperlinks
 \usepackage[toc]{appendix} % includes appendix in the TOC
 \usepackage[nottoc,notlot,notlof]{tocbibind} % TOC
@@ -76,6 +76,14 @@ BCOR5mm, % Binding correction
 	pdfproducer={LaTeX with hyperref and ClassicThesis} % PDF producer
 }
 %
+% Keywords command
+\providecommand{\keywords}[1]
+{
+	\small	
+	\textbf{\textit{Keywords---}} #1
+}
+%
+%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DOCUMENT PRODUCTION
@@ -87,21 +95,20 @@ BCOR5mm, % Binding correction
 %
 \title{Speech intelligibility:} % The article title
 \subtitle{A generalized latent variable approach on utterances' entropies} % subtitle
-\author[1]{Jose Rivera}
+\author[1]{\small Jose RIVERA}
 \affil[1]{ {\small Department of Training and Education Sciences, \authorcr
 	University of Antwerp, Antwerp, Belgium  \authorcr
-	E-mail: JoseManuel.RiveraEspejo@uantwerpen.be \authorcr
-	(corresponding author) \authorcr } }
-\author[2]{Sven de Maeyer}
+	e-mail: JoseManuel.RiveraEspejo@uantwerpen.be} }
+\author[2]{Sven DE MAEYER}
 \affil[2]{ {\small Department of Training and Education Sciences, \authorcr
 		University of Antwerp, Antwerp, Belgium  \authorcr
-		E-mail: sven.demaeyer@uantwerpen.be \authorcr } }
-\author[3]{Steven Gillis}
+		e-mail: sven.demaeyer@uantwerpen.be \authorcr } }
+\author[3]{Steven GILLIS}
 \affil[3]{ {\small Computational Linguistics, and Psycholinguistics Research Centre \authorcr 
 		University of Antwerp, Antwerp, Belgium \authorcr
-		E-mail: steven.gillis@uantwerpen.be \authorcr } } 
+		e-mail: steven.gillis@uantwerpen.be \authorcr } } 
 %
-\date{\today} % An optional date to appear under the author(s)
+\date{\small \today} % An optional date to appear under the author(s)
 %
 %
 \begin{document}
@@ -112,6 +119,24 @@ BCOR5mm, % Binding correction
 \maketitle % Print the title/author/date block
 \setcounter{tocdepth}{3} % Set the depth of the table of contents to show sections and subsections only
 %
+%
+% corresponding author
+\noindent \textbf{Corresponding author:} Jose Rivera, Department of Training and Education Sciences, University of Antwerp, Antwerp, Belgium. e-mail: JoseManuel.RiveraEspejo@uantwerpen.be \\ \\
+%
+%
+% Finantial support
+\textbf{Finantial support:} The project was financed by the Flemish Government through the Research Fund of the University of Antwerp (BOF). \\ \\
+%
+%
+% competing interest
+\textbf{Competing interests:} The authors declare they have no conflict of interest regarding this manuscript. \\ \\ 
+%
+%
+% Keywords
+\keywords{intelligibilty, children with coclear implants, utterances' entropy, generalized linear latent and mixed model.}
+%
+%
+\newpage
 \input 1_abstract
 %
 \newpage
@@ -141,7 +166,7 @@ BCOR5mm, % Binding correction
 %
 \renewcommand{\refname}{\spacedlowsmallcaps{References}} % For modifying the bibliography heading
 \newpage
-\bibliographystyle{dcu}
+\bibliographystyle{dcu} %dcu
 \bibliography{bibliography.bib}
 %
 %
