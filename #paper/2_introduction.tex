@@ -34,14 +34,11 @@ Therefore, "objective rating" methods try to infer intelligibility from the exte
 
 However, although the literature is clear on the benefits of the aforementioned method to (indirectly) quantify intelligibility \citep{Boonen_et_al_2020, Boonen_et_al_2021, Hustad_et_al_2020}, we notice the statistical procedures used to model such data are not at par of the measurement procedure's sophistication.
 
-Previous research have considered the data clsutering, but ignored its bounded nature, where averaging was considered a `valid' option for modeling \citep{Boonen_et_al_2021}. We argue that the latter practice is not appropriate, as with bounded data not only the location (average), but also the spread (variance) of the entropies' distribution might inform about the speaker's intelligibility \citep{Nelder_et_al_1983}. As an exmaple 
+Previous research have considered the data clustering, but ignored its bounded nature, where averaging was considered a valid option for modeling \citep{Boonen_et_al_2021}. We argue that the latter practice is not appropriate, as with bounded data not only the location (average), but also the spread (variance), of the entropies' distribution might inform about the speaker's intelligibility \citep{Nelder_et_al_1983}. Therefore, considering a more sophisticated statistical procedure could improve our statistical inferences related to the intelligibility of individuals \citep{McElreath_2020}.
+
+The preceding statement is easier to understand with a thought experiment. Imagine three children with different patterns of entropy measures, all reporting the same mean entropy of $0.5$. The patterns are: (a) scores closely agglomerated around $0.5$, (b) scores loosely aglomerated around $0.5$, and finally, (c) half of the scores agglomerated around $0.1$ and the other half around $0.9$. It is clear that from the mean score we can say that the three children have an "average" level of intelligibility. However, it is also clear from the spread of the scores that more uncertainty (to the asesssment of "average") should be assigned to child (c), followed by (b) and finally (a). This just mean that we can be more confident that child (a) has an "average" level of intelligibility, than in the other two cases, where (c) represent the extreme example of uncertainty. In that sense, we can easily notice that not only the average but also the spread of the entropies' distribution informs the level of intelligibility, and that we need a model that can integrate all these pieces of information coming from the data.
 
 \begin{comment}
-	
-		
-	If you take a look at the research most of the time these phenomena are not really modelled as characteristics of persons, but as characteristics of smaller units of observation from that person (e.g. utterances; trials; …)
-	
-	Not approaching these phenomena as a ‘latent construct’ has statistical consequences (this is the crux of the problem; the statistical but also a conceptual problem)
 	
 	First, as previous paragraphs reveal, the intelligibility scores are `complex' in nature, however, such `complexity' is rarely fully considered in the statistical modeling procedure. The problem with the later is that, because the data does not fulfill the typical assumptions, e.g. normality, its analysis under such models might lead us to erroneous conclusions \textcolor{red}{[citation]}. On the one hand, outcomes such as the number of (un)intelligible words are discrete, while the entropy scores are continuous in nature. In addition, there is the consideration that both scores are constraint in specific bounds, i.e. the number of (un)intelligible words cannot be negative, while the entropy scores are in the bounds between zero and one. Finally, given the rating procedure's nature, the scores are produced in a clustered manner, i.e. we observe several score measurements per child. 
 	
@@ -52,6 +49,10 @@ Previous research have considered the data clsutering, but ignored its bounded n
 Furthermore, in order to understand or intervene on the factors that drives speech intelligibility, first one needs to `construct an error free' \textit{intelligibility} scale \citep{Carroll_2006}, a characteristic not possessed by the entropy measures nor its averages.
 
 \begin{comment}
+			
+	If you take a look at the research most of the time these phenomena are not really modelled as characteristics of persons, but as characteristics of smaller units of observation from that person (e.g. utterances; trials; …)
+	
+	Not approaching these phenomena as a ‘latent construct’ has statistical consequences (this is the crux of the problem; the statistical but also a conceptual problem)
 	
 	Second, although the literature suggest the number of (un)intelligible words or the entropy of transcriptions are scores that capture the level of intelligibility in a child, it is easy to notice these two can still be considered surrogate measures of it, i.e. scores that indirectly reflect what is intended to be measured. The latter is important because it implies these outcomes are `measured with error', resulting from considering that there is an unobserved (latent) `construct' that is responsible for the observed scores variation, i.e. the \textit{speech intelligibility}. Moreover, it is important to recognize that this `measurement error' is of a different kind that the one produced by the clustered nature of the data, and that again, by failing to account for it, we would be led to incorrect inferences \citep{deHaan_et_al_2019}.
 	
