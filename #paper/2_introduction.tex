@@ -2,9 +2,9 @@
 \section{Introduction} \label{S:introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Intelligible spoken language requires all core components of speech perception, cognitive processing, linguistic knowledge, and articulation to be mastered \citep{Freeman_et_al_2017}. In that sense, its attainment carries an important societal value, as it is considered a milestone in children's language development; and more practically, it is qualified as the ultimate checkpoint for the success of speech therapy, and the "gold standard" for assessing the benefit of cochlear implantation \citep{Chin_et_al_2012}.
+Intelligible spoken language requires all core components of speech perception, cognitive processing, linguistic knowledge, and articulation to be mastered \citep{Freeman_et_al_2017}. In that sense, its attainment carries an important societal value, as it is considered a milestone in children's language development; and more practically, it is qualified as the ultimate checkpoint for the success of speech therapy, and the "gold standard" for assessing the benefits of cochlear implantation \citep{Chin_et_al_2012}.
 
-But what is speech intelligibility?. Intelligibility can be broadly defined as "the extent to which a speaker's message is actually understood by the listener" \citep{Munro_et_al_1999}. But in a more narrow sense, it refers to the listener’s ability to successfully identify or decode the words in a message \citep{Freeman_et_al_2017, Kent_et_al_1989, vanHeuven_2008, Whitehill_et_al_2004}. The latter definition is more helpful, as it sets a clear contrast with comprehensibility, which involves the listener’s ability to understand the message and its intent \citep{Munro_et_al_1999, Smith_et_al_1985}.
+But what is speech intelligibility?. Intelligibility can be broadly defined as "the extent to which a speaker's message is actually understood by the listener" \citep{Munro_et_al_1999}, and in a more narrow sense, it refers to the listener’s ability to successfully decode the words in a message \citep{Freeman_et_al_2017, Kent_et_al_1989, vanHeuven_2008, Whitehill_et_al_2004}. The latter definition is more helpful, as it sets a clear contrast with comprehensibility, which involves the listener’s ability to understand the message and its intent \citep{Munro_et_al_1999, Smith_et_al_1985}.
 
 However, indifferent of its broad or narrow definition, the literature also reveal that intelligibility can be compromised by features of the communicative environment, such as noise \citep{Munro_1998}; by features of the speaker, like speaking rate \citep{Munro_et_al_1998} or accent \citep{Jenkins_2000, Ockey_et_al_2016}}; or features of the listener, like vocabulary mastery \citep{Varonis_et_al_1985}. Moreover, all of the above further emphasizes its dynamic nature, where changes in intelligibility stem from online adaptations of the speaker to the listener and/or the context.
 
@@ -22,7 +22,7 @@ In that sense, the literature suggests two perspectives from which intelligibili
 		
 \end{comment}
 
-Focusing our attention on perceptual studies, "objective rating" methods on children's utterances, recovered from spontaneous speech tasks, have received special attention because of their high level of ecological validity \citep{Boonen_et_al_2021, Ertmer_2011, Flipsen_2006, Hustad_et_al_2020}. In these methods, listeners transcribe children's utterances orthographically (or phonetically), which later are used as information to construct an entropy score that expresses the degree of (dis)agreement in the transcriptions \citep{Boonen_et_al_2021, Shannon_1948}. As a result, the scores are characterized by their clustered and bounded nature. The first is because the data have multiple measurements per child (one per utterance). While the second is because the score values are expresed in the continuum between zero and one.
+Focusing our attention on perceptual studies, "objective rating" methods on children's utterances recovered from spontaneous speech tasks have received special attention, because of their high level of ecological validity \citep{Boonen_et_al_2021, Ertmer_2011, Flipsen_2006, Hustad_et_al_2020}. In these methods, listeners transcribe children's utterances orthographically (or phonetically), which later are used as information to construct an entropy score that expresses the degree of (dis)agreement in the transcriptions \citep{Boonen_et_al_2021, Shannon_1948}. As a result, the scores are characterized by their clustered and bounded nature. The first is because the data have multiple measurements per child (one per utterance). While the second is because the score values are expresed in the continuum between zero and one.
 
 \begin{comment}
 	
@@ -34,9 +34,11 @@ Therefore, "objective rating" methods try to infer intelligibility from the exte
 
 However, although the literature is clear on the benefits of the aforementioned method to (indirectly) quantify intelligibility \citep{Boonen_et_al_2020, Boonen_et_al_2021, Hustad_et_al_2020}, we notice the statistical procedures used to model such data are not at par of the measurement procedure's sophistication.
 
-Previous research have considered the data clustering, but ignored its bounded nature, where averaging was considered a valid option for modeling \citep{Boonen_et_al_2021}. We argue that the latter practice is not appropriate, as with bounded data not only the location (average), but also the spread (variance), of the entropies' distribution might inform about the speaker's intelligibility \citep{Nelder_et_al_1983}. Therefore, considering a more sophisticated statistical procedure could improve our statistical inferences related to the intelligibility of individuals \citep{McElreath_2020}.
+First, previous research have dealt with the data clustering, but ignored its bounded nature, where averaging was considered a valid option for modeling \citep{Boonen_et_al_2021}. We argue that the latter practice is not appropriate, as with bounded data not only the location (average), but also the spread (variance), of the entropies' distribution might inform about the speaker's intelligibility \citep{Nelder_et_al_1983}.
 
-The preceding statement is easier to understand with a thought experiment. Imagine three children with different patterns of entropy measures, all reporting the same mean entropy of $0.5$. The patterns are: (a) scores closely agglomerated around $0.5$, (b) scores loosely aglomerated around $0.5$, and finally, (c) half of the scores agglomerated around $0.1$ and the other half around $0.9$. It is clear that from the mean score we can say that the three children have an "average" level of intelligibility. However, it is also clear from the spread of the scores that more uncertainty (to the asesssment of "average") should be assigned to child (c), followed by (b) and finally (a). This just mean that we can be more confident that child (a) has an "average" level of intelligibility, than in the other two cases, where (c) represent the extreme example of uncertainty. In that sense, we can easily notice that not only the average but also the spread of the entropies' distribution informs the level of intelligibility, and that we need a model that can integrate all these pieces of information coming from the data.
+The preceding statement is easier to understand with a thought experiment. Imagine three children with different patterns for ten entropy measures, all reporting the same mean entropy of $0.5$. The patterns are: (a) scores closely agglomerated around $0.5$, (b) scores loosely aglomerated around $0.5$, and finally, (c) half of the scores agglomerated around $0.1$ and the other half around $0.9$. From the mean score we can say that the three children have an "average" level of intelligibility. However, from the spread of the scores we can notice that more uncertainty (to the asesssment of "average") should be assigned to child (c), followed by (b) and finally (a). This just mean that we can be more confident that child (a) has an "average" level of intelligibility, than in the other two cases, where (c) represent one extreme example of uncertainty. In that sense, we can easily notice that not only the average but also the spread of the entropies' distribution informs intelligibility.
+
+Considering the previous, it is clear that more sophisticated statistical procedures, that integrates all these pieces of information, could improve our intelligibility estimates \citep{McElreath_2020}.
 
 \begin{comment}
 	
@@ -46,7 +48,9 @@ The preceding statement is easier to understand with a thought experiment. Imagi
 
 \end{comment}
 
-Furthermore, in order to understand or intervene on the factors that drives speech intelligibility, first one needs to `construct an error free' \textit{intelligibility} scale \citep{Carroll_2006}, a characteristic not possessed by the entropy measures nor its averages.
+Second, although the literature suggest the entropy scores capture the intelligibility of a child, it is clear that they can still be considered a surrogate of what it intends measure. Notice the previous can be stated because we observe multiple entropy scores per child, and that these scores are not "intelligibility" scores, but entropy scores. Therefore we can say that these multiple outcomes are a manifestation of a child's intelligibility, but such manifestation is measured with uncertainty (error), i.e. there is an unobserved (latent) intelligibility construct that is responsible for what it is observed on the entropy scores and their variation. 
+
+Therefore, if we hope to understand or intervene on the factors that drives speech intelligibility, first one needs to "construct" a children' \textit{intelligibility} scale \citep{Carroll_2006}, allowing us to test our research hypotheses at the appropriate level. Furthermore, the literature suggest that failing to model this phenomena as a "latent construct" would lead us to incorrect inferences \citep{deHaan_et_al_2019}.
 
 \begin{comment}
 			
@@ -66,7 +70,7 @@ Furthermore, in order to understand or intervene on the factors that drives spee
 	
 \end{comment}
 
-Considering all of the above, we propose a novel analysis of the entropy data using a Bayesian implementation of the Generalized Linear Latent and Mixed Model (GLLAMM) \citep{Rabe_et_al_2004a, Rabe_et_al_2004b, Rabe_et_al_2004c, Rabe_et_al_2012, Skrondal_et_al_2004a}. The statistical procedure offers four benefits. First, it allows to appropriately model the bounded entropy data. Second, it provides a way to `construct' the speaker's latent intelligibility scale. Third, it allow us to test our research hypothesis at the appropriate level. And fourth, as a result from the first two, we successfully avoid producing false confidence in the parameter estimates, which help us to produce correct statistical inferences \citep{McElreath_2020}.
+Considering all of the above, the aim of this reasearch is to propose a novel analysis of the entropy data using a Bayesian implementation of the Generalized Linear Latent and Mixed Model (GLLAMM) \citep{Rabe_et_al_2004a, Rabe_et_al_2004b, Rabe_et_al_2004c, Rabe_et_al_2012, Skrondal_et_al_2004a}. The statistical procedure offers four benefits. First, it allows to appropriately model the bounded nature of the entropy data. Second, it provides a way to "construct" the speaker's latent intelligibility scale. Third, it allow us to test our research hypothesis at the appropriate level. And fourth, as a result from the first two, we successfully avoid producing false confidence in the parameter estimates, which help us to produce correct statistical inferences \citep{McElreath_2020}.
 
 \begin{comment}
 	
@@ -78,7 +82,8 @@ Considering all of the above, we propose a novel analysis of the entropy data us
 
 \end{comment}
 	
-We find the proposed method bring new insights about the use of replicated entropy scores to measure intelligibility, and on how some factors affect the (under)development of children's intelligibility.
+We find that when the proposed method is used to investigate the speech intelligibility levels of normal hearing (NH) versus hearing-impaired children with cochlear implants (HI/CI), in a data composed of ten utterances recordings from thirty two NH and HI/CI children selected from a large corpus of spontaneously spoken speech collected by the CLiPS research center, it brings bring new insights about the use of replicated entropy scores to measure intelligibility. Furthermore, the method also provide a way to assess how some factors affect the (under)development of children's intelligibility.
+
 
 \begin{comment}
 	
